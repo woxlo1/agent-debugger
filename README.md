@@ -2,6 +2,8 @@
 
 > Chrome DevTools for LLM agents.
 
+![Agent Debugger demo](docs/assets/demo.gif)
+
 Agent Debugger is a local-first developer tool that lets you **visualize and replay** what your AI agent thought, which tools it called, and in what order it made decisions.
 
 ![status](https://img.shields.io/badge/status-MVP-orange)
