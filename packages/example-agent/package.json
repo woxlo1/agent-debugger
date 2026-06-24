@@ -1,0 +1,15 @@
+{
+  "name": "agent-debugger-example-agent",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "start": "tsx run.ts"
+  },
+  "dependencies": {
+    "agent-debugger-sdk": "*"
+  },
+  "devDependencies": {
+    "tsx": "^4.16.2"
+  }
+}

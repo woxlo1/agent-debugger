@@ -1,0 +1,19 @@
+{
+  "name": "agent-debugger-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "packages/server",
+    "packages/sdk",
+    "packages/web",
+    "packages/example-agent"
+  ],
+  "scripts": {
+    "dev": "concurrently -n SERVER,WEB -c green,cyan \"npm run dev -w packages/server\" \"npm run dev -w packages/web\"",
+    "demo": "tsx packages/example-agent/run.ts"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "tsx": "^4.16.2"
+  }
+}
