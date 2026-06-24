@@ -1,0 +1,5 @@
+{"type": "user", "name": "user_input", "input": "What's the weather in Tokyo and should I bring an umbrella?"}
+{"type": "reasoning", "name": "plan", "output": "I need current weather data for Tokyo. I'll call the weather tool, then reason about precipitation.", "tokens": 42}
+{"type": "tool", "name": "get_weather", "input": {"city": "Tokyo"}, "output": {"tempC": 23, "condition": "light rain", "precipitationChance": 0.8}}
+{"type": "reasoning", "name": "interpret_result", "input": {"precipitationChance": 0.8}, "output": "80% chance of rain, definitely recommend an umbrella.", "tokens": 18}
+{"type": "agent", "name": "final_answer", "output": "It's 23\u00b0C with light rain in Tokyo today, 80% chance of precipitation \u2014 yes, bring an umbrella!", "tokens": 28, "cost": 0.0007}

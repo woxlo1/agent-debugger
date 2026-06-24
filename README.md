@@ -2,8 +2,6 @@
 
 > Chrome DevTools for LLM agents.
 
-![Agent Debugger demo](docs/assets/demo.gif)
-
 Agent Debugger is a local-first developer tool that lets you **visualize and replay** what your AI agent thought, which tools it called, and in what order it made decisions.
 
 ![status](https://img.shields.io/badge/status-MVP-orange)
@@ -72,6 +70,40 @@ await trace({
 
 Events show up live in the Web UI as soon as `agent-debugger start` (or `npm run dev`) is running.
 
+## Using Agent Debugger from any language (no SDK required)
+
+The TypeScript SDK is just a thin wrapper around one HTTP call. If your agent is written in Python, Go, Ruby, or anything else, use the `pipe` command instead: print one JSON object per line (JSON Lines) and pipe it in.
+
+```bash
+agent-debugger pipe                 # reads from stdin
+agent-debugger pipe trace.jsonl     # reads from a file
+```
+
+Each line needs at least `type` and `name`:
+
+```json
+{"type": "tool", "name": "search", "input": "cats", "output": "..."}
+```
+
+Example from Python:
+
+```python
+import json
+
+def emit(event):
+    print(json.dumps(event), flush=True)
+
+emit({"type": "user", "name": "user_input", "input": "What's the weather in Tokyo?"})
+emit({"type": "tool", "name": "get_weather", "input": {"city": "Tokyo"}, "output": {"tempC": 23}})
+emit({"type": "agent", "name": "final_answer", "output": "It's 23°C in Tokyo."})
+```
+
+```bash
+python3 your_agent.py | agent-debugger pipe
+```
+
+All events piped in a single run share an auto-generated `traceId` unless you set your own per-event `traceId` field, so they group into one trace in the UI. A runnable version of this example lives at `packages/example-agent/demo_pipe.py`.
+
 ## Architecture
 
 ```
@@ -127,15 +159,13 @@ type AgentEvent = {
 ## CLI
 
 ```bash
-agent-debugger start
+agent-debugger start            # start the local server (same as npm run dev -w packages/server)
+agent-debugger pipe [file]      # send JSON Lines events from stdin or a file
 ```
 
-Starts the local server (same as `npm run dev -w packages/server`).
-
-## Roadmap (v0.2+)
+## Roadmap (v0.3+)
 
 - Persist traces to disk (SQLite) instead of in-memory only
-- stdin/file bridge so any language (Python, Go, etc.) can pipe JSON events in without an SDK
 - Token/cost rollups per trace, cost charts
 - Diff view: compare two traces of the same prompt side by side
 - Export/share a trace as a single JSON file or shareable link
