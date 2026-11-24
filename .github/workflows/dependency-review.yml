@@ -16,9 +16,10 @@ jobs:
     name: Review dependency changes
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    # Temporary: dependency graph activation is a UI-only repository setting.
-    # Remove this line after it is enabled in Settings -> Advanced Security.
-    continue-on-error: true
+    # Dependency Graph activation is a UI-only repository setting. After it is
+    # enabled in Settings -> Advanced Security, set the repository variable
+    # DEPENDENCY_GRAPH_ENABLED to "true" to activate this check.
+    if: ${{ vars.DEPENDENCY_GRAPH_ENABLED == 'true' }}
     steps:
       - uses: actions/checkout@v4
         with:
