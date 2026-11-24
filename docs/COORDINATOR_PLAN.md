@@ -9,9 +9,9 @@
 
 ## Current stage
 
-Stage 6: browser-based local desktop shell.
+Stage 7: benchmark harness and published results.
 
-Stage 6 builds on the merged Stage 1 usage contracts, Stage 2 server/CLI/web integration, Stage 3 Case Packages, Stage 4 docs/assets, and Stage 5 MCP/adapter. It adds a dependency-free launcher that starts the API, serves the built UI from the same loopback origin, proxies `/api/*`, and opens the default browser. A web app manifest makes the windowed view installable where supported. No release action is performed in this stage.
+Stage 7 builds on the merged Stage 1 usage contracts, Stage 2 server/CLI/web integration, Stage 3 Case Packages, Stage 4 docs/assets, Stage 5 MCP/adapter, and Stage 6 desktop shell. It adds a dependency-free benchmark script, publishes synthetic 10,000-event results in `docs/PERFORMANCE.md`, and records the cold-start target miss honestly. No release action is performed in this stage.
 
 ## Shared interfaces frozen by the coordinator
 
