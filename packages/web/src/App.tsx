@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import type { AgentEvent, TraceSummary } from "./types"
 import { fetchEvents, fetchTraces, subscribeToStream } from "./api"
 import TraceList from "./components/TraceList"
@@ -11,12 +11,31 @@ import ComparePanel from "./components/ComparePanel"
 
 type View = "replay" | "analysis" | "usage" | "privacy" | "compare"
 
+type EventLoad = {
+  generation: number
+  loaded: boolean
+  buffered: AgentEvent[]
+}
+
+function mergeEvents(base: AgentEvent[], incoming: AgentEvent[]): AgentEvent[] {
+  if (incoming.length === 0) return base
+  const seen = new Set(base.map((event) => event.id))
+  const merged = [...base]
+  for (const event of incoming) {
+    if (seen.has(event.id)) continue
+    seen.add(event.id)
+    merged.push(event)
+  }
+  return merged
+}
+
 export default function App() {
   const [traces, setTraces] = useState<TraceSummary[]>([])
   const [selectedTraceId, setSelectedTraceId] = useState<string | null>(null)
   const [events, setEvents] = useState<AgentEvent[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [view, setView] = useState<View>("analysis")
+  const eventLoad = useRef<EventLoad>({ generation: 0, loaded: false, buffered: [] })
 
   const loadTraces = () => {
     fetchTraces()
@@ -37,18 +56,30 @@ export default function App() {
   }, [traces, selectedTraceId])
 
   useEffect(() => {
+    const load = eventLoad.current
+    const generation = ++load.generation
+    load.loaded = false
+    load.buffered = []
     if (!selectedTraceId) return
     fetchEvents(selectedTraceId).then((evts) => {
-      setEvents(evts)
-      setCurrentIndex(evts.length > 0 ? evts.length - 1 : 0)
+      if (generation !== eventLoad.current.generation) return
+      const buffered = eventLoad.current.buffered
+      eventLoad.current.loaded = true
+      const merged = mergeEvents(evts, buffered)
+      setEvents(merged)
+      setCurrentIndex(merged.length > 0 ? merged.length - 1 : 0)
     })
   }, [selectedTraceId])
 
   useEffect(() => {
     const unsubscribe = subscribeToStream((event) => {
-      if (event.traceId === selectedTraceId) {
-        setEvents((prev) => [...prev, event])
+      if (event.traceId !== selectedTraceId) return
+      const load = eventLoad.current
+      if (!load.loaded) {
+        load.buffered.push(event)
+        return
       }
+      setEvents((prev) => mergeEvents(prev, [event]))
     })
     return unsubscribe
   }, [selectedTraceId])

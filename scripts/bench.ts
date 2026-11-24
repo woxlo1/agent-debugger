@@ -72,6 +72,7 @@ async function measureColdStart(): Promise<number> {
   const storePath = path.join(temp, "events.ndjson")
   const port = await getFreePort()
   const base = `http://127.0.0.1:${port}`
+  const started = now()
   const child = spawn(
     process.execPath,
     ["--import", "tsx", "packages/server/src/index.ts"],
@@ -87,16 +88,15 @@ async function measureColdStart(): Promise<number> {
       },
     },
   )
-  const started = now()
   try {
-    for (let attempt = 0; attempt < 80; attempt += 1) {
+    for (let attempt = 0; attempt < 400; attempt += 1) {
       try {
         const response = await fetch(`${base}/api/health`)
         if (response.ok) return Math.round((now() - started) * 100) / 100
       } catch {
         // Process is still starting.
       }
-      await new Promise((resolve) => setTimeout(resolve, 25))
+      await new Promise((resolve) => setTimeout(resolve, 5))
     }
     throw new Error("Benchmark server did not become ready")
   } finally {

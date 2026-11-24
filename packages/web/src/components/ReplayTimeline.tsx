@@ -43,7 +43,12 @@ export default function ReplayTimeline({
           ⏮ Step
         </button>
         <button
-          onClick={() => setIsPlaying((p) => !p)}
+          onClick={() => {
+            if (!isPlaying && currentIndex >= events.length - 1) {
+              onIndexChange(0)
+            }
+            setIsPlaying((p) => !p)
+          }}
           disabled={events.length === 0}
           className="px-4 py-1.5 text-sm rounded bg-emerald-600 hover:bg-emerald-500 disabled:opacity-30 font-medium"
         >

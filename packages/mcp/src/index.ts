@@ -30,7 +30,10 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function handleRequest(request: JsonRpcRequest): void {
-  const id = request.id ?? null
+  // JSON-RPC notifications have no id and must never receive a response.
+  // An explicit null id is a request, not a notification.
+  if (request.id === undefined) return
+  const id = request.id
   const params = isRecord(request.params) ? request.params : {}
 
   if (request.method === "initialize") {
