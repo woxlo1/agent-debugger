@@ -78,19 +78,18 @@ class EventStore {
   }
 
   addMany(events: AgentEvent[]) {
-    const addedIds = new Set<string>()
+    const addedEvents: AgentEvent[] = []
     for (const event of events) {
       if (this.ids.has(event.id)) continue
       this.ids.add(event.id)
-      addedIds.add(event.id)
+      addedEvents.push(event)
       this.events.push(event)
     }
-    if (addedIds.size > 0) this.persist()
-    for (const event of events) {
-      if (!addedIds.has(event.id)) continue
+    if (addedEvents.length > 0) this.persist()
+    for (const event of addedEvents) {
       for (const listener of this.listeners) listener(event)
     }
-    return addedIds.size
+    return addedEvents.length
   }
 
   addUsage(entries: AiUsage[]): number {

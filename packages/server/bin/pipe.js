@@ -107,6 +107,7 @@ export async function runPipe(filePath) {
   console.log(
     `[agent-debugger pipe] done. sent=${sent} failed=${failed} traceId=${sharedTraceId}`,
   )
+  return failed
 }
 
 export async function runImport(filePath) {

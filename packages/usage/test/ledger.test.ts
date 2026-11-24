@@ -2,9 +2,11 @@ import assert from "node:assert/strict"
 import {
   normalizeAnthropicUsage,
   normalizeClaudeCodeUsage,
+  normalizeLangChainUsage,
   normalizeOpenAIUsage,
   normalizeOtelGenAiUsage,
 } from "../../ingest/src/adapters/index.js"
+import { createUsage } from "../../shared/src/index.js"
 import { buildUsageLedger } from "../src/ledger.js"
 import { createEstimatedUsage } from "../src/estimate.js"
 
@@ -106,6 +108,45 @@ function run() {
   })
   assert.equal(withEstimates.entries.length, 2)
   assert.equal(withEstimates.confidence, "estimated")
+
+  const mixed = buildUsageLedger("t-mixed", [
+    createUsage({
+      id: "explicit-total",
+      source: "sdk_explicit",
+      confidence: "reported",
+      buckets: { totalTokens: 100 },
+    }),
+    createUsage({
+      id: "bucket-total",
+      source: "sdk_explicit",
+      confidence: "reported",
+      buckets: { inputTokens: 5 },
+    }),
+  ])
+  assert.equal(mixed.totals.totalTokens, 105)
+
+  const openaiAudio = normalizeOpenAIUsage({
+    id: "chatcmpl-audio",
+    usage: {
+      prompt_tokens: 100,
+      completion_tokens: 50,
+      prompt_tokens_details: { audio_tokens: 40 },
+      completion_tokens_details: { audio_tokens: 10 },
+    },
+  })
+  assert.ok(openaiAudio)
+  assert.equal(openaiAudio.inputTokens, 60)
+  assert.equal(openaiAudio.outputTokens, 40)
+  assert.equal(openaiAudio.audioTokens, 50)
+  assert.equal(openaiAudio.totalTokens, 150)
+
+  const langchainCache = normalizeLangChainUsage({
+    usage_metadata: { input_tokens: 100, cache_read_input_tokens: 80 },
+  })
+  assert.ok(langchainCache)
+  assert.equal(langchainCache.inputTokens, 20)
+  assert.equal(langchainCache.cacheReadTokens, 80)
+  assert.equal(langchainCache.totalTokens, 100)
 
   console.log("usage ledger tests ok")
 }

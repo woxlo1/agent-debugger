@@ -10,6 +10,7 @@ import {
 } from "../src/index.js"
 
 const SECRET = "sk-abcdefgh1234"
+const EMAIL = "alice@example.com"
 
 function fixture(): {
   analysis: CausePackageAnalysis
@@ -58,7 +59,7 @@ function fixture(): {
           id: "ev-status-error",
           kind: "status_error",
           label: "Steps marked as errors",
-          detail: "1 event(s) carry an explicit error status.",
+          detail: `1 event(s) carry an explicit error status. Contact ${EMAIL}.`,
           eventIds: ["e1"],
         },
       ],
@@ -123,8 +124,16 @@ function run() {
   assert.equal(artifact.privacy.rawValuesStored, false)
   assert.ok(artifact.fingerprint.length === 64)
   assert.equal(JSON.stringify(artifact).includes(SECRET), false)
+  assert.equal(JSON.stringify(artifact).includes(EMAIL), false)
   assert.equal(verifyCausePackage(artifact), true)
   assert.equal(verifyCausePackage({ ...artifact, traceId: "tampered" }), false)
+  assert.equal(
+    verifyCausePackage({
+      ...artifact,
+      integrity: { ...artifact.integrity, sha256: "garbage" },
+    }),
+    false,
+  )
 
   assert.throws(
     () =>

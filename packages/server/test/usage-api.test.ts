@@ -94,9 +94,20 @@ async function run() {
         warnings: [],
         inputTokens: 7,
       },
+      {
+        id: "claude-missing-consent",
+        traceId: "t-usage-api",
+        source: "claude_code_local",
+        sourceLabel: "Claude Code local transcript",
+        confidence: "reported",
+        currency: "USD",
+        costSource: "none",
+        warnings: [],
+        inputTokens: 11,
+      },
     ],
   })
-  assert.equal(entries.added, 2)
+  assert.equal(entries.added, 3)
   assert.equal(entries.rejected, 0)
 
   const ledger = await fetch(
@@ -115,9 +126,9 @@ async function run() {
   const privacy = await fetch(
     `${base}/api/traces/t-usage-api/privacy`,
   ).then((response) => response.json())
-  assert.equal(privacy.entries, 3)
+  assert.equal(privacy.entries, 4)
   assert.equal(privacy.rawValuesStored, false)
-  assert.equal(privacy.consent.required, 1)
+  assert.equal(privacy.consent.required, 2)
 
   console.log("usage api tests ok")
 }

@@ -93,6 +93,22 @@ function asNumber(value: unknown): number | undefined {
   return undefined
 }
 
+function asTimestamp(value: unknown): number | undefined {
+  const numeric = asNumber(value)
+  if (numeric !== undefined) return numeric
+  if (typeof value === "string" && value.trim() !== "") {
+    const parsed = Date.parse(value)
+    if (Number.isFinite(parsed)) return parsed
+  }
+  return undefined
+}
+
+/** Keep a usable source hint without persisting absolute host paths. */
+function safeSourcePath(value: string): string {
+  const segments = value.replace(/\\/g, "/").split("/").filter(Boolean)
+  return segments.length > 2 ? segments.slice(-2).join("/") : value
+}
+
 function normalizeType(raw: Record<string, unknown>): AgentEventType {
   const direct = asString(raw.type)
   if (
@@ -147,7 +163,9 @@ function errorOf(raw: Record<string, unknown>): EventError | undefined {
 function sourceOf(raw: Record<string, unknown>): SourceRef | undefined {
   const direct = isRecord(raw.source) ? raw.source : undefined
   const attrs = isRecord(raw.attributes) ? raw.attributes : {}
-  const path = asString(direct?.path) ?? asString(attrs["code.filepath"]) ?? asString(attrs["source.path"])
+  const rawPath =
+    asString(direct?.path) ?? asString(attrs["code.filepath"]) ?? asString(attrs["source.path"])
+  const path = rawPath ? safeSourcePath(rawPath) : undefined
   const line =
     asNumber(direct?.line) ??
     asNumber(attrs["code.lineno"]) ??
@@ -186,7 +204,8 @@ export function normalizeEvent(
 ): AgentEvent | null {
   if (!isRecord(raw)) return null
 
-  const name = asString(raw.name)
+  const redactedName = redact(raw.name)
+  const name = typeof redactedName === "string" ? asString(redactedName) : undefined
   if (!name) return null
 
   const rawAttributes = isRecord(raw.attributes) ? redact(raw.attributes) : undefined
@@ -194,7 +213,8 @@ export function normalizeEvent(
     ? (rawAttributes as Record<string, unknown>)
     : undefined
 
-  const error = errorOf(raw)
+  const rawError = errorOf(raw)
+  const error = rawError ? (redact(rawError) as EventError) : undefined
   const status = statusOf(raw)
 
   const event: AgentEvent = {
@@ -204,9 +224,9 @@ export function normalizeEvent(
     type: normalizeType(raw),
     name,
     timestamp:
-      asNumber(raw.timestamp) ??
-      asNumber(raw.startTime) ??
-      asNumber(raw.start_time) ??
+      asTimestamp(raw.timestamp) ??
+      asTimestamp(raw.startTime) ??
+      asTimestamp(raw.start_time) ??
       Date.now(),
     status,
   }
@@ -228,7 +248,8 @@ export function normalizeEvent(
   const cost = asNumber(raw.cost)
   if (cost !== undefined) event.cost = cost
 
-  const source = sourceOf(raw)
+  const rawSource = sourceOf(raw)
+  const source = rawSource ? (redact(rawSource) as SourceRef) : undefined
   if (source) event.source = source
   if (attributes) event.attributes = attributes
 
