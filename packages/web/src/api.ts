@@ -1,6 +1,8 @@
 import type {
   AgentEvent,
   Analysis,
+  CaseComparison,
+  CausePackage,
   PrivacyAudit,
   TraceSummary,
   UsageLedger,
@@ -65,6 +67,35 @@ export async function importTrace(content: string): Promise<{
 
 export function exportUrl(traceId: string): string {
   return `/api/traces/${encodeURIComponent(traceId)}/export`
+}
+
+export function packageUrl(
+  traceId: string,
+  includeEstimates = false,
+): string {
+  const query = includeEstimates ? "?includeEstimates=true" : ""
+  return `/api/traces/${encodeURIComponent(traceId)}/package${query}`
+}
+
+export async function fetchCasePackage(
+  traceId: string,
+  includeEstimates = false,
+): Promise<CausePackage> {
+  const res = await fetch(packageUrl(traceId, includeEstimates))
+  if (!res.ok) throw new Error(`Failed to load Cause Package: HTTP ${res.status}`)
+  return res.json()
+}
+
+export async function fetchCaseComparison(
+  a: string,
+  b: string,
+  includeEstimates = false,
+): Promise<CaseComparison> {
+  const query = new URLSearchParams({ a, b })
+  if (includeEstimates) query.set("includeEstimates", "true")
+  const res = await fetch(`/api/cases/compare?${query.toString()}`)
+  if (!res.ok) throw new Error(`Failed to compare cases: HTTP ${res.status}`)
+  return res.json()
 }
 
 export function subscribeToStream(onEvent: (event: AgentEvent) => void) {
