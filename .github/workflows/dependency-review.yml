@@ -21,7 +21,7 @@ jobs:
     # DEPENDENCY_GRAPH_ENABLED to "true" to activate this check.
     if: ${{ vars.DEPENDENCY_GRAPH_ENABLED == 'true' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
       - uses: actions/dependency-review-action@v4
