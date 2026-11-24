@@ -4,7 +4,7 @@
 
 This is a local-first security review of the v1.0.0 repository as of 2026-11-24. It covers the API, CLI, local store, web UI, desktop shell, MCP server, and Claude Code local adapter. It is not a penetration test, a formal audit, or a claim that the product is free of vulnerabilities. The `v1.0.1` patch applies the correctness and privacy fixes listed in `CHANGELOG.md`; the review scope and trust boundaries are unchanged.
 
-Version is `1.0.1`; the original review covered `1.0.0`. The repository owner approved the v1.0.0 version bump, tag, GitHub Release, demo GIF refresh, and Hacker News posting, and later approved the v1.0.1 patch with local npm authentication, on 2026-11-24. npm publishing requires registry credentials that are not available in this environment. This document records the review; it does not itself grant approval.
+Version is `1.0.2`; the original review covered `1.0.0`. The `1.0.2` patch changes no runtime behavior (docs, CI, packaging metadata, and the demo import path only). The repository owner approved the v1.0.0 version bump, tag, GitHub Release, demo GIF refresh, and Hacker News posting, and later approved the v1.0.1 and v1.0.2 patches with local npm authentication, on 2026-11-24. npm publishing requires registry credentials that are not available in this environment. This document records the review; it does not itself grant approval.
 
 ## Assets and trust boundaries
 
@@ -112,4 +112,4 @@ Stage 9 (#21) and Stage 10 (#22) CI were green before merge. PR #24 (`fix/publis
 
 ## Recommendation
 
-The implementation is suitable for local v1.0.1 use with synthetic or consented, pre-redacted traces. Do not describe it as audited or production-hardened. Keep the residual risks explicit: real-user validation is unexecuted, cold start misses the 500 ms target, and the remaining supply-chain activations are owner UI actions.
+The implementation is suitable for local v1.0.2 use with synthetic or consented, pre-redacted traces. Do not describe it as audited or production-hardened. Keep the residual risks explicit: real-user validation is unexecuted, cold start misses the 500 ms target, and the remaining supply-chain activations are owner UI actions.

@@ -8,6 +8,24 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 No unreleased changes.
 
+## [1.0.2] - 2026-11-24
+
+### Fixed
+
+- `npm run demo` no longer fails with `ERR_MODULE_NOT_FOUND`: the example agent imported the SDK with a wrong relative path.
+- The OpenSSF Scorecard workflow now uses `ossf/scorecard-action@v2.4.4`; `v2.4.0` pulled its image from `gcr.io`, which fails.
+
+### Changed
+
+- `packages/server` and `packages/sdk` now carry their own `README.md` and `LICENSE`, so their npm package pages are populated.
+- `agent-debugger-server`'s README states that the package ships the local API and CLI only; the web UI runs from a repository checkout.
+- Refreshed `demo.gif` (cropped to the app, Cause Package evidence through debugger handoff).
+- All workspace manifests, the lockfile, and runtime version constants now report `1.0.2`.
+
+### Release approval
+
+The repository owner approved the v1.0.2 patch release on 2026-11-24. No external AI service call, upload, credential creation, or secret logging was performed.
+
 ## [1.0.1] - 2026-11-24
 
 ### Fixed

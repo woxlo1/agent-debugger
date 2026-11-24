@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/status-v1.0.1-brightgreen" alt="status: v1.0.1" />
+  <img src="https://img.shields.io/badge/status-v1.0.2-brightgreen" alt="status: v1.0.2" />
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="license: MIT" />
   <img src="https://img.shields.io/badge/runtime-local%20only-emerald" alt="runtime: local only" />
 </p>
@@ -341,9 +341,9 @@ Published results are in `docs/PERFORMANCE.md`; raw measurements are in `docs/be
 
 Targets assume a commodity laptop and no network access. Results are local measurements, not user-study evidence.
 
-## v1.0.1 release status
+## v1.0.2 release status
 
-`v1.0.1` is a patch release containing the fixes listed in `CHANGELOG.md`. Tag `v1.0.0` and the matching GitHub Release remain at the original commit. The MIT license and all package names are unchanged.
+`v1.0.2` is a patch release containing the fixes listed in `CHANGELOG.md`. Tags `v1.0.0` and `v1.0.1` and their GitHub Releases remain at their original commits. The MIT license and all package names are unchanged.
 
 - [x] Generated docs site from `docs/`
 - [x] Local MCP server exposing analysis and package tools
@@ -351,11 +351,11 @@ Targets assume a commodity laptop and no network access. Results are local measu
 - [x] Benchmark harness and published results against the targets above
 - [x] Final security review documented with findings and residual risks
 - [x] Final project structure frozen in `docs/PROJECT_STRUCTURE.md`
-- [x] Explicit release approval and version bump to `1.0.1`
+- [x] Explicit release approval and version bump to `1.0.2`
 - [x] Publish-ready package build verified with `npm pack` and a clean-directory smoke test
 - [ ] Real-user validation with consented traces and third-party ground truth (materials ready in `docs/VALIDATION_KIT.md`; study not executed)
 
-The `v1.0.1` tag, GitHub Release, and npm packages require explicit owner action after CI is green. CI never performs a version bump, tag, release, publish, or Hacker News post. The final Hacker News text is in `docs/HN_LAUNCH_DRAFT.md` and still references `v1.0.0`; it is unchanged by this patch. Posting requires an authenticated HN session.
+The `v1.0.2` tag, GitHub Release, and npm packages require explicit owner action after CI is green. CI never performs a version bump, tag, release, publish, or Hacker News post. The final Hacker News text is in `docs/HN_LAUNCH_DRAFT.md` and still references `v1.0.0`; it is unchanged by this patch. Posting requires an authenticated HN session.
 
 ## Verification
 
