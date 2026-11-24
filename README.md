@@ -21,7 +21,8 @@ Everything runs on your machine. No account, no cloud, no external AI service.
 | NDJSON / JSON trace import | Evals, datasets, scores |
 | File-backed local event store | Cloud sync or accounts |
 | Deterministic, rule-only Cause Package | External AI explanations |
-| Redaction on ingest and export | Custom DAP/debugger implementation |
+| Portable redacted Cause Package bundles | Custom DAP/debugger implementation |
+| Case comparison across two local traces | Cloud case storage |
 
 Cause candidates are **hypotheses derived from rules**, not verified root causes. The UI keeps observed facts, rule flags, hypotheses, reproduction steps, and handoff suggestions in separate sections.
 
@@ -68,6 +69,12 @@ agent-debugger analyze <traceId>
 # Print the AI usage ledger and privacy audit
 agent-debugger usage <traceId>
 agent-debugger privacy <traceId>
+
+# Export a redacted portable Cause Package
+agent-debugger package <traceId> failed-run.cause.json
+
+# Compare two local traces
+agent-debugger compare <traceIdA> <traceIdB>
 ```
 
 You can also paste NDJSON into the **Cause Package** view and click **Import & select**.
@@ -86,6 +93,19 @@ curl -X POST http://127.0.0.1:4317/api/usage \
 ```
 
 Claude Code and claude.ai Web sources require explicit consent before their values are included in totals. Redaction receipts store detector counts only, never raw values. See `docs/AI_SOURCE_MATRIX.md` for the full source policy.
+
+## Case comparison and portable bundles
+
+The **Compare** tab diffs two traces by metrics, observed evidence, cause hypotheses, unknowns, usage totals, confidence labels, and redaction findings. It is deterministic and local-only.
+
+A **Cause Package** bundle is a single JSON file containing redacted events, rule-based analysis, the usage ledger, the privacy audit, provenance, and a SHA-256 fingerprint. Use it to hand a run to a debugger or teammate without sending raw prompts or transcripts.
+
+```bash
+curl http://127.0.0.1:4317/api/traces/<traceId>/package > failed-run.cause.json
+curl 'http://127.0.0.1:4317/api/cases/compare?a=<traceIdA>&b=<traceIdB>'
+```
+
+See `docs/CASE_COMPARE.md` for the bundle contract and comparison rules.
 
 ## Instrumenting your own agent
 
@@ -184,6 +204,8 @@ type AgentEvent = {
 | GET | `/api/traces` | List trace summaries |
 | GET | `/api/events?traceId=...` | List events |
 | GET | `/api/traces/:traceId/analysis` | Build the rule-based Cause Package |
+| GET | `/api/traces/:traceId/package` | Export a redacted portable Cause Package |
+| GET | `/api/cases/compare?a=...&b=...` | Compare two local traces |
 | POST | `/api/usage` | Normalize and store AI usage entries |
 | GET | `/api/traces/:traceId/usage` | Build the consent-aware usage ledger |
 | GET | `/api/traces/:traceId/privacy` | Aggregate redaction receipts and consent states |
@@ -198,7 +220,8 @@ type AgentEvent = {
 - Set `AGENT_DEBUGGER_ALLOWED_ORIGINS` to override the browser-origin allowlist.
 - Set `AGENT_DEBUGGER_TOKEN` to require `x-agent-debugger-token` on all mutating APIs.
 - Events are stored in `.agent-debugger/events.ndjson` by default; override with `AGENT_DEBUGGER_STORE`.
-- Redaction is applied on import, event submission, SSE output, and NDJSON export.
+- Redaction is applied on import, event submission, SSE output, NDJSON export, and portable Cause Package export.
+- Portable bundles carry counts and placeholders only; they never include a store path or raw usage payload.
 
 ## Rules currently implemented
 
@@ -225,8 +248,13 @@ agent-debugger server
    ├─ store.ts         local NDJSON persistence
    └─ analyzer.ts      rule-based Cause Package
    ▼
+packages/artifact      portable redacted bundle + fingerprint
+packages/cases         deterministic case comparison
+   ▼
 agent-debugger web
    ├─ Cause Package view
+   ├─ Compare view
+   ├─ Usage / Privacy views
    └─ Replay view
 ```
 
@@ -234,6 +262,12 @@ agent-debugger web
 
 ```
 packages/
+  shared/          Frozen usage, consent, and privacy contracts
+  privacy/         Count-only redaction engine
+  ingest/          AI source normalizers
+  usage/           Consent-aware usage ledger
+  artifact/        Portable Cause Package builder and verifier
+  cases/           Case comparison logic
   server/          Fastify API, importer, analyzer, local store, CLI
   sdk/             TypeScript event client
   web/             React + Vite + Tailwind UI
