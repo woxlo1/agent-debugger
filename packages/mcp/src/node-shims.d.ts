@@ -14,9 +14,11 @@ declare module "node:fs" {
   export function readFileSync(path: string, encoding: string): string
   export function writeFileSync(path: string, data: string): void
   export function mkdirSync(path: string, options?: { recursive?: boolean }): void
+  export function realpathSync(path: string): string
   export function statSync(path: string): {
     size: number
     isFile(): boolean
+    isDirectory(): boolean
   }
 }
 

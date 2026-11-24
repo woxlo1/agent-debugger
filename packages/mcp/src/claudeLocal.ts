@@ -64,24 +64,44 @@ export function readClaudeLocalUsage(
   if (!Array.isArray(input.allowedRoots) || input.allowedRoots.length === 0) {
     throw new Error("At least one absolute allowedRoots entry is required")
   }
-
-  const target = path.resolve(input.path)
-  if (!target.endsWith(".jsonl")) {
+  if (!path.isAbsolute(input.path)) {
+    throw new Error("The requested path must be an absolute path")
+  }
+  if (!input.path.endsWith(".jsonl")) {
     throw new Error("Only local .jsonl transcript exports can be read")
   }
 
-  const roots = input.allowedRoots.map((root) => path.resolve(root))
-  if (roots.some((root) => !path.isAbsolute(root))) {
-    throw new Error("allowedRoots entries must be absolute paths")
-  }
-  if (!roots.some((root) => isWithin(root, target))) {
-    throw new Error("The requested path is outside the explicit allowedRoots")
-  }
+  // Containment is checked on both the supplied path and its real path. The
+  // second check closes a symlink escape where a .jsonl link inside an allowed
+  // root points to a transcript outside it.
+  const target = path.resolve(input.path)
   if (!fs.existsSync(target)) {
     throw new Error("The requested transcript path does not exist")
   }
 
-  const stats = fs.statSync(target)
+  const roots: string[] = []
+  for (const root of input.allowedRoots) {
+    if (!path.isAbsolute(root)) {
+      throw new Error("allowedRoots entries must be absolute paths")
+    }
+    const resolvedRoot = path.resolve(root)
+    if (!fs.existsSync(resolvedRoot) || !fs.statSync(resolvedRoot).isDirectory()) {
+      throw new Error("allowedRoots entries must be existing directories")
+    }
+    roots.push(fs.realpathSync(resolvedRoot))
+  }
+
+  const realTarget = fs.realpathSync(target)
+  if (!realTarget.endsWith(".jsonl")) {
+    throw new Error("Only local .jsonl transcript exports can be read")
+  }
+  if (
+    !roots.some((root) => isWithin(root, target) && isWithin(root, realTarget))
+  ) {
+    throw new Error("The requested path is outside the explicit allowedRoots")
+  }
+
+  const stats = fs.statSync(realTarget)
   if (!stats.isFile()) throw new Error("The requested path is not a file")
   if (stats.size > CLAUDE_LOCAL_MAX_BYTES) {
     throw new Error("The requested transcript exceeds the 10 MB local read limit")
@@ -93,7 +113,7 @@ export function readClaudeLocalUsage(
       : 500
 
   const redactor = createRedactor("strict")
-  const content = fs.readFileSync(target, "utf8")
+  const content = fs.readFileSync(realTarget, "utf8")
   const entries: AiUsage[] = []
   let recordsRead = 0
   let recordsWithUsage = 0

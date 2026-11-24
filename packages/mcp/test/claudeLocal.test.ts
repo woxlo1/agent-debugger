@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs"
+import { mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs"
 import os from "node:os"
 import path from "node:path"
 import { readClaudeLocalUsage } from "../src/claudeLocal.js"
@@ -86,6 +86,48 @@ async function run() {
         }),
       /outside the explicit allowedRoots/,
     )
+
+    assert.throws(
+      () =>
+        readClaudeLocalUsage({
+          path: target,
+          allowedRoots: ["."],
+          consentGranted: true,
+          acknowledgedScope: true,
+        }),
+      /must be absolute paths/,
+    )
+
+    assert.throws(
+      () =>
+        readClaudeLocalUsage({
+          path: target,
+          allowedRoots: [path.join(temp, "missing-root")],
+          consentGranted: true,
+          acknowledgedScope: true,
+        }),
+      /must be existing directories/,
+    )
+
+    const outsideTarget = writeTranscript(other, "symlink-source.jsonl")
+    const linkedTarget = path.join(temp, "linked.jsonl")
+    try {
+      symlinkSync(outsideTarget, linkedTarget, "file")
+      assert.throws(
+        () =>
+          readClaudeLocalUsage({
+            path: linkedTarget,
+            allowedRoots: [temp],
+            consentGranted: true,
+            acknowledgedScope: true,
+          }),
+        /outside the explicit allowedRoots/,
+      )
+    } catch (error) {
+      const code = error instanceof Error && "code" in error ? error.code : undefined
+      if (code !== "EPERM" && code !== "EACCES" && code !== "ENOSYS") throw error
+      console.log("claude local symlink containment test skipped (symlinks unavailable)")
+    }
 
     process.env.AGENT_DEBUGGER_CLAUDE_LOCAL = "disabled"
     assert.throws(
