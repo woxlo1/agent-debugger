@@ -1,7 +1,7 @@
 import { findTool, tools } from "./tools.js"
 
 const SERVER_NAME = "agent-debugger-mcp"
-const SERVER_VERSION = "0.3.0-alpha.0"
+const SERVER_VERSION = "1.0.0"
 const SUPPORTED_PROTOCOL_VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"]
 const DEFAULT_PROTOCOL_VERSION = SUPPORTED_PROTOCOL_VERSIONS[0]
 
