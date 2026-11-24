@@ -1,16 +1,29 @@
 # Agent Debugger
 
-> Chrome DevTools for LLM agents.
+> Failed agent trace → evidence → reproduction → debugger handoff.
 
-![Agent Debugger demo](docs/assets/demo.gif)
+Agent Debugger is a local-first developer tool for investigating **failed** agent runs. It does not try to replace observability platforms such as Langfuse, Phoenix, or LangSmith. Instead, it takes a trace you already have and builds a **Cause Package**:
 
-Agent Debugger is a local-first developer tool that lets you **visualize and replay** what your AI agent thought, which tools it called, and in what order it made decisions.
+- **Observed evidence** — directly visible facts with event IDs
+- **Cause candidates** — rule-based hypotheses, each with a falsifier
+- **Reproduction steps** — what to replay and what to compare
+- **Next debugger action** — where to stop and what to inspect in your existing debugger
 
-![status](https://img.shields.io/badge/status-MVP-orange)
+Everything runs on your machine. No account, no cloud, no external AI service.
 
-## Why
+![status](https://img.shields.io/badge/status-alpha-orange)
 
-Debugging an LLM agent today means scrolling through raw console logs or JSON blobs. Agent Debugger gives you a timeline you can **play, pause, and step through** — like a debugger, but for agent reasoning.
+## What this is / is not
+
+| This build | Not included |
+|---|---|
+| Versioned event schema (`schemaVersion: 2`) | Live pause / inject |
+| NDJSON / JSON trace import | Evals, datasets, scores |
+| File-backed local event store | Cloud sync or accounts |
+| Deterministic, rule-only Cause Package | External AI explanations |
+| Redaction on ingest and export | Custom DAP/debugger implementation |
+
+Cause candidates are **hypotheses derived from rules**, not verified root causes. The UI keeps observed facts, rule flags, hypotheses, reproduction steps, and handoff suggestions in separate sections.
 
 ## Quick start
 
@@ -22,157 +35,200 @@ npm run dev
 ```
 
 This starts:
-- the local server on `http://localhost:4317`
+
+- the local API on `http://127.0.0.1:4317`
 - the Web UI on `http://localhost:5173`
 
-Open `http://localhost:5173` in your browser.
+Open `http://localhost:5173`. The **Cause Package** view is selected by default.
 
-### See it in action with one command
+### Try the demo
 
-In a second terminal (while `npm run dev` is running):
+In a second terminal while `npm run dev` is running:
 
 ```bash
 npm run demo
 ```
 
-This emits a realistic fake agent trace using the SDK, which appears live in the UI. Select it from the trace list on the left and hit **Play**.
+The demo emits a fake failed checkout trace. Select it in the trace list and inspect its Cause Package, or switch to the **Replay** tab for the original timeline view.
+
+A checked-in version of the same failure is available at `docs/examples/failed-trace.ndjson` for repeatable procedure checks. It is synthetic and contains no real customer data.
+
+## Import an existing trace
+
+```bash
+# NDJSON / JSON Lines
+agent-debugger import failed-run.jsonl
+
+# From stdin
+cat failed-run.jsonl | agent-debugger import
+
+# Print the Cause Package as JSON
+agent-debugger analyze <traceId>
+```
+
+You can also paste NDJSON into the **Cause Package** view and click **Import & select**.
+
+Imported records are normalized into the v2 schema. Timestamps, status fields, error payloads, source locations, and token/cost fields are preserved when present. Secret-like keys, API-key patterns, bearer tokens, and email addresses are redacted on ingest and again on export.
 
 ## Instrumenting your own agent
 
-Install the SDK in your agent project:
-
-```bash
-npm install agent-debugger-sdk
-```
+The SDK is not published to npm yet. Use it from the workspace or send JSON Lines with the `pipe` command.
 
 ```ts
-import { trace, setTraceId } from "agent-debugger-sdk"
+import { setTraceId, trace } from "./packages/sdk/src/index.ts"
 
-setTraceId("my-agent-run-1")
-
-await trace({
-  type: "user",
-  name: "user_input",
-  input: "What's the weather in Tokyo?",
-})
+setTraceId("checkout-agent-run-42")
 
 await trace({
   type: "tool",
-  name: "get_weather",
-  input: { city: "Tokyo" },
-  output: { tempC: 23, condition: "rain" },
-})
-
-await trace({
-  type: "agent",
-  name: "final_answer",
-  output: "It's 23°C and raining in Tokyo.",
+  name: "charge_card",
+  input: { amount: 4200, currency: "JPY" },
+  output: { success: false, error: "declined" },
+  status: "error",
+  source: { path: "src/tools/payments.ts", line: 88 },
 })
 ```
 
-Events show up live in the Web UI as soon as `agent-debugger start` (or `npm run dev`) is running.
+`trace()` never throws; it returns `{ ok, event, error }`. Use `traceOrThrow()` when delivery failure must stop the run.
 
-## Using Agent Debugger from any language (no SDK required)
+```ts
+import { traceOrThrow } from "./packages/sdk/src/index.ts"
 
-The TypeScript SDK is just a thin wrapper around one HTTP call. If your agent is written in Python, Go, Ruby, or anything else, use the `pipe` command instead: print one JSON object per line (JSON Lines) and pipe it in.
+await traceOrThrow({ type: "agent", name: "final_answer", output: "..." })
+```
+
+### Any language via JSON Lines
 
 ```bash
-agent-debugger pipe                 # reads from stdin
-agent-debugger pipe trace.jsonl     # reads from a file
+# stdin
+python3 your_agent.py | agent-debugger pipe
+
+# file
+agent-debugger pipe trace.jsonl
+
+# explicit trace id
+AGENT_DEBUGGER_TRACE_ID=run-42 agent-debugger pipe trace.jsonl
 ```
 
-Each line needs at least `type` and `name`:
+Minimum event:
 
 ```json
-{"type": "tool", "name": "search", "input": "cats", "output": "..."}
+{"type":"tool","name":"search","input":"cats","output":"..."}
 ```
 
-Example from Python:
+Optional v2 fields:
 
-```python
-import json
-
-def emit(event):
-    print(json.dumps(event), flush=True)
-
-emit({"type": "user", "name": "user_input", "input": "What's the weather in Tokyo?"})
-emit({"type": "tool", "name": "get_weather", "input": {"city": "Tokyo"}, "output": {"tempC": 23}})
-emit({"type": "agent", "name": "final_answer", "output": "It's 23°C in Tokyo."})
+```json
+{
+  "type": "tool",
+  "name": "search",
+  "traceId": "run-42",
+  "parentId": "step-7",
+  "status": "error",
+  "error": { "message": "timeout" },
+  "source": { "path": "src/search.ts", "line": 31 },
+  "durationMs": 5200,
+  "attributes": { "retry_count": 3 }
+}
 ```
 
-```bash
-python3 your_agent.py | agent-debugger pipe
+Invalid lines are reported by line number only; raw line content is never logged.
+
+## Event schema (v2)
+
+```ts
+type AgentEvent = {
+  schemaVersion: number
+  id: string
+  traceId: string
+  parentId?: string
+  type: "user" | "agent" | "tool" | "reasoning" | "system"
+  name: string
+  status?: "ok" | "error" | "unknown"
+  error?: { kind?: string; message?: string }
+  input?: unknown
+  output?: unknown
+  timestamp: number
+  durationMs?: number
+  tokens?: number
+  cost?: number
+  source?: { path?: string; line?: number; symbol?: string }
+  attributes?: Record<string, unknown>
+}
 ```
 
-All events piped in a single run share an auto-generated `traceId` unless you set your own per-event `traceId` field, so they group into one trace in the UI. A runnable version of this example lives at `packages/example-agent/demo_pipe.py`.
+## API
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/health` | Health, schema version, store path |
+| POST | `/api/events` | Submit one v2 event |
+| POST | `/api/import` | Import `{ content, format?, traceId? }` or `{ events }` |
+| GET | `/api/traces` | List trace summaries |
+| GET | `/api/events?traceId=...` | List events |
+| GET | `/api/traces/:traceId/analysis` | Build the rule-based Cause Package |
+| GET | `/api/traces/:traceId/export` | Download redacted NDJSON |
+| POST | `/api/reset` | Clear the local store |
+| GET | `/api/stream` | SSE stream of new events |
+
+## Local security
+
+- The server binds to `127.0.0.1` by default.
+- CORS allows only `http://localhost:5173` and `http://127.0.0.1:5173` by default.
+- Set `AGENT_DEBUGGER_ALLOWED_ORIGINS` to override the browser-origin allowlist.
+- Set `AGENT_DEBUGGER_TOKEN` to require `x-agent-debugger-token` on all mutating APIs.
+- Events are stored in `.agent-debugger/events.ndjson` by default; override with `AGENT_DEBUGGER_STORE`.
+- Redaction is applied on import, event submission, SSE output, and NDJSON export.
+
+## Rules currently implemented
+
+The analyzer emits evidence for:
+
+- explicit `status: "error"` or `error` payloads
+- tool results containing `isError`, `success: false`, or an `error` field
+- identical tool calls repeated three or more times
+- tool calls without a captured output
+- the last known good event before the first failure
+- tool durations exceeding three times the median
+- runs ending on a reasoning step without a final answer
+
+Each candidate includes a falsifier so it can be challenged rather than trusted.
 
 ## Architecture
 
 ```
-Your Agent App
-     │  trace({...})
-     ▼
-agent-debugger-sdk  (HTTP POST)
-     │
-     ▼
-agent-debugger-server  (Fastify, in-memory store, SSE stream)
-     │  Server-Sent Events
-     ▼
-agent-debugger-web  (React + Vite, Replay UI)
+Your agent
+   │  trace() / JSON Lines
+   ▼
+agent-debugger server
+   ├─ importer.ts      normalize + redact
+   ├─ store.ts         local NDJSON persistence
+   └─ analyzer.ts      rule-based Cause Package
+   ▼
+agent-debugger web
+   ├─ Cause Package view
+   └─ Replay view
 ```
 
 ## Monorepo layout
 
 ```
 packages/
-  server/          # Fastify server: receives events, serves SSE stream
-  sdk/              # TypeScript SDK: trace() client
-  web/              # React + Vite + Tailwind Replay UI
-  example-agent/   # Demo script for `npm run demo`
+  server/          Fastify API, importer, analyzer, local store, CLI
+  sdk/             TypeScript event client
+  web/             React + Vite + Tailwind UI
+  example-agent/   Demo trace emitter
 ```
 
-## Event data model
-
-```ts
-type AgentEvent = {
-  id: string
-  traceId: string
-  type: "user" | "agent" | "tool" | "reasoning"
-  name: string
-  input?: unknown
-  output?: unknown
-  timestamp: number
-  tokens?: number
-  cost?: number
-}
-```
-
-## API (server)
-
-| Method | Path           | Description                              |
-|--------|----------------|-------------------------------------------|
-| POST   | `/api/events`  | Submit a new event                        |
-| GET    | `/api/events`  | List events (optionally `?traceId=...`)   |
-| GET    | `/api/traces`  | List trace summaries                      |
-| GET    | `/api/stream`  | Server-Sent Events stream of new events   |
-| POST   | `/api/reset`   | Clear all stored events                   |
-| GET    | `/api/health`  | Health check                              |
-
-## CLI
+## Verification
 
 ```bash
-agent-debugger start            # start the local server (same as npm run dev -w packages/server)
-agent-debugger pipe [file]      # send JSON Lines events from stdin or a file
+npm run verify
 ```
 
-## Roadmap (v0.3+)
+This runs the JavaScript syntax checks, TypeScript checks, tests, and the web build. No dependency install is performed by this repository's scripts.
 
-- Persist traces to disk (SQLite) instead of in-memory only
-- Token/cost rollups per trace, cost charts
-- Diff view: compare two traces of the same prompt side by side
-- Export/share a trace as a single JSON file or shareable link
-- Multi-agent / sub-agent nesting in the timeline
-- VS Code extension embedding the same Replay UI
+See `docs/PRODUCT_BRIEF.md`, `docs/ARCHITECTURE.md`, and `docs/VALIDATION_PLAN.md` for scope, design, and the unexecuted validation plan.
 
 ## License
 
