@@ -3,11 +3,12 @@ import { spawn, type ChildProcess } from "node:child_process"
 import { readFileSync, rmSync } from "node:fs"
 import os from "node:os"
 import path from "node:path"
+import { getFreePort } from "./freePort.ts"
 
-const port = 4900 + Math.floor(Math.random() * 300)
-const base = `http://127.0.0.1:${port}`
-const storePath = path.join(os.tmpdir(), `ad-case-api-test-${port}.ndjson`)
-const usageStorePath = `${storePath}.usage.ndjson`
+let port = 0
+let base = ""
+let storePath = ""
+let usageStorePath = ""
 const fixturePath = new URL("../../../docs/examples/failed-trace.ndjson", import.meta.url)
 
 let child: ChildProcess | undefined
@@ -35,6 +36,10 @@ async function postJson(endpoint: string, body: unknown) {
 }
 
 async function run() {
+  port = await getFreePort()
+  base = `http://127.0.0.1:${port}`
+  storePath = path.join(os.tmpdir(), `ad-case-api-test-${port}.ndjson`)
+  usageStorePath = `${storePath}.usage.ndjson`
   child = spawn(
     process.execPath,
     ["--import", "tsx", "packages/server/src/index.ts"],

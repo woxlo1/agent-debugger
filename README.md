@@ -131,6 +131,18 @@ curl 'http://127.0.0.1:4317/api/cases/compare?a=<traceIdA>&b=<traceIdB>'
 
 See `docs/CASE_COMPARE.md` for the bundle contract and comparison rules.
 
+## Local MCP server and Claude adapter
+
+A local MCP server exposes the debugger over stdio JSON-RPC:
+
+```bash
+npm run mcp
+```
+
+It offers tools for listing traces, analyzing a trace, exporting a Cause Package, comparing traces, reading usage and privacy audits, importing events, and recording caller-supplied provider usage. It opens no port and calls no external service. See `docs/MCP_CLAUDE_LOCAL.md` for the client configuration and tool contract.
+
+Claude Code local transcript reading is **off by default**. It requires the process switch `AGENT_DEBUGGER_CLAUDE_LOCAL=enabled`, explicit per-request consent, an absolute path allowlist, and strict redaction before normalization. The adapter returns count-only usage and never returns transcript text or file paths. claude.ai Web remains manual-export only.
+
 ## Instrumenting your own agent
 
 The SDK is not published to npm yet. Use it from the workspace or send JSON Lines with the `pipe` command.
@@ -274,6 +286,7 @@ agent-debugger server
    ▼
 packages/artifact      portable redacted bundle + fingerprint
 packages/cases         deterministic case comparison
+packages/mcp           stdio JSON-RPC tools + Claude local adapter
    ▼
 agent-debugger web
    ├─ Cause Package view
@@ -292,6 +305,7 @@ packages/
   usage/           Consent-aware usage ledger
   artifact/        Portable Cause Package builder and verifier
   cases/           Case comparison logic
+  mcp/             Local stdio MCP server and Claude local adapter
   server/          Fastify API, importer, analyzer, local store, CLI
   sdk/             TypeScript event client
   web/             React + Vite + Tailwind UI
@@ -318,7 +332,7 @@ Targets assume a commodity laptop and no network access. The current web build i
 No release is tagged or published yet. The following remain in scope before a release request is made:
 
 - [x] Generated docs site from `docs/`
-- [ ] Local MCP server exposing analysis and package tools
+- [x] Local MCP server exposing analysis and package tools
 - [ ] Desktop shell around the local UI
 - [ ] Benchmark harness and published results against the targets above
 - [ ] Real-user validation with consented traces and third-party ground truth
@@ -336,7 +350,7 @@ This runs the JavaScript syntax checks, TypeScript checks, tests, the web build,
 
 A browsable docs site is generated into `docs-site/` with `npm run build:docs`. Host that directory as static files or open `docs-site/index.html` locally.
 
-See `docs/PRODUCT_BRIEF.md`, `docs/ARCHITECTURE.md`, `docs/VALIDATION_PLAN.md`, `docs/USAGE_PRIVACY.md`, and `docs/CASE_COMPARE.md` for scope, design, validation plans, and current contracts. Brand assets are documented in `docs/assets/README.md`.
+See `docs/PRODUCT_BRIEF.md`, `docs/ARCHITECTURE.md`, `docs/VALIDATION_PLAN.md`, `docs/USAGE_PRIVACY.md`, `docs/CASE_COMPARE.md`, and `docs/MCP_CLAUDE_LOCAL.md` for scope, design, validation plans, and current contracts. Brand assets are documented in `docs/assets/README.md`.
 
 ## License
 

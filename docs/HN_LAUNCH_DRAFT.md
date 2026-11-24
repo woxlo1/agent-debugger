@@ -47,8 +47,9 @@ estimates are excluded from billing totals unless you opt in.
 
 This is an alpha, not a finished observability platform. It does not do
 evals, live injection, or team trace storage. Cause candidates are
-hypotheses, not verified root causes. The v1.0.0 scope still includes a docs
-site, MCP support, a desktop shell, and published benchmarks.
+hypotheses, not verified root causes. A generated docs site and a local MCP
+server are included; a desktop shell, published benchmarks, and real-user
+validation are still in the v1.0.0 scope.
 
 Feedback on the cause/hypothesis split, the privacy model, or the CLI
 workflow is especially welcome.

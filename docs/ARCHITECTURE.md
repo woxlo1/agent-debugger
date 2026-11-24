@@ -16,6 +16,8 @@ Keep one complete, local-only path from an imported failed trace to an evidence-
 | CLI | `packages/server/bin/cli.js`, `pipe.js` | `start`, `pipe`, `import`, `analyze` |
 | SDK | `packages/sdk/src/index.ts` | Explicit event submission with redaction |
 | Web UI | `packages/web/src/` | Cause Package view and replay view |
+| MCP server | `packages/mcp/src/` | stdio JSON-RPC tools over local store and analysis |
+| Claude local adapter | `packages/mcp/src/claudeLocal.ts` | Opt-in, allowlisted, count-only Claude Code transcript reader |
 
 ## Data flow
 
@@ -29,6 +31,11 @@ Agent or export file
   -> GET /api/traces/:traceId/analysis
   -> Cause Package UI (evidence, candidates, reproduction, handoff)
   -> GET /api/traces/:traceId/export (redacted NDJSON)
+
+MCP client (stdio JSON-RPC)
+  -> packages/mcp/src/index.ts
+  -> tools.ts -> local store / analyzer / artifact / cases / usage
+  -> redacted JSON tool results
 ```
 
 No component calls an external service. The web UI talks only to the local API through the Vite proxy.
@@ -85,7 +92,7 @@ Design assumptions for the current code:
 
 - Additional source formats should enter through `importer.ts` and produce the same v2 event type.
 - Additional rules should live in `analyzer.ts` and produce the same analysis shape.
-- A future DAP or MCP integration would consume `source` and `handoff` output; it must require explicit user control before attaching, evaluating, or modifying execution.
+- The MCP integration consumes `source` and `handoff` output as read-only tool results. A future DAP integration must require explicit user control before attaching, evaluating, or modifying execution.
 
 ## Non-goals
 
