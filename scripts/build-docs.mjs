@@ -10,6 +10,7 @@ const repoUrl = "https://github.com/woxlo1/agent-debugger"
 const nav = [
   { file: "PRODUCT_BRIEF.md", title: "Product brief" },
   { file: "ARCHITECTURE.md", title: "Architecture" },
+  { file: "PROJECT_STRUCTURE.md", title: "Project structure" },
   { file: "USAGE_PRIVACY.md", title: "Usage and privacy" },
   { file: "CASE_COMPARE.md", title: "Case comparison" },
   { file: "MCP_CLAUDE_LOCAL.md", title: "MCP and Claude local" },
@@ -17,6 +18,7 @@ const nav = [
   { file: "PERFORMANCE.md", title: "Performance results" },
   { file: "AI_SOURCE_MATRIX.md", title: "AI source matrix" },
   { file: "VALIDATION_PLAN.md", title: "Validation plan" },
+  { file: "VALIDATION_KIT.md", title: "Validation kit" },
   { file: "SECURITY_REVIEW.md", title: "Security review" },
   { file: "OPS_BOTS.md", title: "Ops bots" },
   { file: "COORDINATOR_PLAN.md", title: "Coordinator plan" },

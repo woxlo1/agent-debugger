@@ -17,6 +17,8 @@ Current state as of 2026-11-24:
 
 Automated fixture tests exercise import, analysis, and bundle shape. They are **not** a user study and do not count as evidence for H1. Synthetic traces may be used only for procedure rehearsal, and any rehearsal result must be labelled `not evaluable`.
 
+Ready-to-use materials are in `docs/VALIDATION_KIT.md`: consent template, session script, and anonymous results sheet. They do not change the status above.
+
 Executing the study requires all blocking conditions below to be satisfied first.
 
 ## Hypothesis under test
