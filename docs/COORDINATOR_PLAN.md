@@ -9,9 +9,9 @@
 
 ## Current stage
 
-Stage 7: benchmark harness and published results.
+Stage 8: final security review and validation-status documentation.
 
-Stage 7 builds on the merged Stage 1 usage contracts, Stage 2 server/CLI/web integration, Stage 3 Case Packages, Stage 4 docs/assets, Stage 5 MCP/adapter, and Stage 6 desktop shell. It adds a dependency-free benchmark script, publishes synthetic 10,000-event results in `docs/PERFORMANCE.md`, and records the cold-start target miss honestly. No release action is performed in this stage.
+Stage 8 builds on the merged Stage 1 usage contracts, Stage 2 server/CLI/web integration, Stage 3 Case Packages, Stage 4 docs/assets, Stage 5 MCP/adapter, Stage 6 desktop shell, and Stage 7 benchmarks. It adds `docs/SECURITY_REVIEW.md`, marks real-user validation as not executed in `docs/VALIDATION_PLAN.md`, and hardens the Claude adapter's path allowlist with realpath containment. No release action is performed in this stage.
 
 ## Shared interfaces frozen by the coordinator
 
@@ -47,7 +47,8 @@ These files are coordinator-owned. No parallel session may edit them without coo
 5. Add case comparison and portable bundles.
 6. Add docs, icons, demo GIF, docs site, and HN draft.
 7. Add benchmark harness and ops bots.
-8. Final `npm run verify`, then pull request to `main`.
+8. Document final security review and unexecuted validation status.
+9. Final `npm run verify`, then pull request to `main`.
 
 ## Verification for every stage
 

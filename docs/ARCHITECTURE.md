@@ -20,6 +20,7 @@ Keep one complete, local-only path from an imported failed trace to an evidence-
 | Claude local adapter | `packages/mcp/src/claudeLocal.ts` | Opt-in, allowlisted, count-only Claude Code transcript reader |
 | Desktop shell | `scripts/desktop.mjs`, `scripts/lib/localServer.mjs` | Loopback launcher, built UI server, and `/api` proxy |
 | Benchmark harness | `scripts/bench.ts` | Synthetic performance measurements and published results |
+| Security review | `docs/SECURITY_REVIEW.md` | Threat model, findings, residual risks, and CI evidence |
 
 ## Data flow
 
