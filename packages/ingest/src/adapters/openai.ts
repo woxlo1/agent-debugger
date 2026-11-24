@@ -47,7 +47,7 @@ export function normalizeOpenAIUsage(
     reportedTotal ??
     (inputTokens === undefined && outputTokens === undefined
       ? undefined
-      : [inputTokens, outputTokens, cacheReadTokens, audioTokens].reduce<number>(
+      : [inputTokens, outputTokens, cacheReadTokens, reasoningTokens, audioTokens].reduce<number>(
           (sum, value) => sum + (value ?? 0),
           0,
         ))

@@ -11,9 +11,9 @@
   "scripts": {
     "dev": "concurrently -n SERVER,WEB -c green,cyan \"npm run dev -w packages/server\" \"npm run dev -w packages/web\"",
     "demo": "tsx packages/example-agent/run.ts",
-    "typecheck": "tsc --noEmit -p packages/shared/tsconfig.json && tsc --noEmit -p packages/privacy/tsconfig.json && tsc --noEmit -p packages/ingest/tsconfig.json && tsc --noEmit -p packages/server/tsconfig.json && tsc --noEmit -p packages/sdk/tsconfig.json && tsc --noEmit -p packages/web/tsconfig.json",
+    "typecheck": "tsc --noEmit -p packages/shared/tsconfig.json && tsc --noEmit -p packages/privacy/tsconfig.json && tsc --noEmit -p packages/ingest/tsconfig.json && tsc --noEmit -p packages/usage/tsconfig.json && tsc --noEmit -p packages/server/tsconfig.json && tsc --noEmit -p packages/sdk/tsconfig.json && tsc --noEmit -p packages/web/tsconfig.json",
     "smoke": "tsx packages/server/test/smoke.ts",
-    "test": "tsx packages/privacy/test/redactor.test.ts && tsx packages/server/test/smoke.ts && tsx packages/server/test/importer.test.ts && tsx packages/server/test/analyzer.test.ts && tsx packages/server/test/fixture.test.ts && tsx packages/server/test/api.test.ts",
+    "test": "tsx packages/privacy/test/redactor.test.ts && tsx packages/usage/test/ledger.test.ts && tsx packages/server/test/smoke.ts && tsx packages/server/test/importer.test.ts && tsx packages/server/test/analyzer.test.ts && tsx packages/server/test/fixture.test.ts && tsx packages/server/test/api.test.ts",
     "verify": "node --check packages/server/bin/pipe.js && node --check packages/server/bin/cli.js && npm run typecheck && npm test && npm run build -w packages/web"
   },
   "devDependencies": {
