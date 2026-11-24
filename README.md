@@ -1,6 +1,20 @@
-# Agent Debugger
+<p align="center">
+  <img src="docs/assets/icon.svg" alt="Agent Debugger icon" width="112" />
+</p>
 
-> Failed agent trace → evidence → reproduction → debugger handoff.
+<h1 align="center">Agent Debugger</h1>
+
+<p align="center">
+  <em>Failed agent trace → evidence → reproduction → debugger handoff.</em>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/status-alpha-orange" alt="status: alpha" />
+  <img src="https://img.shields.io/badge/license-MIT-blue" alt="license: MIT" />
+  <img src="https://img.shields.io/badge/runtime-local%20only-emerald" alt="runtime: local only" />
+</p>
+
+![Agent Debugger replaying a synthetic failed checkout trace](docs/assets/demo.gif)
 
 Agent Debugger is a local-first developer tool for investigating **failed** agent runs. It does not try to replace observability platforms such as Langfuse, Phoenix, or LangSmith. Instead, it takes a trace you already have and builds a **Cause Package**:
 
@@ -10,8 +24,6 @@ Agent Debugger is a local-first developer tool for investigating **failed** agen
 - **Next debugger action** — where to stop and what to inspect in your existing debugger
 
 Everything runs on your machine. No account, no cloud, no external AI service.
-
-![status](https://img.shields.io/badge/status-alpha-orange)
 
 ## What this is / is not
 
@@ -25,6 +37,18 @@ Everything runs on your machine. No account, no cloud, no external AI service.
 | Case comparison across two local traces | Cloud case storage |
 
 Cause candidates are **hypotheses derived from rules**, not verified root causes. The UI keeps observed facts, rule flags, hypotheses, reproduction steps, and handoff suggestions in separate sections.
+
+## Why another debugger?
+
+Most agent observability tools answer *what happened*. Agent Debugger answers the narrower question a developer has when a run fails: **what should I inspect next, and how can I prove that hypothesis wrong?**
+
+- Evidence is separated from interpretation. A rule flag never becomes a root cause on its own.
+- Every cause candidate carries a falsifier, so a hypothesis can be challenged instead of trusted.
+- The handoff step points at your existing debugger and source location. This project does not invent another debug protocol.
+- Privacy is structural: redaction runs on ingest, stream, export, and bundle creation, and usage data is allowlist-sanitized before it reaches disk.
+- The scope is intentionally narrow: one failed run, compared against another when useful, then handed off.
+
+If you need dashboards, evaluation suites, or team-wide trace retention, use an observability platform. Agent Debugger is the local step you take before or after that platform.
 
 ## Quick start
 
@@ -274,6 +298,34 @@ packages/
   example-agent/   Demo trace emitter
 ```
 
+## Performance targets
+
+These are **design targets, not measured results**. A repeatable benchmark harness and published numbers are part of the v1.0.0 scope and are not included in this alpha.
+
+| Operation | Target |
+|---|---|
+| Server cold start to `/api/health` | < 500 ms |
+| Import 10,000 NDJSON events | < 2 s |
+| Analyze a 10,000-event trace | < 500 ms |
+| Export a Cause Package for 10,000 events | < 1 s |
+| Peak memory for a 10,000-event trace | < 150 MB |
+| Web bundle (JS + CSS, gzip) | < 60 kB |
+
+Targets assume a commodity laptop and no network access. The current web build is about 55 kB gzip; the remaining numbers still need a harness.
+
+## Roadmap to v1.0.0
+
+No release is tagged or published yet. The following remain in scope before a release request is made:
+
+- [ ] Generated docs site from `docs/`
+- [ ] Local MCP server exposing analysis and package tools
+- [ ] Desktop shell around the local UI
+- [ ] Benchmark harness and published results against the targets above
+- [ ] Real-user validation with consented traces and third-party ground truth
+- [ ] Final security review and explicit release approval
+
+A version bump, tag, GitHub Release, npm publish, and Hacker News posting all require explicit approval. CI never performs them.
+
 ## Verification
 
 ```bash
@@ -282,7 +334,7 @@ npm run verify
 
 This runs the JavaScript syntax checks, TypeScript checks, tests, and the web build. No dependency install is performed by this repository's scripts.
 
-See `docs/PRODUCT_BRIEF.md`, `docs/ARCHITECTURE.md`, and `docs/VALIDATION_PLAN.md` for scope, design, and the unexecuted validation plan.
+See `docs/PRODUCT_BRIEF.md`, `docs/ARCHITECTURE.md`, `docs/VALIDATION_PLAN.md`, `docs/USAGE_PRIVACY.md`, and `docs/CASE_COMPARE.md` for scope, design, validation plans, and current contracts. Brand assets are documented in `docs/assets/README.md`.
 
 ## License
 
