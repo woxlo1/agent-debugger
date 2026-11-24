@@ -1,32 +1,38 @@
 import { useEffect, useState } from "react"
 import type { AgentEvent, TraceSummary } from "./types"
-import { fetchTraces, fetchEvents, subscribeToStream } from "./api"
+import { fetchEvents, fetchTraces, subscribeToStream } from "./api"
 import TraceList from "./components/TraceList"
 import ReplayTimeline from "./components/ReplayTimeline"
 import DetailPanel from "./components/DetailPanel"
+import AnalysisPanel from "./components/AnalysisPanel"
+
+type View = "replay" | "analysis"
 
 export default function App() {
   const [traces, setTraces] = useState<TraceSummary[]>([])
   const [selectedTraceId, setSelectedTraceId] = useState<string | null>(null)
   const [events, setEvents] = useState<AgentEvent[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [view, setView] = useState<View>("analysis")
 
-  // Poll the trace list every 2s (simple + reliable for an MVP).
+  const loadTraces = () => {
+    fetchTraces()
+      .then(setTraces)
+      .catch(() => {})
+  }
+
   useEffect(() => {
-    const load = () => fetchTraces().then(setTraces).catch(() => {})
-    load()
-    const id = setInterval(load, 2000)
+    loadTraces()
+    const id = setInterval(loadTraces, 2000)
     return () => clearInterval(id)
   }, [])
 
-  // Auto-select the first/most-recent trace once traces load.
   useEffect(() => {
     if (!selectedTraceId && traces.length > 0) {
       setSelectedTraceId(traces[0].traceId)
     }
   }, [traces, selectedTraceId])
 
-  // Load events for the selected trace.
   useEffect(() => {
     if (!selectedTraceId) return
     fetchEvents(selectedTraceId).then((evts) => {
@@ -35,7 +41,6 @@ export default function App() {
     })
   }, [selectedTraceId])
 
-  // Live updates via SSE: append new events for the currently selected trace.
   useEffect(() => {
     const unsubscribe = subscribeToStream((event) => {
       if (event.traceId === selectedTraceId) {
@@ -45,12 +50,35 @@ export default function App() {
     return unsubscribe
   }, [selectedTraceId])
 
+  function handleImported(traceId: string) {
+    loadTraces()
+    setSelectedTraceId(traceId)
+    setView("analysis")
+  }
+
   return (
     <div className="h-screen flex flex-col">
       <header className="border-b border-zinc-800 px-5 py-3 flex items-center gap-3">
         <span className="text-emerald-400 font-bold text-lg">●</span>
         <h1 className="font-semibold text-lg">Agent Debugger</h1>
-        <span className="text-xs text-zinc-500">Chrome DevTools for LLM agents</span>
+        <span className="text-xs text-zinc-500">
+          Failed trace → evidence → debugger handoff
+        </span>
+        <div className="ml-auto flex gap-1">
+          {(["analysis", "replay"] as View[]).map((item) => (
+            <button
+              key={item}
+              onClick={() => setView(item)}
+              className={`px-3 py-1.5 text-sm rounded ${
+                view === item
+                  ? "bg-zinc-700 text-white"
+                  : "text-zinc-400 hover:bg-zinc-900"
+              }`}
+            >
+              {item === "analysis" ? "Cause Package" : "Replay"}
+            </button>
+          ))}
+        </div>
       </header>
 
       <div className="flex-1 flex overflow-hidden">
@@ -60,15 +88,20 @@ export default function App() {
           onSelect={setSelectedTraceId}
         />
 
-        <div className="w-[420px] border-r border-zinc-800">
-          <ReplayTimeline
-            events={events}
-            currentIndex={currentIndex}
-            onIndexChange={setCurrentIndex}
-          />
-        </div>
-
-        <DetailPanel event={events[currentIndex] ?? null} />
+        {view === "analysis" ? (
+          <AnalysisPanel traceId={selectedTraceId} onImported={handleImported} />
+        ) : (
+          <>
+            <div className="w-[420px] border-r border-zinc-800">
+              <ReplayTimeline
+                events={events}
+                currentIndex={currentIndex}
+                onIndexChange={setCurrentIndex}
+              />
+            </div>
+            <DetailPanel event={events[currentIndex] ?? null} />
+          </>
+        )}
       </div>
     </div>
   )

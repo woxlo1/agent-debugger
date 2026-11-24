@@ -5,6 +5,7 @@ const STYLES: Record<AgentEventType, string> = {
   reasoning: "bg-purple-500/20 text-purple-300 border-purple-500/40",
   tool: "bg-amber-500/20 text-amber-300 border-amber-500/40",
   agent: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+  system: "bg-zinc-500/20 text-zinc-300 border-zinc-500/40",
 }
 
 export default function TypeBadge({ type }: { type: AgentEventType }) {

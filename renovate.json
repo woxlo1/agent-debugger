@@ -1,0 +1,19 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":dependencyDashboard", ":semanticCommits"],
+  "timezone": "Asia/Tokyo",
+  "schedule": ["after 10pm every weekday", "every weekend"],
+  "labels": ["dependencies"],
+  "prConcurrentLimit": 5,
+  "packageRules": [
+    {
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "npm minor and patch"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions"
+    }
+  ]
+}

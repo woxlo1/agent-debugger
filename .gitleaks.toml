@@ -1,0 +1,20 @@
+title = "agent-debugger gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Synthetic privacy fixtures intentionally contain fake secrets and PII."
+paths = [
+  '''docs/examples/.*''',
+  '''docs/.*\.md''',
+  '''packages/privacy/test/.*''',
+  '''packages/server/test/.*''',
+  '''packages/test-fixtures/.*''',
+  '''packages/usage/test/.*''',
+]
+regexes = [
+  '''sk-abcdefgh1234''',
+  '''user@example\.com''',
+  '''Ada@example\.com''',
+]
