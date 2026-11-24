@@ -1,6 +1,6 @@
 {
   "name": "agent-debugger-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Minimal TypeScript client for sending agent events to a local agent-debugger server.",
   "type": "module",
   "main": "dist/index.js",

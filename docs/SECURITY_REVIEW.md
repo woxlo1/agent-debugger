@@ -2,9 +2,9 @@
 
 ## Scope and status
 
-This is a local-first security review of the v1.0.0 repository as of 2026-11-24. It covers the API, CLI, local store, web UI, desktop shell, MCP server, and Claude Code local adapter. It is not a penetration test, a formal audit, or a claim that the product is free of vulnerabilities.
+This is a local-first security review of the v1.0.0 repository as of 2026-11-24. It covers the API, CLI, local store, web UI, desktop shell, MCP server, and Claude Code local adapter. It is not a penetration test, a formal audit, or a claim that the product is free of vulnerabilities. The `v1.0.1` patch applies the correctness and privacy fixes listed in `CHANGELOG.md`; the review scope and trust boundaries are unchanged.
 
-Version is `1.0.0`. The repository owner explicitly approved the version bump, tag, GitHub Release, demo GIF refresh, and Hacker News posting on 2026-11-24. npm publishing is approved but requires registry credentials that are not available in this environment. This document records the review; it does not itself grant approval.
+Version is `1.0.1`; the original review covered `1.0.0`. The repository owner approved the v1.0.0 version bump, tag, GitHub Release, demo GIF refresh, and Hacker News posting, and later approved the v1.0.1 patch with local npm authentication, on 2026-11-24. npm publishing requires registry credentials that are not available in this environment. This document records the review; it does not itself grant approval.
 
 ## Assets and trust boundaries
 
@@ -47,6 +47,7 @@ Out of scope: protection against a malicious process running as the same OS user
 - Claude Code and claude.ai Web usage require explicit consent before inclusion in totals.
 - `record_usage` rejects `claude_code_local` and `claude_web_export` sources so callers cannot bypass the consent path.
 - The Claude adapter applies strict redaction before normalization and returns only count usage fields plus a redaction receipt. It never returns transcript text, raw payloads, or the source path.
+- The `v1.0.1` patch also redacts event names, errors, and source paths before storing or exporting, and verifies `integrity.sha256` on portable Cause Package bundles.
 
 ### Claude Code local adapter
 
@@ -86,7 +87,7 @@ Additional controls:
 | SEC-04 | Low | API tests used fixed random port ranges and could fail when another local process held a port. | Fixed in Stage 5 with OS-assigned free ports. This is an availability/flakiness issue, not a data disclosure. |
 | SEC-05 | Accepted | If `AGENT_DEBUGGER_TOKEN` is set, the current web UI cannot perform mutating actions because it does not send the token. | Documented as an intentional mismatch rather than silently weakening API auth. Token-protected mutation remains available through CLI/API clients. |
 
-No finding in this review authorized a release by itself. The v1.0.0 release was approved separately by the repository owner on 2026-11-24.
+No finding in this review authorized a release by itself. The v1.0.0 release and the v1.0.1 patch were approved separately by the repository owner on 2026-11-24.
 
 ## Residual risks
 
@@ -107,8 +108,8 @@ Merged stage PRs were only merged after all required checks were green:
 - Stage 6 initially failed CodeQL with SEC-02 and SEC-03. The fix commit `c50f397` was pushed before merge and the rerun was green.
 - The OpenSSF Scorecard workflow runs on `main` and weekly, with results uploaded as an artifact and SARIF; it is not a required PR gate.
 
-Stage 9 (#21) and Stage 10 (#22) CI were green before merge. The v1.0.0 release pull request is validated by `npm run verify` and the same required checks. This document records that approval; it does not grant it.
+Stage 9 (#21) and Stage 10 (#22) CI were green before merge. PR #24 (`fix/publish-readiness`) was merged with all required checks green. The v1.0.1 release pull request is validated by `npm run verify` and the same required checks. This document records that approval; it does not grant it.
 
 ## Recommendation
 
-The implementation is suitable for local v1.0.0 use with synthetic or consented, pre-redacted traces. Do not describe it as audited or production-hardened. Keep the residual risks explicit: real-user validation is unexecuted, cold start misses the 500 ms target, and the remaining supply-chain activations are owner UI actions.
+The implementation is suitable for local v1.0.1 use with synthetic or consented, pre-redacted traces. Do not describe it as audited or production-hardened. Keep the residual risks explicit: real-user validation is unexecuted, cold start misses the 500 ms target, and the remaining supply-chain activations are owner UI actions.

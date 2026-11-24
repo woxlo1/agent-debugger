@@ -3,7 +3,7 @@ import type { UsageLedger } from "../../shared/src/index.js"
 
 export const CAUSE_PACKAGE_SCHEMA_VERSION = 1
 export const CAUSE_PACKAGE_GENERATOR = "agent-debugger"
-export const CAUSE_PACKAGE_GENERATOR_VERSION = "1.0.0"
+export const CAUSE_PACKAGE_GENERATOR_VERSION = "1.0.1"
 
 export type CausePackageEvidence = {
   id: string
