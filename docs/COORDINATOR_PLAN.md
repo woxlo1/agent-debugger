@@ -9,9 +9,9 @@
 
 ## Current stage
 
-Stage 9: final project structure and validation kit.
+Stage 11: v1.0.0 release preparation.
 
-Stage 9 builds on all merged implementation and review stages. It declares the current `packages/`, `scripts/`, `docs/`, and `docs-site/` layout final for the 1.0.0 line, adds `docs/PROJECT_STRUCTURE.md`, and adds ready-to-use validation materials in `docs/VALIDATION_KIT.md` and `docs/validation/`. The study itself remains unexecuted. No release action is performed in this stage.
+Stage 11 builds on all merged implementation, review, structure, and ops stages. It bumps every workspace manifest and runtime version constant to `1.0.0`, publishes release notes in `CHANGELOG.md`, reconciles the README / security / HN documents with the approved release, refreshes the synthetic demo GIF, and prepares the tag, GitHub Release, and final Hacker News text. Real-user validation remains unexecuted, and npm publishing requires registry credentials that are not stored in this repository.
 
 ## Shared interfaces frozen by the coordinator
 
@@ -53,7 +53,8 @@ The final layout is documented in `docs/PROJECT_STRUCTURE.md`. No `apps/` migrat
 7. Add benchmark harness and ops bots.
 8. Document final security review and unexecuted validation status.
 9. Freeze final project structure and prepare validation materials.
-10. Final `npm run verify`, then pull request to `main`.
+10. Restore the gated Dependency Review workflow and document UI-only activations.
+11. Bump to v1.0.0, refresh the synthetic demo GIF, verify, open a release PR, then tag and release after merge.
 
 ## Verification for every stage
 
@@ -67,4 +68,4 @@ No stage is complete until all three pass locally and in GitHub Actions.
 
 ## Release policy
 
-Version bump, tag, GitHub Release, npm publish, and Hacker News posting require explicit final approval. This plan does not authorize them.
+The repository owner granted explicit approval for the v1.0.0 version bump, tag, GitHub Release, demo GIF refresh, and Hacker News posting on 2026-11-24. CI never performs these actions. npm publish and Hacker News posting additionally require registry / HN credentials that are not stored in this repository; when unavailable, the approved text and dry-run evidence are recorded for the owner.

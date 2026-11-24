@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/status-alpha-orange" alt="status: alpha" />
+  <img src="https://img.shields.io/badge/status-v1.0.0-brightgreen" alt="status: v1.0.0" />
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="license: MIT" />
   <img src="https://img.shields.io/badge/runtime-local%20only-emerald" alt="runtime: local only" />
 </p>
@@ -341,20 +341,21 @@ Published results are in `docs/PERFORMANCE.md`; raw measurements are in `docs/be
 
 Targets assume a commodity laptop and no network access. Results are local measurements, not user-study evidence.
 
-## Roadmap to v1.0.0
+## v1.0.0 release status
 
-No release is tagged or published yet. The following remain in scope before a release request is made:
+Tag `v1.0.0` and the matching GitHub Release are created from this commit. The MIT license and all package names are unchanged.
 
 - [x] Generated docs site from `docs/`
 - [x] Local MCP server exposing analysis and package tools
 - [x] Browser-based desktop shell around the local UI
 - [x] Benchmark harness and published results against the targets above
-- [ ] Real-user validation with consented traces and third-party ground truth (materials ready in `docs/VALIDATION_KIT.md`; study not executed)
 - [x] Final security review documented with findings and residual risks
 - [x] Final project structure frozen in `docs/PROJECT_STRUCTURE.md`
-- [ ] Explicit release approval, version bump, tag, release, and publish
+- [x] Explicit release approval, version bump, tag, and GitHub Release
+- [ ] Real-user validation with consented traces and third-party ground truth (materials ready in `docs/VALIDATION_KIT.md`; study not executed)
+- [ ] npm publish (approved; requires registry authentication, dry-run verified)
 
-A version bump, tag, GitHub Release, npm publish, and Hacker News posting all require explicit approval. CI never performs them.
+CI never performs a version bump, tag, release, publish, or Hacker News post. The owner approved these actions explicitly for v1.0.0. The final Hacker News text is in `docs/HN_LAUNCH_DRAFT.md`; posting requires an authenticated HN session.
 
 ## Verification
 
