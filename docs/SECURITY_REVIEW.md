@@ -2,9 +2,9 @@
 
 ## Scope and status
 
-This is a local-first, pre-release security review of the repository as of 2026-11-24. It covers the API, CLI, local store, web UI, desktop shell, MCP server, and Claude Code local adapter. It is not a penetration test, a formal audit, or a claim that the product is free of vulnerabilities.
+This is a local-first security review of the v1.0.0 repository as of 2026-11-24. It covers the API, CLI, local store, web UI, desktop shell, MCP server, and Claude Code local adapter. It is not a penetration test, a formal audit, or a claim that the product is free of vulnerabilities.
 
-Version remains `0.3.0-alpha.0`. No tag, GitHub Release, npm publish, or Hacker News post is authorized by this document.
+Version is `1.0.0`. The repository owner explicitly approved the version bump, tag, GitHub Release, demo GIF refresh, and Hacker News posting on 2026-11-24. npm publishing is approved but requires registry credentials that are not available in this environment. This document records the review; it does not itself grant approval.
 
 ## Assets and trust boundaries
 
@@ -72,8 +72,8 @@ Additional controls:
 - Workflows use `persist-credentials: false` on checkout.
 - Gitleaks allowlists only documented synthetic fixtures and test paths; fake secrets in tests are explicitly enumerated.
 - CodeQL uses the default query suite. The earlier `security-extended` configuration produced local-first false positives in the loopback API and was removed.
-- Dependabot covers npm and GitHub Actions. Renovate config exists but the GitHub App is not activated without explicit approval.
-- Dependency Graph remains disabled and Dependency Review remains removed pending explicit approval.
+- Dependabot covers npm and GitHub Actions. Renovate config is ready and approval has been granted, but the GitHub App installation is a UI-only action that remains with the repository owner.
+- Dependency Graph activation is a UI-only action that remains with the owner. The Dependency Review workflow is restored but skipped until the repository variable `DEPENDENCY_GRAPH_ENABLED=true` is set.
 - No workflow performs a version bump, tag, release, publish, or Hacker News post.
 
 ## Findings and disposition
@@ -86,7 +86,7 @@ Additional controls:
 | SEC-04 | Low | API tests used fixed random port ranges and could fail when another local process held a port. | Fixed in Stage 5 with OS-assigned free ports. This is an availability/flakiness issue, not a data disclosure. |
 | SEC-05 | Accepted | If `AGENT_DEBUGGER_TOKEN` is set, the current web UI cannot perform mutating actions because it does not send the token. | Documented as an intentional mismatch rather than silently weakening API auth. Token-protected mutation remains available through CLI/API clients. |
 
-No finding in this review authorized a release.
+No finding in this review authorized a release by itself. The v1.0.0 release was approved separately by the repository owner on 2026-11-24.
 
 ## Residual risks
 
@@ -102,13 +102,13 @@ No finding in this review authorized a release.
 
 Merged stage PRs were only merged after all required checks were green:
 
-- PR #2 (Stage 1), #14 (Stage 2), #15 (Stage 3), #16 (Stage 4), #17 (Stage 5), #18 (Stage 6), and #19 (Stage 7).
-- Required checks: `verify (Node 20)`, `verify (Node 22)`, `Analyze JavaScript/TypeScript`, and `Detect committed secrets`.
+- PR #2 (Stage 1), #14 through #19 (Stages 2–7), #21 (Stage 9), and #22 (Stage 10). Stage 8 was merged as PR #20.
+- Required checks: `verify (Node 20)`, `verify (Node 22)`, `Analyze JavaScript/TypeScript`, and `Detect committed secrets`. `Review dependency changes` is skipped until the Dependency Graph variable gate is enabled.
 - Stage 6 initially failed CodeQL with SEC-02 and SEC-03. The fix commit `c50f397` was pushed before merge and the rerun was green.
 - The OpenSSF Scorecard workflow runs on `main` and weekly, with results uploaded as an artifact and SARIF; it is not a required PR gate.
 
-Stage 8 CI status is recorded on its pull request before merge. This document does not claim a release approval.
+Stage 9 (#21) and Stage 10 (#22) CI were green before merge. The v1.0.0 release pull request is validated by `npm run verify` and the same required checks. This document records that approval; it does not grant it.
 
 ## Recommendation
 
-The implementation is suitable for continued local alpha use with synthetic or consented, pre-redacted traces. Do not describe it as audited or production-hardened. Before a 1.0.0 release request, keep the residual risks explicit, complete the user study if the project chooses to make H1 claims, and obtain separate approval for release, publication, and posting.
+The implementation is suitable for local v1.0.0 use with synthetic or consented, pre-redacted traces. Do not describe it as audited or production-hardened. Keep the residual risks explicit: real-user validation is unexecuted, cold start misses the 500 ms target, and the remaining supply-chain activations are owner UI actions.

@@ -1,9 +1,9 @@
 {
   "name": "agent-debugger-server",
-  "version": "0.3.0-alpha.0",
+  "version": "1.0.0",
   "type": "module",
   "bin": {
-    "agent-debugger": "./bin/cli.js"
+    "agent-debugger": "bin/cli.js"
   },
   "scripts": {
     "dev": "tsx watch src/index.ts",

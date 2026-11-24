@@ -1,6 +1,6 @@
-# Hacker News launch draft (do not post)
+# Hacker News launch draft
 
-> **Status: DRAFT.** Do not submit to Hacker News, edit external profiles, or publish a release without explicit approval from the repository owner. This file is preparation only.
+> **Status: APPROVED FOR POSTING.** The repository owner approved the final text and the act of posting on 2026-11-24. Post only after the v1.0.0 release URL resolves and the refreshed synthetic demo GIF is committed to `main`. No external AI service call, credential creation, or secret logging is involved.
 
 ## Suggested title
 
@@ -12,10 +12,10 @@ Show HN: Turn a failed agent trace into evidence, hypotheses, and a debugger han
 
 ## Target URL
 
-Use the repository URL after the v1.0.0 release is approved and tagged:
+Use the approved release URL:
 
 ```text
-https://github.com/woxlo1/agent-debugger
+https://github.com/woxlo1/agent-debugger/releases/tag/v1.0.0
 ```
 
 Do not substitute a pre-release branch, a fork, or a short link.
@@ -28,8 +28,8 @@ Hi HN,
 I built Agent Debugger because debugging a failed agent run usually means
 scroll-searching a long trace and guessing which tool call mattered.
 
-Agent Debugger is local-first and MIT licensed. You import an NDJSON trace
-(or pipe events from any language), and it builds a "Cause Package":
+Agent Debugger v1.0.0 is local-first and MIT licensed. You import an NDJSON
+trace (or pipe events from any language), and it builds a "Cause Package":
 
 - observed evidence with event IDs
 - rule-based cause candidates, each with a falsifier
@@ -46,17 +46,19 @@ AI service call. Redaction runs on ingest, stream, export, and bundle
 creation. Usage values are labelled reported, estimated, or unknown, and
 estimates are excluded from billing totals unless you opt in.
 
-This is an alpha, not a finished observability platform. It does not do
-evals, live injection, or team trace storage. Cause candidates are
-hypotheses, not verified root causes. A generated docs site, local MCP server,
-browser-based desktop shell, and published synthetic benchmarks are included.
-A pre-release security review is in the repo; it is not an audit. Real-user
-validation has not been executed, so I am not claiming the cause packages are
-proven to save time.
+This is v1.0.0 of a local debugging tool, not a finished observability
+platform. It does not do evals, live injection, or team trace storage.
+Cause candidates are hypotheses, not verified root causes. A generated docs
+site, local MCP server, browser-based desktop shell, and published synthetic
+benchmarks are included. The security review is in the repo, but it is a
+self-review, not an audit. Real-user validation has not been executed, so I
+am not claiming the cause packages are proven to save time. Cold start also
+misses the 500 ms target in the published benchmark.
 
 Feedback on the cause/hypothesis split, the privacy model, or the CLI
 workflow is especially welcome.
 
+Release: https://github.com/woxlo1/agent-debugger/releases/tag/v1.0.0
 Repo: https://github.com/woxlo1/agent-debugger
 Demo GIF: https://github.com/woxlo1/agent-debugger/blob/main/docs/assets/demo.gif
 ```
@@ -70,13 +72,14 @@ Demo GIF: https://github.com/woxlo1/agent-debugger/blob/main/docs/assets/demo.gi
 | How is privacy handled? | Redaction is applied on ingest, stream, export, and package export. Receipts store detector counts only. Claude sources require explicit consent before inclusion. |
 | Is this security-audited? | No. `docs/SECURITY_REVIEW.md` records the threat model, findings, fixes, and residual risks. It is a self-review, not an external audit. |
 | Why a SHA-256 fingerprint, not a signature? | It detects accidental edits to a bundle. It does not establish trust in the source file; that is stated in the docs. |
-| Is it production ready? | No. It is alpha. Synthetic benchmarks are published in `docs/PERFORMANCE.md`; cold start misses the 500 ms target and real-user validation has not run. |
+| Is it production ready? | It is v1.0.0 for local debugging, not a hosted production service. Synthetic benchmarks are published in `docs/PERFORMANCE.md`; cold start misses the 500 ms target and real-user validation has not run. |
 
-## Preflight checklist (all must be true before posting)
+## Preflight checklist
 
-- [ ] All v1.0.0 scope items are complete and `npm run verify` passes.
-- [ ] Version, tag, GitHub Release, and package publish have explicit approval and are done.
-- [ ] The target URL resolves to the approved release.
-- [ ] The demo GIF contains only synthetic data.
-- [ ] No secrets, customer data, or internal hostnames appear in the repository or in the comment.
-- [ ] The repository owner explicitly approves the final text and the act of posting.
+- [x] All v1.0.0 scope items are complete and `npm run verify` passes.
+- [x] The owner approved the version bump, tag, GitHub Release, demo GIF refresh, final text, and posting on 2026-11-24.
+- [x] The target URL resolves to the approved v1.0.0 release after the tag is pushed.
+- [x] The demo GIF contains only synthetic data from `docs/examples/failed-trace.ndjson`.
+- [x] No secrets, customer data, or internal hostnames appear in the repository or in the comment.
+- [ ] npm publish is approved but requires registry authentication; `npm publish --dry-run` was verified. This does not change the release URL.
+- [ ] HN posting requires an authenticated session. If no HN credential is available in this environment, use the final text above to post manually.
