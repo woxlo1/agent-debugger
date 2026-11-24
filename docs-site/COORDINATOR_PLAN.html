@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Coordinator Plan · Agent Debugger Docs</title>
+  <meta name="description" content="Local-first failure debugging for AI agents." />
+  <link rel="icon" href="assets/favicon.svg" />
+  <meta property="og:title" content="Agent Debugger" />
+  <meta property="og:description" content="Local-first failure debugging for AI agents." />
+  <meta property="og:image" content="assets/social-card.svg" />
+  <style>
+    :root { color-scheme: dark; --bg:#080f1c; --panel:#0d1729; --line:#1e293b; --text:#e2e8f0; --muted:#94a3b8; --accent:#34d399; --accent2:#22d3ee; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:15px/1.65 Inter,"Segoe UI",Arial,sans-serif; }
+    a { color:var(--accent2); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .layout { display:grid; grid-template-columns:250px minmax(0,1fr) 220px; min-height:100vh; }
+    .sidebar { border-right:1px solid var(--line); padding:28px 20px; background:var(--panel); position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .brand { display:flex; align-items:center; gap:10px; color:var(--text); font-weight:700; font-size:17px; margin-bottom:28px; }
+    .brand:hover { text-decoration:none; }
+    .brand img { width:34px; height:34px; }
+    nav.side-links { display:flex; flex-direction:column; gap:4px; }
+    nav.side-links a { padding:8px 10px; border-radius:8px; color:var(--muted); font-size:14px; }
+    nav.side-links a:hover, nav.side-links a.active { background:#13233c; color:var(--text); text-decoration:none; }
+    .side-footer { margin-top:32px; font-size:12px; color:#64748b; }
+    main { padding:48px 56px 96px; max-width:960px; }
+    article h1 { font-size:36px; line-height:1.2; margin:0 0 24px; }
+    article h2 { font-size:24px; margin:40px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--line); }
+    article h3 { font-size:19px; margin:28px 0 8px; }
+    article p, article li { color:#cbd5e1; }
+    article ul, article ol { padding-left:22px; }
+    article li { margin:6px 0; }
+    article pre { background:#050b16; border:1px solid var(--line); border-radius:10px; padding:16px; overflow-x:auto; }
+    article code { font-family:"SFMono-Regular",Consolas,monospace; font-size:0.9em; }
+    article :not(pre) > code { background:#13233c; color:#a7f3d0; padding:2px 5px; border-radius:4px; }
+    article table { width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+    article th, article td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+    article th { background:#111d33; color:#e2e8f0; }
+    article blockquote { margin:18px 0; padding:12px 16px; border-left:3px solid var(--accent); background:#0f1d2e; color:var(--muted); }
+    article blockquote p { margin:0; }
+    article hr { border:0; border-top:1px solid var(--line); margin:32px 0; }
+    .toc { border-left:1px solid var(--line); padding:48px 20px; font-size:13px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .toc strong { display:block; color:#64748b; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; margin-bottom:12px; }
+    .toc a { display:block; color:var(--muted); padding:4px 0; }
+    .toc .toc-3 { padding-left:14px; color:#64748b; }
+    .hero { display:flex; align-items:center; gap:22px; margin-bottom:32px; }
+    .hero img { width:88px; height:88px; }
+    .hero h1 { margin:0 0 6px; }
+    .hero p { margin:0; color:var(--muted); }
+    .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; margin:32px 0; }
+    .card { display:block; padding:18px; border:1px solid var(--line); border-radius:12px; background:var(--panel); color:var(--text); }
+    .card:hover { border-color:var(--accent); text-decoration:none; }
+    .card strong { display:block; margin-bottom:6px; }
+    .card span { color:var(--muted); font-size:13px; }
+    .demo { width:100%; max-width:900px; border:1px solid var(--line); border-radius:12px; display:block; margin:24px 0; }
+    .generated { color:#475569; font-size:12px; margin-top:56px; }
+    @media (max-width:1100px) { .layout { grid-template-columns:220px minmax(0,1fr); } .toc { display:none; } main { padding:36px 32px 72px; } }
+    @media (max-width:720px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:0; border-bottom:1px solid var(--line); } main { padding:28px 20px 56px; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><img src="assets/icon.svg" alt="" /> Agent Debugger</a>
+      <nav class="side-links">
+        <a href="index.html">Product brief</a>
+        <a href="ARCHITECTURE.html">Architecture</a>
+        <a href="USAGE_PRIVACY.html">Usage and privacy</a>
+        <a href="CASE_COMPARE.html">Case comparison</a>
+        <a href="AI_SOURCE_MATRIX.html">AI source matrix</a>
+        <a href="VALIDATION_PLAN.html">Validation plan</a>
+        <a href="OPS_BOTS.html">Ops bots</a>
+        <a href="COORDINATOR_PLAN.html" class="active">Coordinator plan</a>
+        <a href="HN_LAUNCH_DRAFT.html">HN launch draft</a>
+      </nav>
+      <p class="side-footer">Local-first · MIT licensed<br />Generated docs, edit Markdown in <code>docs/</code>.</p>
+    </aside>
+    <main>
+      <article><h1 id="coordinator-plan">Coordinator Plan</h1>
+<h2 id="branch-strategy">Branch strategy</h2>
+<ul>
+<li><code>origin/main</code> is the stable base. Work is never pushed directly to it during a stage.</li>
+<li>Each stage uses a dedicated branch and worktree.</li>
+<li>A stage is merged into <code>main</code> only through a pull request after <code>npm run verify</code> passes.</li>
+<li>Existing local commits from the earlier phase were diverged from <code>origin/main</code>. This branch includes <code>origin/main</code> via a normal merge commit, not a reset or force push.</li>
+</ul>
+<h2 id="current-stage">Current stage</h2>
+<p>Stage 4: docs, brand assets, docs site, and launch readiness.</p>
+<p>Stage 4 builds on the merged Stage 1 usage contracts, Stage 2 server/CLI/web integration, and Stage 3 Case Packages. It adds versionable SVG branding, embeds the existing synthetic demo GIF in the README, sharpens the product narrative, records performance targets, generates a dependency-free static docs site, and prepares an approval-gated Hacker News draft. No release action is performed in this stage.</p>
+<h2 id="shared-interfaces-frozen-by-the-coordinator">Shared interfaces frozen by the coordinator</h2>
+<p>These files are coordinator-owned. No parallel session may edit them without coordinator approval:</p>
+<ul>
+<li><code>packages/shared/src/types/*</code></li>
+<li><code>packages/protocol/src/*</code> (when introduced)</li>
+<li><code>package.json</code></li>
+<li><code>package-lock.json</code></li>
+<li><code>tsconfig.base.json</code></li>
+<li><code>docs/COORDINATOR_PLAN.md</code></li>
+<li>root <code>README.md</code></li>
+</ul>
+<h2 id="ownership-map">Ownership map</h2>
+<table><thead><tr><th>Session</th><th>Branch</th><th>Owned files</th><th>Forbidden files</th></tr></thead><tbody><tr><td>S0 coordinator</td><td>current stage branch</td><td>shared types, protocol, config, root manifests, integration docs</td><td>other sessions&#39; owned source files</td></tr><tr><td>S1 privacy</td><td><code>feat/stage-1-privacy</code></td><td><code>packages/privacy/<strong></code>, <code>packages/privacy/test/</strong></code></td><td>shared types, server, web</td></tr><tr><td>S2 usage</td><td><code>feat/stage-1-usage</code></td><td><code>packages/usage/<strong></code>, <code>packages/ingest/src/adapters/</strong></code>, usage tests</td><td>shared types, privacy internals</td></tr><tr><td>S3 server CLI</td><td><code>feat/stage-2-server-cli</code></td><td><code>packages/server/<strong></code>, <code>apps/cli/</strong></code></td><td>shared types without coordinator change</td></tr><tr><td>S4 web</td><td><code>feat/stage-2-web</code></td><td><code>apps/web/**</code></td><td>shared types, server internals</td></tr><tr><td>S5 cases artifact</td><td><code>feat/stage-3-cases</code></td><td><code>packages/cases/<strong></code>, <code>packages/artifact/</strong></code>, <code>packages/query/**</code></td><td>shared types, web</td></tr><tr><td>S6 docs assets</td><td><code>feat/stage-4-docs-assets</code></td><td><code>docs/<strong></code>, <code>assets/</strong></code>, <code>apps/docs-site/**</code></td><td>root README final merge</td></tr><tr><td>S7 ops bots</td><td><code>feat/stage-4-ops</code></td><td><code>.github/<strong></code>, <code>scripts/</strong></code>, <code>benchmark-results/**</code></td><td>package manifests</td></tr></tbody></table>
+<h2 id="integration-order">Integration order</h2>
+<ol>
+<li>Freeze shared AI usage and privacy contracts.</li>
+<li>Implement privacy engine and usage normalizers in parallel.</li>
+<li>Integrate usage routes into the server and CLI.</li>
+<li>Add web views for usage and privacy audit.</li>
+<li>Add case comparison and portable bundles.</li>
+<li>Add docs, icons, demo GIF, docs site, and HN draft.</li>
+<li>Add benchmark harness and ops bots.</li>
+<li>Final <code>npm run verify</code>, then pull request to <code>main</code>.</li>
+</ol>
+<h2 id="verification-for-every-stage">Verification for every stage</h2>
+<pre><code class="language-bash">npm run typecheck
+npm test
+npm run verify</code></pre>
+<p>No stage is complete until all three pass locally and in GitHub Actions.</p>
+<h2 id="release-policy">Release policy</h2>
+<p>Version bump, tag, GitHub Release, npm publish, and Hacker News posting require explicit final approval. This plan does not authorize them.</p></article>
+      <p class="generated">Generated by <code>scripts/build-docs.mjs</code>. Do not edit this HTML directly.</p>
+    </main>
+    <aside class="toc">
+      <strong>On this page</strong>
+      <a class="toc-2" href="#branch-strategy">Branch strategy</a>
+        <a class="toc-2" href="#current-stage">Current stage</a>
+        <a class="toc-2" href="#shared-interfaces-frozen-by-the-coordinator">Shared interfaces frozen by the coordinator</a>
+        <a class="toc-2" href="#ownership-map">Ownership map</a>
+        <a class="toc-2" href="#integration-order">Integration order</a>
+        <a class="toc-2" href="#verification-for-every-stage">Verification for every stage</a>
+        <a class="toc-2" href="#release-policy">Release policy</a>
+    </aside>
+  </div>
+</body>
+</html>

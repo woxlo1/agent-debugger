@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Usage Ledger and Privacy Audit · Agent Debugger Docs</title>
+  <meta name="description" content="Local-first failure debugging for AI agents." />
+  <link rel="icon" href="assets/favicon.svg" />
+  <meta property="og:title" content="Agent Debugger" />
+  <meta property="og:description" content="Local-first failure debugging for AI agents." />
+  <meta property="og:image" content="assets/social-card.svg" />
+  <style>
+    :root { color-scheme: dark; --bg:#080f1c; --panel:#0d1729; --line:#1e293b; --text:#e2e8f0; --muted:#94a3b8; --accent:#34d399; --accent2:#22d3ee; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:15px/1.65 Inter,"Segoe UI",Arial,sans-serif; }
+    a { color:var(--accent2); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .layout { display:grid; grid-template-columns:250px minmax(0,1fr) 220px; min-height:100vh; }
+    .sidebar { border-right:1px solid var(--line); padding:28px 20px; background:var(--panel); position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .brand { display:flex; align-items:center; gap:10px; color:var(--text); font-weight:700; font-size:17px; margin-bottom:28px; }
+    .brand:hover { text-decoration:none; }
+    .brand img { width:34px; height:34px; }
+    nav.side-links { display:flex; flex-direction:column; gap:4px; }
+    nav.side-links a { padding:8px 10px; border-radius:8px; color:var(--muted); font-size:14px; }
+    nav.side-links a:hover, nav.side-links a.active { background:#13233c; color:var(--text); text-decoration:none; }
+    .side-footer { margin-top:32px; font-size:12px; color:#64748b; }
+    main { padding:48px 56px 96px; max-width:960px; }
+    article h1 { font-size:36px; line-height:1.2; margin:0 0 24px; }
+    article h2 { font-size:24px; margin:40px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--line); }
+    article h3 { font-size:19px; margin:28px 0 8px; }
+    article p, article li { color:#cbd5e1; }
+    article ul, article ol { padding-left:22px; }
+    article li { margin:6px 0; }
+    article pre { background:#050b16; border:1px solid var(--line); border-radius:10px; padding:16px; overflow-x:auto; }
+    article code { font-family:"SFMono-Regular",Consolas,monospace; font-size:0.9em; }
+    article :not(pre) > code { background:#13233c; color:#a7f3d0; padding:2px 5px; border-radius:4px; }
+    article table { width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+    article th, article td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+    article th { background:#111d33; color:#e2e8f0; }
+    article blockquote { margin:18px 0; padding:12px 16px; border-left:3px solid var(--accent); background:#0f1d2e; color:var(--muted); }
+    article blockquote p { margin:0; }
+    article hr { border:0; border-top:1px solid var(--line); margin:32px 0; }
+    .toc { border-left:1px solid var(--line); padding:48px 20px; font-size:13px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .toc strong { display:block; color:#64748b; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; margin-bottom:12px; }
+    .toc a { display:block; color:var(--muted); padding:4px 0; }
+    .toc .toc-3 { padding-left:14px; color:#64748b; }
+    .hero { display:flex; align-items:center; gap:22px; margin-bottom:32px; }
+    .hero img { width:88px; height:88px; }
+    .hero h1 { margin:0 0 6px; }
+    .hero p { margin:0; color:var(--muted); }
+    .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; margin:32px 0; }
+    .card { display:block; padding:18px; border:1px solid var(--line); border-radius:12px; background:var(--panel); color:var(--text); }
+    .card:hover { border-color:var(--accent); text-decoration:none; }
+    .card strong { display:block; margin-bottom:6px; }
+    .card span { color:var(--muted); font-size:13px; }
+    .demo { width:100%; max-width:900px; border:1px solid var(--line); border-radius:12px; display:block; margin:24px 0; }
+    .generated { color:#475569; font-size:12px; margin-top:56px; }
+    @media (max-width:1100px) { .layout { grid-template-columns:220px minmax(0,1fr); } .toc { display:none; } main { padding:36px 32px 72px; } }
+    @media (max-width:720px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:0; border-bottom:1px solid var(--line); } main { padding:28px 20px 56px; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><img src="assets/icon.svg" alt="" /> Agent Debugger</a>
+      <nav class="side-links">
+        <a href="index.html">Product brief</a>
+        <a href="ARCHITECTURE.html">Architecture</a>
+        <a href="USAGE_PRIVACY.html" class="active">Usage and privacy</a>
+        <a href="CASE_COMPARE.html">Case comparison</a>
+        <a href="AI_SOURCE_MATRIX.html">AI source matrix</a>
+        <a href="VALIDATION_PLAN.html">Validation plan</a>
+        <a href="OPS_BOTS.html">Ops bots</a>
+        <a href="COORDINATOR_PLAN.html">Coordinator plan</a>
+        <a href="HN_LAUNCH_DRAFT.html">HN launch draft</a>
+      </nav>
+      <p class="side-footer">Local-first · MIT licensed<br />Generated docs, edit Markdown in <code>docs/</code>.</p>
+    </aside>
+    <main>
+      <article><h1 id="usage-ledger-and-privacy-audit">Usage Ledger and Privacy Audit</h1>
+<h2 id="data-flow">Data flow</h2>
+<ol>
+<li>The caller supplies a provider response, callback payload, or explicit usage entry. The debugger never calls an AI provider by itself.</li>
+<li><code>packages/ingest</code> normalizes the payload into the shared <code>AiUsage</code> contract.</li>
+<li><code>packages/server/src/usage.ts</code> rebuilds every entry from an allowlist before persistence. Extra fields such as prompts and API keys are dropped.</li>
+<li><code>packages/usage</code> builds a ledger. Entries without required consent and local estimates are excluded from billing totals by default.</li>
+<li><code>auditPrivacy()</code> aggregates redaction receipts into counts and placeholders only.</li>
+</ol>
+<h2 id="api-examples">API examples</h2>
+<pre><code class="language-bash"># Provider response supplied by the caller
+curl -X POST http://127.0.0.1:4317/api/usage \
+  -H &#39;content-type: application/json&#39; \
+  -d &#39;{&quot;source&quot;:&quot;anthropic_api&quot;,&quot;traceId&quot;:&quot;run-1&quot;,&quot;payload&quot;:{&quot;id&quot;:&quot;msg_1&quot;,&quot;model&quot;:&quot;claude-sonnet-4-5&quot;,&quot;usage&quot;:{&quot;input_tokens&quot;:10,&quot;output_tokens&quot;:5}}}&#39;
+
+# Read the ledger
+curl &#39;http://127.0.0.1:4317/api/traces/run-1/usage&#39;
+
+# Include local estimates explicitly
+curl &#39;http://127.0.0.1:4317/api/traces/run-1/usage?includeEstimates=true&#39;
+
+# Read the privacy audit
+curl &#39;http://127.0.0.1:4317/api/traces/run-1/privacy&#39;</code></pre>
+<h2 id="consent-rules">Consent rules</h2>
+<table><thead><tr><th>Source</th><th>Default consent</th><th>Included in totals</th></tr></thead><tbody><tr><td>Provider API responses</td><td><code>not-required</code></td><td>Yes, when <code>reported</code></td></tr><tr><td>Explicit SDK events</td><td><code>not-required</code></td><td>Yes, when <code>reported</code></td></tr><tr><td>Claude Code local transcript</td><td><code>required</code></td><td>Only after <code>consent: &quot;granted&quot;</code></td></tr><tr><td>claude.ai Web export</td><td><code>required</code></td><td>Only after <code>consent: &quot;granted&quot;</code></td></tr><tr><td>Local heuristic estimate</td><td><code>not-required</code></td><td>Only with <code>includeEstimates=true</code></td></tr></tbody></table>
+<h2 id="storage">Storage</h2>
+<p>Usage entries are stored at <code>${AGENT_DEBUGGER_STORE}.usage.ndjson</code> by default. Set <code>AGENT_DEBUGGER_USAGE_STORE</code> to override the path. The store reloads entries through the same allowlist sanitizer used by the API, so persisted data cannot introduce raw fields.</p></article>
+      <p class="generated">Generated by <code>scripts/build-docs.mjs</code>. Do not edit this HTML directly.</p>
+    </main>
+    <aside class="toc">
+      <strong>On this page</strong>
+      <a class="toc-2" href="#data-flow">Data flow</a>
+        <a class="toc-2" href="#api-examples">API examples</a>
+        <a class="toc-2" href="#consent-rules">Consent rules</a>
+        <a class="toc-2" href="#storage">Storage</a>
+    </aside>
+  </div>
+</body>
+</html>
