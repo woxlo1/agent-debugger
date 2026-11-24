@@ -79,8 +79,19 @@ function proxyHeaders(request) {
   return headers
 }
 
-async function proxyApi(request, response, apiBase, body) {
-  const target = new URL(request.url ?? "/", apiBase)
+function proxyTarget(apiBase, incoming) {
+  // Host and protocol are fixed to the local API. Only the path and query of
+  // the loopback request are forwarded; an absolute-form request URL cannot
+  // change the destination.
+  const target = new URL(apiBase)
+  target.pathname = incoming.pathname
+  target.search = incoming.search
+  target.hash = ""
+  return target
+}
+
+async function proxyApi(request, response, target, body) {
+  // codeql[js/request-forgery]
   const upstream = await fetch(target, {
     method: request.method,
     headers: proxyHeaders(request),
@@ -139,17 +150,16 @@ export function createDesktopStaticServer({ distDir, apiBase }) {
       const parsed = new URL(request.url ?? "/", "http://127.0.0.1")
       const body = await readBody(request)
       if (parsed.pathname.startsWith("/api/")) {
-        await proxyApi(request, response, apiBase, body)
+        await proxyApi(request, response, proxyTarget(apiBase, parsed), body)
         return
       }
       await serveStatic(request, response, distDir, parsed.pathname)
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error)
+    } catch {
       if (!response.headersSent) {
         response.statusCode = 502
         response.setHeader("content-type", "application/json; charset=utf-8")
       }
-      response.end(JSON.stringify({ error: "Desktop shell request failed", detail: message }))
+      response.end(JSON.stringify({ error: "Desktop shell request failed" }))
     }
   })
 }
