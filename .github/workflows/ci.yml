@@ -5,22 +5,29 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
+    name: verify (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
+      fail-fast: false
       matrix:
         node-version: [20, 22]
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
       - run: npm ci
-      - run: node --check packages/server/bin/pipe.js
-      - run: node --check packages/server/bin/cli.js
-      - run: npx tsc --noEmit -p packages/server/tsconfig.json
-      - run: npx tsc --noEmit -p packages/sdk/tsconfig.json
-      - run: npm run build -w packages/web
-      - run: npm test
+      - run: npm run verify
