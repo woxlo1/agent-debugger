@@ -133,7 +133,8 @@ export function createRedactor(profile: RedactionProfile = "strict"): Redactor {
     }
 
     if (isRecord(value)) {
-      const output: Record<string, unknown> = {}
+      // Null prototype prevents user-controlled keys from mutating prototypes.
+      const output: Record<string, unknown> = Object.create(null)
       for (const [key, entry] of Object.entries(value)) {
         if (SECRET_KEY.test(key)) {
           record("api_key")
