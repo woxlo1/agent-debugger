@@ -10,14 +10,16 @@ These workflows run with repository files only. No new secret, paid service, or 
 | `codeql.yml` | JavaScript/TypeScript security analysis | `GITHUB_TOKEN` with `security-events: write` |
 | `gitleaks.yml` | Detects committed secrets | `GITHUB_TOKEN` only; synthetic fixtures are allowlisted |
 | `scorecard.yml` | Supply-chain posture check, SARIF artifact, no public badge | `GITHUB_TOKEN` only |
+| `dependency-review.yml` | Reviews dependency changes in pull requests | `GITHUB_TOKEN` with `contents: read` |
 
 ## Configured but requiring app activation
 
 | Bot | Config | Activation status |
 |---|---|---|
-| Dependabot | `.github/dependabot.yml` | Config added. GitHub-side enablement is not changed by this branch. |
-| Renovate | `renovate.json` | Config added. Installing the Renovate GitHub App requires explicit approval. |
-| Dependency Review | Approval-gated workflow | The workflow file was removed after CI reported that Dependency graph is disabled. Enabling it in repository settings requires explicit approval. |
+| Dependabot | `.github/dependabot.yml` | Native GitHub config; no separate app installation is needed. |
+| Renovate | `renovate.json` | Config is ready and approval has been granted. Installing the Renovate GitHub App is a repository-settings UI action with no REST endpoint; it remains to be done by the repository owner. |
+| Dependency Graph | GitHub Advanced Security settings | Approval has been granted, but GitHub exposes no REST endpoint to enable it. It must be enabled from Settings → Advanced Security in the repository UI. |
+| Dependency Review | `.github/workflows/dependency-review.yml` | Workflow restored but skipped until Dependency Graph is enabled and the repository variable `DEPENDENCY_GRAPH_ENABLED=true` is set. No secret is required. |
 
 ## Deliberately not added
 

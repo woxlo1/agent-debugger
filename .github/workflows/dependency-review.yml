@@ -1,0 +1,29 @@
+name: Dependency Review
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependency-review-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dependency-review:
+    name: Review dependency changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Dependency Graph activation is a UI-only repository setting. After it is
+    # enabled in Settings -> Advanced Security, set the repository variable
+    # DEPENDENCY_GRAPH_ENABLED to "true" to activate this check.
+    if: ${{ vars.DEPENDENCY_GRAPH_ENABLED == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: moderate
