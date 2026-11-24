@@ -85,7 +85,7 @@
     <main>
       <article><h1 id="project-structure">Project Structure</h1>
 <h2 id="status">Status</h2>
-<p>This is the final repository structure for the 1.0.0 line. No <code>apps/</code> layer is introduced. The current <code>packages/</code>, <code>scripts/</code>, <code>docs/</code>, and <code>docs-site/</code> split is kept because it matches the actual build, test, and release boundaries and avoids a destructive migration of user work.</p>
+<p>This is the final repository structure for the 1.0.x line, including the 1.0.1 patch. No <code>apps/</code> layer is introduced. The current <code>packages/</code>, <code>scripts/</code>, <code>docs/</code>, and <code>docs-site/</code> split is kept because it matches the actual build, test, and release boundaries and avoids a destructive migration of user work.</p>
 <h2 id="layout">Layout</h2>
 <pre><code class="language-text">agent-debugger/
 ├── .github/
@@ -127,7 +127,7 @@
 <li><code>docs/</code> is the source of truth for documentation and assets; <code>docs-site/</code> is generated from it.</li>
 <li><code>.github/</code> contains automation only and never holds application logic.</li>
 <li>The root <code>package.json</code> is private. Publishing, if approved, happens per distributable package (<code>agent-debugger-sdk</code>, <code>agent-debugger-server</code>), not from the root.</li>
-<li>The desktop shell is browser-based and stays in <code>scripts/</code>; no native Electron/Tauri workspace is added for 1.0.0.</li>
+<li>The desktop shell is browser-based and stays in <code>scripts/</code>; no native Electron/Tauri workspace is added for 1.0.x.</li>
 </ul>
 <h2 id="rules-for-changes">Rules for changes</h2>
 <table><thead><tr><th>Change</th><th>Add it to</th></tr></thead><tbody><tr><td>A new event source normalizer</td><td><code>packages/ingest/src/adapters/</code> with a test in <code>packages/ingest/test/</code></td></tr><tr><td>A new redaction detector</td><td><code>packages/privacy/</code> with a count-only receipt test</td></tr><tr><td>A new analyzer rule</td><td><code>packages/server/src/analyzer.ts</code> with a fixture assertion</td></tr><tr><td>A new API route</td><td><code>packages/server/src/index.ts</code> with an API test</td></tr><tr><td>A new MCP tool</td><td><code>packages/mcp/src/tools.ts</code> with a protocol test</td></tr><tr><td>A new local command</td><td><code>scripts/</code> with a test in <code>scripts/test/</code></td></tr><tr><td>A new user guide</td><td><code>docs/</code> then regenerate <code>docs-site/</code> with <code>npm run build:docs</code></td></tr><tr><td>A new CI check</td><td><code>.github/workflows/</code> with least-privilege permissions</td></tr></tbody></table>

@@ -2,7 +2,7 @@
 
 ## Status
 
-This is the final repository structure for the 1.0.0 line. No `apps/` layer is introduced. The current `packages/`, `scripts/`, `docs/`, and `docs-site/` split is kept because it matches the actual build, test, and release boundaries and avoids a destructive migration of user work.
+This is the final repository structure for the 1.0.x line, including the 1.0.1 patch. No `apps/` layer is introduced. The current `packages/`, `scripts/`, `docs/`, and `docs-site/` split is kept because it matches the actual build, test, and release boundaries and avoids a destructive migration of user work.
 
 ## Layout
 
@@ -49,7 +49,7 @@ agent-debugger/
 - `docs/` is the source of truth for documentation and assets; `docs-site/` is generated from it.
 - `.github/` contains automation only and never holds application logic.
 - The root `package.json` is private. Publishing, if approved, happens per distributable package (`agent-debugger-sdk`, `agent-debugger-server`), not from the root.
-- The desktop shell is browser-based and stays in `scripts/`; no native Electron/Tauri workspace is added for 1.0.0.
+- The desktop shell is browser-based and stays in `scripts/`; no native Electron/Tauri workspace is added for 1.0.x.
 
 ## Rules for changes
 

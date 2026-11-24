@@ -85,8 +85,8 @@
     <main>
       <article><h1 id="security-review">Security Review</h1>
 <h2 id="scope-and-status">Scope and status</h2>
-<p>This is a local-first security review of the v1.0.0 repository as of 2026-11-24. It covers the API, CLI, local store, web UI, desktop shell, MCP server, and Claude Code local adapter. It is not a penetration test, a formal audit, or a claim that the product is free of vulnerabilities.</p>
-<p>Version is <code>1.0.0</code>. The repository owner explicitly approved the version bump, tag, GitHub Release, demo GIF refresh, and Hacker News posting on 2026-11-24. npm publishing is approved but requires registry credentials that are not available in this environment. This document records the review; it does not itself grant approval.</p>
+<p>This is a local-first security review of the v1.0.0 repository as of 2026-11-24. It covers the API, CLI, local store, web UI, desktop shell, MCP server, and Claude Code local adapter. It is not a penetration test, a formal audit, or a claim that the product is free of vulnerabilities. The <code>v1.0.1</code> patch applies the correctness and privacy fixes listed in <code>CHANGELOG.md</code>; the review scope and trust boundaries are unchanged.</p>
+<p>Version is <code>1.0.1</code>; the original review covered <code>1.0.0</code>. The repository owner approved the v1.0.0 version bump, tag, GitHub Release, demo GIF refresh, and Hacker News posting, and later approved the v1.0.1 patch with local npm authentication, on 2026-11-24. npm publishing requires registry credentials that are not available in this environment. This document records the review; it does not itself grant approval.</p>
 <h2 id="assets-and-trust-boundaries">Assets and trust boundaries</h2>
 <table><thead><tr><th>Asset</th><th>Trust boundary</th></tr></thead><tbody><tr><td>Imported trace events, prompts, tool inputs/outputs</td><td>Agent process or pasted NDJSON → local API/store</td></tr><tr><td>Cause Package bundles and case comparisons</td><td>Local store → API → UI/export/MCP client</td></tr><tr><td>AI usage entries and redaction receipts</td><td>Provider response or adapter → usage ledger</td></tr><tr><td>Claude Code transcript files</td><td>Local filesystem → opt-in adapter → count-only usage result</td></tr><tr><td>Local API and desktop shell</td><td>Loopback process → browser on <code>127.0.0.1</code></td></tr></tbody></table>
 <h3 id="threat-model">Threat model</h3>
@@ -117,6 +117,7 @@
 <li>Claude Code and claude.ai Web usage require explicit consent before inclusion in totals.</li>
 <li><code>record_usage</code> rejects <code>claude_code_local</code> and <code>claude_web_export</code> sources so callers cannot bypass the consent path.</li>
 <li>The Claude adapter applies strict redaction before normalization and returns only count usage fields plus a redaction receipt. It never returns transcript text, raw payloads, or the source path.</li>
+<li>The <code>v1.0.1</code> patch also redacts event names, errors, and source paths before storing or exporting, and verifies <code>integrity.sha256</code> on portable Cause Package bundles.</li>
 </ul>
 <h3 id="claude-code-local-adapter">Claude Code local adapter</h3>
 <p>The adapter is off unless <code>AGENT_DEBUGGER_CLAUDE_LOCAL=enabled</code>. Each request must also provide <code>consentGranted: true</code> and <code>acknowledgedScope: true</code>.</p>
@@ -146,7 +147,7 @@
 </ul>
 <h2 id="findings-and-disposition">Findings and disposition</h2>
 <table><thead><tr><th>ID</th><th>Severity</th><th>Finding</th><th>Disposition</th></tr></thead><tbody><tr><td>SEC-01</td><td>Medium</td><td>The Claude adapter originally validated only lexical paths. A symlink inside <code>allowedRoots</code> could resolve to a transcript outside the root.</td><td>Fixed in Stage 8. Roots and target are canonicalized with <code>realpathSync</code>; containment is checked on both lexical and real paths before reading. A symlink-escape regression test was added. The test is skipped only when the OS denies symlink creation; CI on Linux exercises it.</td></tr><tr><td>SEC-02</td><td>Medium</td><td>Stage 6 CodeQL reported request forgery in the desktop proxy because the fetch URL was derived from the incoming request.</td><td>Fixed in <code>c50f397</code>. The proxy builds a URL from a fixed local <code>apiBase</code> and copies only path/search from the loopback request. An explicit suppression documents the intentional pattern. CI rerun is green.</td></tr><tr><td>SEC-03</td><td>Low</td><td>Stage 6 CodeQL reported user-visible error text derived from exceptions.</td><td>Fixed in <code>c50f397</code>. Proxy errors now return a generic message with no stack or path detail. CI rerun is green.</td></tr><tr><td>SEC-04</td><td>Low</td><td>API tests used fixed random port ranges and could fail when another local process held a port.</td><td>Fixed in Stage 5 with OS-assigned free ports. This is an availability/flakiness issue, not a data disclosure.</td></tr><tr><td>SEC-05</td><td>Accepted</td><td>If <code>AGENT_DEBUGGER_TOKEN</code> is set, the current web UI cannot perform mutating actions because it does not send the token.</td><td>Documented as an intentional mismatch rather than silently weakening API auth. Token-protected mutation remains available through CLI/API clients.</td></tr></tbody></table>
-<p>No finding in this review authorized a release by itself. The v1.0.0 release was approved separately by the repository owner on 2026-11-24.</p>
+<p>No finding in this review authorized a release by itself. The v1.0.0 release and the v1.0.1 patch were approved separately by the repository owner on 2026-11-24.</p>
 <h2 id="residual-risks">Residual risks</h2>
 <ul>
 <li>A malicious process running as the same OS user can read local files, environment variables, and the local event store. Agent Debugger does not provide OS-level isolation.</li>
@@ -165,9 +166,9 @@
 <li>Stage 6 initially failed CodeQL with SEC-02 and SEC-03. The fix commit <code>c50f397</code> was pushed before merge and the rerun was green.</li>
 <li>The OpenSSF Scorecard workflow runs on <code>main</code> and weekly, with results uploaded as an artifact and SARIF; it is not a required PR gate.</li>
 </ul>
-<p>Stage 9 (#21) and Stage 10 (#22) CI were green before merge. The v1.0.0 release pull request is validated by <code>npm run verify</code> and the same required checks. This document records that approval; it does not grant it.</p>
+<p>Stage 9 (#21) and Stage 10 (#22) CI were green before merge. PR #24 (<code>fix/publish-readiness</code>) was merged with all required checks green. The v1.0.1 release pull request is validated by <code>npm run verify</code> and the same required checks. This document records that approval; it does not grant it.</p>
 <h2 id="recommendation">Recommendation</h2>
-<p>The implementation is suitable for local v1.0.0 use with synthetic or consented, pre-redacted traces. Do not describe it as audited or production-hardened. Keep the residual risks explicit: real-user validation is unexecuted, cold start misses the 500 ms target, and the remaining supply-chain activations are owner UI actions.</p></article>
+<p>The implementation is suitable for local v1.0.1 use with synthetic or consented, pre-redacted traces. Do not describe it as audited or production-hardened. Keep the residual risks explicit: real-user validation is unexecuted, cold start misses the 500 ms target, and the remaining supply-chain activations are owner UI actions.</p></article>
       <p class="generated">Generated by <code>scripts/build-docs.mjs</code>. Do not edit this HTML directly.</p>
     </main>
     <aside class="toc">

@@ -8,6 +8,31 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 No unreleased changes.
 
+## [1.0.1] - 2026-11-24
+
+### Fixed
+
+- `agent-debugger-sdk` now ships compiled JS and declarations via a `prepack` build.
+- `agent-debugger-server` now ships a self-contained compiled server and runs it without `tsx`.
+- Explicit token totals are preserved when mixed with token bucket entries.
+- Claude local/web usage submitted through the bulk API can no longer bypass consent.
+- Cause Package analysis, usage, privacy, and event string fields are redacted before hashing; `integrity.sha256` is verified.
+- Audio and cached token subsets are no longer double counted in OpenAI, LangChain, and OpenTelemetry adapters.
+- `agent-debugger pipe` exits non-zero when any event fails to send.
+- ISO 8601 timestamps and explicit import `traceId` overrides are honored.
+- Usage sources are validated and `manual_import` keeps its source label.
+- Event names, errors, and source paths are redacted on ingest and in the SDK; SDK redaction no longer mutates prototypes.
+- Compare/replay UI races, MCP notification responses, desktop child cleanup, static shell fallback, and cold-start timing were corrected.
+
+### Changed
+
+- All workspace manifests and runtime version constants now report `1.0.1`.
+- The `v1.0.0` tag and GitHub Release remain unchanged; this patch supersedes the npm package contents only.
+
+### Release approval
+
+The repository owner approved the v1.0.1 patch release and local npm authentication on 2026-11-24. No external AI service call, upload, credential creation, or secret logging was performed.
+
 ## [1.0.0] - 2026-11-24
 
 ### Added
