@@ -268,6 +268,8 @@ type AgentEvent = {
 - Redaction is applied on import, event submission, SSE output, NDJSON export, and portable Cause Package export.
 - Portable bundles carry counts and placeholders only; they never include a store path or raw usage payload.
 
+For the threat model, findings, residual risks, and CI evidence, see `docs/SECURITY_REVIEW.md`. It is a pre-release review, not an audit or production-hardening claim.
+
 ## Rules currently implemented
 
 The analyzer emits evidence for:
@@ -347,8 +349,9 @@ No release is tagged or published yet. The following remain in scope before a re
 - [x] Local MCP server exposing analysis and package tools
 - [x] Browser-based desktop shell around the local UI
 - [x] Benchmark harness and published results against the targets above
-- [ ] Real-user validation with consented traces and third-party ground truth
-- [ ] Final security review and explicit release approval
+- [ ] Real-user validation with consented traces and third-party ground truth (not executed; see `docs/VALIDATION_PLAN.md`)
+- [x] Final security review documented with findings and residual risks
+- [ ] Explicit release approval, version bump, tag, release, and publish
 
 A version bump, tag, GitHub Release, npm publish, and Hacker News posting all require explicit approval. CI never performs them.
 
@@ -362,7 +365,7 @@ This runs the JavaScript syntax checks, TypeScript checks, tests, the web build,
 
 A browsable docs site is generated into `docs-site/` with `npm run build:docs`. Host that directory as static files or open `docs-site/index.html` locally.
 
-See `docs/PRODUCT_BRIEF.md`, `docs/ARCHITECTURE.md`, `docs/VALIDATION_PLAN.md`, `docs/USAGE_PRIVACY.md`, `docs/CASE_COMPARE.md`, `docs/MCP_CLAUDE_LOCAL.md`, `docs/DESKTOP_SHELL.md`, and `docs/PERFORMANCE.md` for scope, design, validation plans, and current contracts. Brand assets are documented in `docs/assets/README.md`.
+See `docs/PRODUCT_BRIEF.md`, `docs/ARCHITECTURE.md`, `docs/VALIDATION_PLAN.md`, `docs/SECURITY_REVIEW.md`, `docs/USAGE_PRIVACY.md`, `docs/CASE_COMPARE.md`, `docs/MCP_CLAUDE_LOCAL.md`, `docs/DESKTOP_SHELL.md`, and `docs/PERFORMANCE.md` for scope, design, validation status, security review, and current contracts. Brand assets are documented in `docs/assets/README.md`.
 
 ## License
 

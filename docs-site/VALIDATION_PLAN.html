@@ -73,6 +73,7 @@
         <a href="PERFORMANCE.html">Performance results</a>
         <a href="AI_SOURCE_MATRIX.html">AI source matrix</a>
         <a href="VALIDATION_PLAN.html" class="active">Validation plan</a>
+        <a href="SECURITY_REVIEW.html">Security review</a>
         <a href="OPS_BOTS.html">Ops bots</a>
         <a href="COORDINATOR_PLAN.html">Coordinator plan</a>
         <a href="HN_LAUNCH_DRAFT.html">HN launch draft</a>
@@ -82,7 +83,11 @@
     <main>
       <article><h1 id="validation-plan">Validation Plan</h1>
 <h2 id="status">Status</h2>
-<p>Planned. Not executed. No user results are claimed.</p>
+<p><strong>Not executed. No user results, effect estimates, or validation claims are made.</strong></p>
+<p>Current state as of 2026-11-24:</p>
+<table><thead><tr><th>Item</th><th>Required</th><th>Current</th><th>Status</th></tr></thead><tbody><tr><td>Target-user participants</td><td>6–8</td><td>0 recruited</td><td>Blocked</td></tr><tr><td>Consented, pre-redacted real failed traces</td><td>At least 6</td><td>0 available</td><td>Blocked</td></tr><tr><td>Third-party ground-truth owner</td><td>1</td><td>Not assigned</td><td>Blocked</td></tr><tr><td>Manual Cause Package authors</td><td>1 or more</td><td>Not assigned</td><td>Blocked</td></tr><tr><td>Procedure rehearsal</td><td>1 recorded run</td><td>Not performed as a recorded study procedure</td><td>Not executed</td></tr><tr><td>H1 hypothesis</td><td>Tested</td><td>Untested</td><td>No decision</td></tr></tbody></table>
+<p>Automated fixture tests exercise import, analysis, and bundle shape. They are <strong>not</strong> a user study and do not count as evidence for H1. Synthetic traces may be used only for procedure rehearsal, and any rehearsal result must be labelled <code>not evaluable</code>.</p>
+<p>Executing the study requires all blocking conditions below to be satisfied first.</p>
 <h2 id="hypothesis-under-test">Hypothesis under test</h2>
 <p>H1 (product hypothesis, not a confirmed decision):</p>
 <blockquote><p>A rule-based Cause Package generated from a failed agent trace helps the target developer reach a plausible cause and a concrete next debugging action faster than reading the raw trace alone.</p></blockquote>

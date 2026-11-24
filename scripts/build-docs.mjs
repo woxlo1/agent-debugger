@@ -17,6 +17,7 @@ const nav = [
   { file: "PERFORMANCE.md", title: "Performance results" },
   { file: "AI_SOURCE_MATRIX.md", title: "AI source matrix" },
   { file: "VALIDATION_PLAN.md", title: "Validation plan" },
+  { file: "SECURITY_REVIEW.md", title: "Security review" },
   { file: "OPS_BOTS.md", title: "Ops bots" },
   { file: "COORDINATOR_PLAN.md", title: "Coordinator plan" },
   { file: "HN_LAUNCH_DRAFT.md", title: "HN launch draft" },

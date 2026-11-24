@@ -2,7 +2,22 @@
 
 ## Status
 
-Planned. Not executed. No user results are claimed.
+**Not executed. No user results, effect estimates, or validation claims are made.**
+
+Current state as of 2026-11-24:
+
+| Item | Required | Current | Status |
+|---|---|---|---|
+| Target-user participants | 6–8 | 0 recruited | Blocked |
+| Consented, pre-redacted real failed traces | At least 6 | 0 available | Blocked |
+| Third-party ground-truth owner | 1 | Not assigned | Blocked |
+| Manual Cause Package authors | 1 or more | Not assigned | Blocked |
+| Procedure rehearsal | 1 recorded run | Not performed as a recorded study procedure | Not executed |
+| H1 hypothesis | Tested | Untested | No decision |
+
+Automated fixture tests exercise import, analysis, and bundle shape. They are **not** a user study and do not count as evidence for H1. Synthetic traces may be used only for procedure rehearsal, and any rehearsal result must be labelled `not evaluable`.
+
+Executing the study requires all blocking conditions below to be satisfied first.
 
 ## Hypothesis under test
 

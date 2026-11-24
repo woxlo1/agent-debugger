@@ -73,6 +73,7 @@
         <a href="PERFORMANCE.html">Performance results</a>
         <a href="AI_SOURCE_MATRIX.html">AI source matrix</a>
         <a href="VALIDATION_PLAN.html">Validation plan</a>
+        <a href="SECURITY_REVIEW.html">Security review</a>
         <a href="OPS_BOTS.html">Ops bots</a>
         <a href="COORDINATOR_PLAN.html" class="active">Coordinator plan</a>
         <a href="HN_LAUNCH_DRAFT.html">HN launch draft</a>
@@ -89,8 +90,8 @@
 <li>Existing local commits from the earlier phase were diverged from <code>origin/main</code>. This branch includes <code>origin/main</code> via a normal merge commit, not a reset or force push.</li>
 </ul>
 <h2 id="current-stage">Current stage</h2>
-<p>Stage 7: benchmark harness and published results.</p>
-<p>Stage 7 builds on the merged Stage 1 usage contracts, Stage 2 server/CLI/web integration, Stage 3 Case Packages, Stage 4 docs/assets, Stage 5 MCP/adapter, and Stage 6 desktop shell. It adds a dependency-free benchmark script, publishes synthetic 10,000-event results in <code>docs/PERFORMANCE.md</code>, and records the cold-start target miss honestly. No release action is performed in this stage.</p>
+<p>Stage 8: final security review and validation-status documentation.</p>
+<p>Stage 8 builds on the merged Stage 1 usage contracts, Stage 2 server/CLI/web integration, Stage 3 Case Packages, Stage 4 docs/assets, Stage 5 MCP/adapter, Stage 6 desktop shell, and Stage 7 benchmarks. It adds <code>docs/SECURITY_REVIEW.md</code>, marks real-user validation as not executed in <code>docs/VALIDATION_PLAN.md</code>, and hardens the Claude adapter&#39;s path allowlist with realpath containment. No release action is performed in this stage.</p>
 <h2 id="shared-interfaces-frozen-by-the-coordinator">Shared interfaces frozen by the coordinator</h2>
 <p>These files are coordinator-owned. No parallel session may edit them without coordinator approval:</p>
 <ul>
@@ -113,6 +114,7 @@
 <li>Add case comparison and portable bundles.</li>
 <li>Add docs, icons, demo GIF, docs site, and HN draft.</li>
 <li>Add benchmark harness and ops bots.</li>
+<li>Document final security review and unexecuted validation status.</li>
 <li>Final <code>npm run verify</code>, then pull request to <code>main</code>.</li>
 </ol>
 <h2 id="verification-for-every-stage">Verification for every stage</h2>

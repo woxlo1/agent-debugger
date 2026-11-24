@@ -77,8 +77,9 @@ All of the following are enforced:
 
 - `AGENT_DEBUGGER_CLAUDE_LOCAL=enabled` for the process
 - `consentGranted: true` and `acknowledgedScope: true` in the request
-- At least one absolute `allowedRoots` entry
-- The target must be a `.jsonl` file inside an allowed root
+- At least one absolute `allowedRoots` entry pointing to an existing directory
+- The target must be an absolute `.jsonl` path inside an allowed root
+- Both the supplied path and its `realpath` must be inside an allowed root, so a symlink cannot escape the allowlist
 - File size is capped at 10 MB and records at 5,000 (default 500)
 - Strict redaction runs before any usage normalization
 
@@ -106,4 +107,4 @@ It never returns transcript text, the source path, raw JSON lines, prompts, tool
 npm run verify
 ```
 
-The MCP tests cover initialization, tool discovery, analysis, comparison, package export, error responses, redaction of a synthetic secret, consent enforcement, path allowlisting, and the process-level opt-in switch.
+The MCP tests cover initialization, tool discovery, analysis, comparison, package export, error responses, redaction of a synthetic secret, consent enforcement, path allowlisting, symlink containment, relative and nonexistent root rejection, and the process-level opt-in switch. Symlink creation tests are skipped only on platforms where the local process is not permitted to create symlinks. See `docs/SECURITY_REVIEW.md` for the security disposition.
