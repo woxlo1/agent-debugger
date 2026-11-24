@@ -1,7 +1,7 @@
 {
   "name": "agent-debugger-monorepo",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0-alpha.0",
   "workspaces": [
     "packages/server",
     "packages/sdk",
@@ -10,7 +10,11 @@
   ],
   "scripts": {
     "dev": "concurrently -n SERVER,WEB -c green,cyan \"npm run dev -w packages/server\" \"npm run dev -w packages/web\"",
-    "demo": "tsx packages/example-agent/run.ts"
+    "demo": "tsx packages/example-agent/run.ts",
+    "typecheck": "tsc --noEmit -p packages/server/tsconfig.json && tsc --noEmit -p packages/sdk/tsconfig.json && tsc --noEmit -p packages/web/tsconfig.json",
+    "smoke": "tsx packages/server/test/smoke.ts",
+    "test": "tsx packages/server/test/smoke.ts && tsx packages/server/test/importer.test.ts && tsx packages/server/test/analyzer.test.ts",
+    "verify": "node --check packages/server/bin/pipe.js && node --check packages/server/bin/cli.js && npm run typecheck && npm test && npm run build -w packages/web"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
