@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: node --check packages/server/bin/pipe.js
+      - run: node --check packages/server/bin/cli.js
+      - run: npx tsc --noEmit -p packages/server/tsconfig.json
+      - run: npx tsc --noEmit -p packages/sdk/tsconfig.json
+      - run: npm run build -w packages/web
+      - run: npm test
