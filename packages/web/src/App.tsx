@@ -5,8 +5,10 @@ import TraceList from "./components/TraceList"
 import ReplayTimeline from "./components/ReplayTimeline"
 import DetailPanel from "./components/DetailPanel"
 import AnalysisPanel from "./components/AnalysisPanel"
+import UsagePanel from "./components/UsagePanel"
+import PrivacyPanel from "./components/PrivacyPanel"
 
-type View = "replay" | "analysis"
+type View = "replay" | "analysis" | "usage" | "privacy"
 
 export default function App() {
   const [traces, setTraces] = useState<TraceSummary[]>([])
@@ -65,7 +67,7 @@ export default function App() {
           Failed trace → evidence → debugger handoff
         </span>
         <div className="ml-auto flex gap-1">
-          {(["analysis", "replay"] as View[]).map((item) => (
+          {(["analysis", "replay", "usage", "privacy"] as View[]).map((item) => (
             <button
               key={item}
               onClick={() => setView(item)}
@@ -75,7 +77,13 @@ export default function App() {
                   : "text-zinc-400 hover:bg-zinc-900"
               }`}
             >
-              {item === "analysis" ? "Cause Package" : "Replay"}
+              {item === "analysis"
+                ? "Cause Package"
+                : item === "replay"
+                  ? "Replay"
+                  : item === "usage"
+                    ? "Usage"
+                    : "Privacy"}
             </button>
           ))}
         </div>
@@ -90,6 +98,10 @@ export default function App() {
 
         {view === "analysis" ? (
           <AnalysisPanel traceId={selectedTraceId} onImported={handleImported} />
+        ) : view === "usage" ? (
+          <UsagePanel traceId={selectedTraceId} />
+        ) : view === "privacy" ? (
+          <PrivacyPanel traceId={selectedTraceId} />
         ) : (
           <>
             <div className="w-[420px] border-r border-zinc-800">
