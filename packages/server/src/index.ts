@@ -111,13 +111,38 @@ app.get("/api/traces/:traceId/export", async (request, reply) => {
   return exportNdjson(events)
 })
 
-// Local-only debugger route; mutating endpoints require a token when configured.
+// Minimal in-memory limiter for the local debugger. No dependency is added.
+const RESET_WINDOW_MS = 60_000
+const RESET_MAX = 5
+const resetHits = new Map<string, number[]>()
 
-// lgtm[js/missing-rate-limiting]
-app.post("/api/reset", async () => {
-  store.clear()
-  return { ok: true }
-})
+function limitReset(
+  request: { ip: string },
+  reply: { code: (status: number) => { send: (body: unknown) => unknown } },
+  done: () => void,
+): void {
+  const now = Date.now()
+  const hits = (resetHits.get(request.ip) ?? []).filter((time) => now - time < RESET_WINDOW_MS)
+  if (hits.length >= RESET_MAX) {
+    reply.code(429).send({ error: "Too many reset requests" })
+    return
+  }
+  hits.push(now)
+  resetHits.set(request.ip, hits)
+  done()
+}
+
+app.post(
+  "/api/reset",
+  {
+    preHandler: limitReset,
+    config: { rateLimit: { max: RESET_MAX, timeWindow: "1 minute" } },
+  },
+  async () => {
+    store.clear()
+    return { ok: true }
+  },
+)
 
 app.get("/api/stream", async (request, reply) => {
   reply.hijack()
