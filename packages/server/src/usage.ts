@@ -1,5 +1,6 @@
 import {
   createUsage,
+  SOURCE_LABELS,
   type AiSourceKind,
   type AiUsage,
   type ConsentState,
@@ -34,6 +35,15 @@ const BUCKET_KEYS: Array<keyof UsageBuckets> = [
   "totalTokens",
 ]
 
+const CONSENT_REQUIRED_SOURCES = new Set<AiSourceKind>([
+  "claude_code_local",
+  "claude_web_export",
+])
+
+function isKnownSource(value: string): value is AiSourceKind {
+  return Object.prototype.hasOwnProperty.call(SOURCE_LABELS, value)
+}
+
 function contextOf(input: NormalizeUsageInput): AdapterContext {
   return {
     id: input.id,
@@ -65,8 +75,12 @@ export function normalizeUsagePayload(input: NormalizeUsageInput): AiUsage | nul
       return normalizeLangChainUsage(input.payload, context)
     case "sdk_explicit":
       return normalizeSdkUsage(input.payload, context)
-    case "manual_import":
-      return normalizeSdkUsage(input.payload, context)
+    case "manual_import": {
+      const usage = normalizeSdkUsage(input.payload, context)
+      return usage
+        ? { ...usage, source: "manual_import", sourceLabel: SOURCE_LABELS.manual_import }
+        : null
+    }
     case "claude_code_local":
       return normalizeClaudeCodeUsage(input.payload, context)
     case "claude_web_export":
@@ -83,6 +97,7 @@ export function sanitizeUsageEntry(value: unknown): AiUsage | null {
   if (
     typeof raw.id !== "string" ||
     typeof raw.source !== "string" ||
+    !isKnownSource(raw.source) ||
     (raw.confidence !== "reported" && raw.confidence !== "estimated" && raw.confidence !== "unknown")
   ) {
     return null
@@ -96,13 +111,17 @@ export function sanitizeUsageEntry(value: unknown): AiUsage | null {
     }
   }
 
-  const consent: ConsentState =
+  const suppliedConsent: ConsentState =
     raw.consent === "granted" ||
     raw.consent === "denied" ||
     raw.consent === "required" ||
     raw.consent === "not-required"
       ? raw.consent
       : "not-required"
+  const consent: ConsentState =
+    CONSENT_REQUIRED_SOURCES.has(raw.source) && suppliedConsent === "not-required"
+      ? "required"
+      : suppliedConsent
 
   const costSource: CostSource =
     raw.costSource === "reported" || raw.costSource === "user-rate" ? raw.costSource : "none"

@@ -89,18 +89,23 @@ async function main() {
     }
   })
 
-  await waitForHealth(apiBase)
+  try {
+    await waitForHealth(apiBase)
 
-  ui = createDesktopStaticServer({ distDir, apiBase })
-  await new Promise((resolve, reject) => {
-    ui.once("error", reject)
-    ui.listen(uiPort, "127.0.0.1", resolve)
-  })
+    ui = createDesktopStaticServer({ distDir, apiBase })
+    await new Promise((resolve, reject) => {
+      ui.once("error", reject)
+      ui.listen(uiPort, "127.0.0.1", resolve)
+    })
 
-  console.log(`\n  Agent Debugger desktop shell: ${uiUrl}`)
-  console.log("  Local API and UI are bound to 127.0.0.1 only.")
-  console.log("  Press Ctrl+C to stop.\n")
-  openBrowser(uiUrl)
+    console.log(`\n  Agent Debugger desktop shell: ${uiUrl}`)
+    console.log("  Local API and UI are bound to 127.0.0.1 only.")
+    console.log("  Press Ctrl+C to stop.\n")
+    openBrowser(uiUrl)
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error))
+    stop(1)
+  }
 }
 
 main().catch((error) => {

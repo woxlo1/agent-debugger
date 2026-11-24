@@ -42,6 +42,27 @@ function run() {
   assert.equal("prompt" in sanitized, false)
   assert.equal("apiKey" in sanitized, false)
 
+  const claudeBulk = sanitizeUsageEntry({
+    id: "claude-bulk-no-consent",
+    source: "claude_code_local",
+    confidence: "reported",
+    inputTokens: 10,
+  })
+  assert.ok(claudeBulk)
+  assert.equal(claudeBulk.consent, "required")
+  assert.equal(
+    sanitizeUsageEntry({ id: "bogus", source: "not-a-source", confidence: "reported" }),
+    null,
+  )
+
+  const manual = normalizeUsagePayload({
+    source: "manual_import",
+    payload: { id: "manual-1", inputTokens: 3, outputTokens: 1 },
+  })
+  assert.ok(manual)
+  assert.equal(manual.source, "manual_import")
+  assert.equal(manual.sourceLabel, "Manual import")
+
   const audit = auditPrivacy([usage, claude])
   assert.equal(audit.entries, 2)
   assert.equal(audit.rawValuesStored, false)

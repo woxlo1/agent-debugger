@@ -1,4 +1,4 @@
-import { createReadStream, existsSync, statSync } from "node:fs"
+import { createReadStream, existsSync, realpathSync, statSync } from "node:fs"
 import http from "node:http"
 import net from "node:net"
 import path from "node:path"
@@ -63,6 +63,29 @@ function resolveStaticPath(root, pathname) {
   return target
 }
 
+function isInsideRoot(root, target) {
+  const inside = path.relative(root, target)
+  return !inside.startsWith("..") && !path.isAbsolute(inside)
+}
+
+function resolveWithinRoot(root, target) {
+  if (!target || !existsSync(target)) return null
+  const real = realpathSync(target)
+  return isInsideRoot(root, real) ? real : null
+}
+
+function acceptsHtmlFallback(request, pathname) {
+  if (path.extname(pathname) === "") return true
+  const accept = request.headers.accept
+  return typeof accept === "string" && accept.includes("text/html")
+}
+
+function sendMissingAssets(response) {
+  response.statusCode = 404
+  response.setHeader("content-type", "text/plain; charset=utf-8")
+  response.end("Desktop shell assets are missing. Run npm run build -w packages/web.")
+}
+
 async function readBody(request) {
   if (request.method === "GET" || request.method === "HEAD") return undefined
   const chunks = []
@@ -113,20 +136,26 @@ async function proxyApi(request, response, target, body) {
 }
 
 async function serveStatic(request, response, distDir, pathname) {
-  let target = resolveStaticPath(distDir, pathname)
-  if (!target || !existsSync(target)) {
-    target = path.join(distDir, "index.html")
+  let root
+  try {
+    root = realpathSync(distDir)
+  } catch {
+    sendMissingAssets(response)
+    return
   }
-  if (!existsSync(target)) {
-    response.statusCode = 404
-    response.setHeader("content-type", "text/plain; charset=utf-8")
-    response.end("Desktop shell assets are missing. Run npm run build -w packages/web.")
+
+  let target = resolveWithinRoot(root, resolveStaticPath(root, pathname))
+  if (!target && acceptsHtmlFallback(request, pathname)) {
+    target = resolveWithinRoot(root, path.join(root, "index.html"))
+  }
+  if (!target) {
+    sendMissingAssets(response)
     return
   }
   if (statSync(target).isDirectory()) {
-    target = path.join(target, "index.html")
+    target = resolveWithinRoot(root, path.join(target, "index.html"))
   }
-  if (!existsSync(target)) {
+  if (!target) {
     response.statusCode = 404
     response.end()
     return

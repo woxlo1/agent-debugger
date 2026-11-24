@@ -266,10 +266,16 @@ app.get("/api/stream", async (request, reply) => {
   request.raw.on("close", () => unsubscribe())
 })
 
-app.listen({ port: PORT, host: HOST }).then(() => {
-  console.log(`\n  agent-debugger running at http://${HOST}:${PORT}`)
-  console.log(`  store: ${STORE_PATH}`)
-  console.log(`  schema version: ${SCHEMA_VERSION}`)
-  if (TOKEN) console.log("  mutating APIs require x-agent-debugger-token")
-  console.log("")
-})
+app
+  .listen({ port: PORT, host: HOST })
+  .then(() => {
+    console.log(`\n  agent-debugger running at http://${HOST}:${PORT}`)
+    console.log(`  store: ${STORE_PATH}`)
+    console.log(`  schema version: ${SCHEMA_VERSION}`)
+    if (TOKEN) console.log("  mutating APIs require x-agent-debugger-token")
+    console.log("")
+  })
+  .catch((error: unknown) => {
+    console.error(`[agent-debugger] failed to listen on ${HOST}:${PORT}`, error)
+    process.exit(1)
+  })

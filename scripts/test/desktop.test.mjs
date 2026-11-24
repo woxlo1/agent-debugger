@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs"
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs"
 import http from "node:http"
 import os from "node:os"
 import path from "node:path"
@@ -19,7 +19,6 @@ async function run() {
   const uiPort = await getFreePort()
   writeFileSync(outside, "outside secret", "utf8")
 
-  const { mkdirSync } = await import("node:fs")
   mkdirSync(distDir, { recursive: true })
   writeFileSync(
     path.join(distDir, "index.html"),
@@ -27,6 +26,13 @@ async function run() {
     "utf8",
   )
   writeFileSync(path.join(distDir, "app.js"), "console.log('ok')\n", "utf8")
+  let symlinkCreated = false
+  try {
+    symlinkSync(outside, path.join(distDir, "leak.txt"), "file")
+    symlinkCreated = true
+  } catch {
+    // Symlink creation needs elevated privileges on some systems.
+  }
 
   const api = http.createServer((request, response) => {
     response.setHeader("content-type", "application/json; charset=utf-8")
@@ -62,6 +68,18 @@ async function run() {
     assert.equal(fallback.status, 200)
     assert.match(await fallback.text(), /shell/)
 
+    const missingAsset = await fetch(`${base}/missing.js`)
+    assert.equal(missingAsset.status, 404)
+    const missingBody = await missingAsset.text()
+    assert.match(missingBody, /assets are missing/)
+    assert.equal(missingBody.includes("<!doctype"), false)
+
+    const htmlFallback = await fetch(`${base}/missing.js`, {
+      headers: { accept: "text/html" },
+    })
+    assert.equal(htmlFallback.status, 200)
+    assert.match(await htmlFallback.text(), /shell/)
+
     const proxied = await fetch(`${base}/api/health`).then((response) => response.json())
     assert.deepEqual(proxied, { ok: true, method: "GET", url: "/api/health" })
 
@@ -76,6 +94,12 @@ async function run() {
     const traversal = await fetch(`${base}/%2e%2e%2foutside.txt`)
     const traversalText = await traversal.text()
     assert.equal(traversalText.includes("outside secret"), false)
+
+    if (symlinkCreated) {
+      const leak = await fetch(`${base}/leak.txt`)
+      assert.equal(leak.status, 404)
+      assert.equal((await leak.text()).includes("outside secret"), false)
+    }
 
     console.log("desktop shell tests ok")
   } finally {

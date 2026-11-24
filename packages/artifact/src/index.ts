@@ -122,6 +122,37 @@ export type BuildCausePackageInput = {
   generatorVersion?: string
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
+/** Redact string values while preserving numeric contract fields such as token buckets. */
+function redactStrings<T>(value: T, redactor: (value: unknown) => unknown): T {
+  if (typeof value === "string") return redactor(value) as T
+  if (Array.isArray(value)) {
+    return value.map((entry) => redactStrings(entry, redactor)) as T
+  }
+  if (isRecord(value)) {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, entry]) => [key, redactStrings(entry, redactor)]),
+    ) as T
+  }
+  return value
+}
+
+function redactEvent(
+  event: CausePackageEvent,
+  redactor: (value: unknown) => unknown,
+): CausePackageEvent {
+  const redacted = { ...redactStrings(event, redactor) }
+  if ("input" in event) redacted.input = redactor(event.input)
+  if ("output" in event) redacted.output = redactor(event.output)
+  if (event.attributes) {
+    redacted.attributes = redactor(event.attributes) as Record<string, unknown>
+  }
+  return redacted
+}
+
 /** Deterministic JSON serialization so the fingerprint is stable across runtimes. */
 function stableStringify(value: unknown): string {
   if (value === null || typeof value !== "object") {
@@ -160,9 +191,7 @@ export function buildCausePackage(input: BuildCausePackageInput): CausePackage {
     throw new Error("Cause Package rejected a privacy audit that stores raw values")
   }
 
-  const events = input.events.map(
-    (event) => input.redactor(event) as CausePackageEvent,
-  )
+  const events = input.events.map((event) => redactEvent(event, input.redactor))
   const body: CausePackageBody = {
     schemaVersion: CAUSE_PACKAGE_SCHEMA_VERSION,
     kind: "cause-package",
@@ -176,9 +205,9 @@ export function buildCausePackage(input: BuildCausePackageInput): CausePackage {
       eventSchemaVersion: events[0]?.schemaVersion ?? 0,
       analysisEngine: input.analysis.basedOn,
     },
-    analysis: input.analysis,
-    usage: input.usage,
-    privacy: input.privacy,
+    analysis: redactStrings(input.analysis, input.redactor),
+    usage: redactStrings(input.usage, input.redactor),
+    privacy: redactStrings(input.privacy, input.redactor),
     events,
     integrity: {
       eventCount: events.length,
@@ -200,6 +229,7 @@ export function verifyCausePackage(packageValue: CausePackage): boolean {
   if (packageValue.integrity.redacted !== true) return false
   if (packageValue.integrity.rawValuesStored !== false) return false
   if (packageValue.privacy.rawValuesStored !== false) return false
+  if (packageValue.integrity.sha256 !== packageValue.fingerprint) return false
   const { fingerprint, ...body } = packageValue
   return hashBody(body as CausePackageBody) === fingerprint
 }

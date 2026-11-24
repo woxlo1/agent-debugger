@@ -25,21 +25,40 @@ export function normalizeOpenAIUsage(
       : (audioInputTokens ?? 0) + (audioOutputTokens ?? 0)
 
   const warnings: string[] = []
+  const inputSubsetTokens = (cacheReadTokens ?? 0) + (audioInputTokens ?? 0)
+  const outputSubsetTokens = (reasoningTokens ?? 0) + (audioOutputTokens ?? 0)
   const inputTokens =
     promptTokens === undefined
       ? undefined
-      : cacheReadTokens === undefined
-        ? promptTokens
-        : Math.max(0, promptTokens - cacheReadTokens)
+      : Math.max(0, promptTokens - inputSubsetTokens)
   const outputTokens =
     completionTokens === undefined
       ? undefined
-      : reasoningTokens === undefined
-        ? completionTokens
-        : Math.max(0, completionTokens - reasoningTokens)
+      : Math.max(0, completionTokens - outputSubsetTokens)
 
-  if (cacheReadTokens !== undefined && promptTokens !== undefined && cacheReadTokens > promptTokens) {
+  if (promptTokens !== undefined && cacheReadTokens !== undefined && cacheReadTokens > promptTokens) {
     warnings.push("cached_tokens exceeds prompt_tokens; input bucket clamped to zero")
+  }
+  if (
+    promptTokens !== undefined &&
+    audioInputTokens !== undefined &&
+    audioInputTokens > promptTokens
+  ) {
+    warnings.push("audio input tokens exceed prompt_tokens; input bucket clamped to zero")
+  }
+  if (
+    completionTokens !== undefined &&
+    reasoningTokens !== undefined &&
+    reasoningTokens > completionTokens
+  ) {
+    warnings.push("reasoning_tokens exceeds completion_tokens; output bucket clamped to zero")
+  }
+  if (
+    completionTokens !== undefined &&
+    audioOutputTokens !== undefined &&
+    audioOutputTokens > completionTokens
+  ) {
+    warnings.push("audio output tokens exceed completion_tokens; output bucket clamped to zero")
   }
 
   const reportedTotal = readNumber(usage.total_tokens)

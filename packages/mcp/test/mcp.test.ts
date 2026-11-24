@@ -5,7 +5,7 @@ import os from "node:os"
 import path from "node:path"
 
 type RpcResponse = {
-  id: number
+  id?: number | string | null
   result?: Record<string, any>
   error?: { code: number; message: string }
 }
@@ -117,6 +117,9 @@ async function run() {
         },
         { jsonrpc: "2.0", id: 6, method: "tools/call", params: { name: "does_not_exist" } },
         { jsonrpc: "2.0", id: 7, method: "unknown/method" },
+        { jsonrpc: "2.0", method: "notifications/initialized" },
+        { jsonrpc: "2.0", method: "unknown/method" },
+        { jsonrpc: "2.0", id: null, method: "unknown/method" },
       ],
       {
         AGENT_DEBUGGER_STORE: storePath,
@@ -125,7 +128,8 @@ async function run() {
     )
 
     const byId = new Map(responses.map((response) => [response.id, response]))
-    assert.equal(byId.size, 7)
+    assert.equal(responses.length, 8)
+    assert.equal(byId.size, 8)
 
     const init = byId.get(1)!.result!
     assert.equal(init.protocolVersion, "2025-06-18")
@@ -154,6 +158,8 @@ async function run() {
 
     assert.equal(byId.get(6)!.result!.isError, true)
     assert.equal(byId.get(7)!.error?.code, -32601)
+    assert.equal(byId.get(null)!.error?.code, -32601)
+    assert.equal(responses.some((response) => response.id === undefined), false)
 
     console.log("mcp protocol tests ok")
   } finally {

@@ -26,6 +26,21 @@ export function normalizeLangChainUsage(
     return null
   }
 
+  const warnings: string[] = []
+  if (cacheReadTokens !== undefined && inputTokens !== undefined && cacheReadTokens > inputTokens) {
+    warnings.push("cache_read_input_tokens exceeds input_tokens; input bucket clamped to zero")
+  }
+  const exclusiveInputTokens =
+    inputTokens === undefined
+      ? undefined
+      : Math.max(0, inputTokens - (cacheReadTokens ?? 0))
+  const reportedTotal = readNumber(usage.total_tokens)
+  const totalTokens =
+    reportedTotal ??
+    (exclusiveInputTokens === undefined && outputTokens === undefined
+      ? undefined
+      : (exclusiveInputTokens ?? 0) + (outputTokens ?? 0) + (cacheReadTokens ?? 0))
+
   return buildUsage({
     prefix: "langchain",
     source: "langchain_callback",
@@ -35,13 +50,11 @@ export function normalizeLangChainUsage(
     model: readString(root.model_name ?? root.model ?? usage.model_name),
     requestId: readString(root.ls_run_id ?? root.run_id),
     buckets: {
-      inputTokens,
+      inputTokens: exclusiveInputTokens,
       outputTokens,
       cacheReadTokens,
-      totalTokens:
-        inputTokens === undefined && outputTokens === undefined
-          ? undefined
-          : (inputTokens ?? 0) + (outputTokens ?? 0) + (cacheReadTokens ?? 0),
+      totalTokens,
     },
+    warnings,
   })
 }

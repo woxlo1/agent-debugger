@@ -18,8 +18,11 @@ export default function ComparePanel({ traces, selectedTraceId }: Props) {
 
   useEffect(() => {
     if (selectedTraceId) setA(selectedTraceId)
-    else if (!a && traces.length > 0) setA(traces[0].traceId)
-  }, [selectedTraceId, traces, a])
+  }, [selectedTraceId])
+
+  useEffect(() => {
+    if (traces.length > 0) setA((current) => current || traces[0].traceId)
+  }, [traces])
 
   useEffect(() => {
     if (b && b !== a) return

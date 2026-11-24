@@ -62,16 +62,25 @@ function redact(value: unknown, depth = 0): unknown {
   }
   if (Array.isArray(value)) return value.map((entry) => redact(entry, depth + 1))
   if (typeof value === "object") {
-    const result: Record<string, unknown> = {}
-    for (const [key, entry] of Object.entries(value as Record<string, unknown>)) {
-      result[key] = SECRET_KEY.test(key) ? "[REDACTED]" : redact(entry, depth + 1)
-    }
-    return result
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, entry]) => [
+        key,
+        SECRET_KEY.test(key) ? "[REDACTED]" : redact(entry, depth + 1),
+      ]),
+    )
   }
   return value
 }
 
-let endpoint = process.env.AGENT_DEBUGGER_URL ?? "http://localhost:4317"
+function safeSource(source: SourceRef | undefined): SourceRef | undefined {
+  if (!source) return undefined
+  const redacted = redact(source) as SourceRef
+  if (!redacted.path) return redacted
+  const segments = redacted.path.replace(/\\/g, "/").split("/").filter(Boolean)
+  return { ...redacted, path: segments.length > 2 ? segments.slice(-2).join("/") : redacted.path }
+}
+
+let endpoint = process.env.AGENT_DEBUGGER_URL ?? "http://127.0.0.1:4317"
 let token = process.env.AGENT_DEBUGGER_TOKEN
 let currentTraceId =
   process.env.AGENT_DEBUGGER_TRACE_ID ?? `trace-${Date.now()}`
@@ -94,8 +103,9 @@ export function setToken(value: string | undefined) {
 
 function normalizeError(error: TraceInput["error"]): EventError | undefined {
   if (!error) return undefined
-  if (typeof error === "string") return { message: error }
-  return error
+  const normalized: EventError =
+    typeof error === "string" ? { message: error } : { ...error }
+  return redact(normalized) as EventError
 }
 
 async function send(event: TraceInput): Promise<TraceResult> {
@@ -104,7 +114,7 @@ async function send(event: TraceInput): Promise<TraceResult> {
     id: randomUUID(),
     traceId: event.traceId ?? currentTraceId,
     type: event.type,
-    name: event.name,
+    name: redact(event.name) as string,
     input: redact(event.input),
     output: redact(event.output),
     tokens: event.tokens,
@@ -112,7 +122,7 @@ async function send(event: TraceInput): Promise<TraceResult> {
     parentId: event.parentId,
     status: event.status,
     error: normalizeError(event.error),
-    source: event.source,
+    source: safeSource(event.source),
     durationMs: event.durationMs,
     attributes: event.attributes
       ? (redact(event.attributes) as Record<string, unknown>)

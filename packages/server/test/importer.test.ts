@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import { exportNdjson, importTrace } from "../src/importer.ts"
+import { normalizeEvent } from "../src/schema.ts"
 
 function run() {
   const ndjson = [
@@ -59,6 +60,27 @@ function run() {
   const emptyResult = importTrace({ content: "" })
   assert.equal(emptyResult.imported, 0)
   assert.equal(emptyResult.skipped, 0)
+
+  const isoEvent = normalizeEvent(
+    {
+      name: "charge alice@example.com",
+      error: { message: "sk-abcdefgh1234" },
+      timestamp: "2024-01-02T03:04:05Z",
+      source: { path: "C:/Users/alice/project/pay.ts" },
+    },
+    "t-iso",
+  )
+  assert.ok(isoEvent)
+  assert.equal(isoEvent.timestamp, Date.parse("2024-01-02T03:04:05Z"))
+  assert.equal(isoEvent.name.includes("alice@example.com"), false)
+  assert.equal(isoEvent.error?.message?.includes("sk-abcdefgh1234"), false)
+  assert.equal(isoEvent.source?.path, "project/pay.ts")
+
+  const overridden = importTrace({
+    events: [{ name: "step", traceId: "original" }],
+    traceId: "override",
+  })
+  assert.equal(overridden.events[0].traceId, "override")
 
   console.log("importer tests ok")
 }
