@@ -89,8 +89,10 @@ export function importTrace(input: {
 
   events.sort((a, b) => a.timestamp - b.timestamp)
 
+  const resolvedTraceId = input.traceId ?? events[0]?.traceId ?? traceId
+
   return {
-    traceId,
+    traceId: resolvedTraceId,
     events,
     imported: events.length,
     skipped,
