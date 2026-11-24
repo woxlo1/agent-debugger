@@ -19,7 +19,7 @@ These workflows run with repository files only. No new secret, paid service, or 
 | Dependabot | `.github/dependabot.yml` | Native GitHub config; no separate app installation is needed. |
 | Renovate | `renovate.json` | Config is ready and approval has been granted. Installing the Renovate GitHub App is a repository-settings UI action with no REST endpoint; it remains to be done by the repository owner. |
 | Dependency Graph | GitHub Advanced Security settings | Approval has been granted, but GitHub exposes no REST endpoint to enable it. It must be enabled from Settings → Advanced Security in the repository UI. |
-| Dependency Review | `.github/workflows/dependency-review.yml` | Workflow restored. Its check becomes effective after Dependency Graph is enabled in the repository UI. |
+| Dependency Review | `.github/workflows/dependency-review.yml` | Workflow restored with `continue-on-error: true` so it reports without blocking while Dependency Graph is disabled. Remove that line after enabling Dependency Graph in the repository UI. |
 
 ## Deliberately not added
 

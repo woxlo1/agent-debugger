@@ -96,7 +96,7 @@ No finding in this review authorized a release.
 - The Claude adapter trusts the MCP caller's consent and allowlist assertions. It prevents path escapes and limits output, but it cannot verify the caller's intent or sandbox the local user.
 - Automated tests cover deterministic logic and local transport. They do not prove that cause candidates are correct or useful to developers.
 - Real-user validation has **not** been executed. See `docs/VALIDATION_PLAN.md`.
-- Supply-chain posture still requires repository-settings UI actions. Explicit approval has been granted for Renovate and Dependency Graph, but GitHub provides no REST endpoint for either activation. The Dependency Review workflow is restored and becomes effective once Dependency Graph is enabled in Settings → Advanced Security.
+- Supply-chain posture still requires repository-settings UI actions. Explicit approval has been granted for Renovate and Dependency Graph, but GitHub provides no REST endpoint for either activation. The Dependency Review workflow is restored with `continue-on-error: true` so it reports without blocking while Dependency Graph is disabled. Remove that setting once Dependency Graph is enabled in Settings → Advanced Security.
 
 ## CI evidence
 

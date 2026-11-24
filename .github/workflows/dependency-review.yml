@@ -16,6 +16,9 @@ jobs:
     name: Review dependency changes
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # Temporary: dependency graph activation is a UI-only repository setting.
+    # Remove this line after it is enabled in Settings -> Advanced Security.
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
         with:
