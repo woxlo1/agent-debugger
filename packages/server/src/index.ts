@@ -112,9 +112,9 @@ app.get("/api/traces/:traceId/export", async (request, reply) => {
 })
 
 // Local-only debugger route; mutating endpoints require a token when configured.
-// codeql[js/missing-rate-limiting]
+
+// lgtm[js/missing-rate-limiting]
 app.post("/api/reset", async () => {
-  // codeql[js/missing-rate-limiting]
   store.clear()
   return { ok: true }
 })
