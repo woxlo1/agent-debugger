@@ -326,20 +326,18 @@ scripts/
   build-docs.mjs   Static docs site generator
 ```
 
-## Performance targets
+## Performance
 
-These are **design targets, not measured results**. A repeatable benchmark harness and published numbers are part of the v1.0.0 scope and are not included in this alpha.
+A repeatable, dependency-free benchmark harness measures the local path against a deterministic synthetic 10,000-event trace:
 
-| Operation | Target |
-|---|---|
-| Server cold start to `/api/health` | < 500 ms |
-| Import 10,000 NDJSON events | < 2 s |
-| Analyze a 10,000-event trace | < 500 ms |
-| Export a Cause Package for 10,000 events | < 1 s |
-| Peak memory for a 10,000-event trace | < 150 MB |
-| Web bundle (JS + CSS, gzip) | < 60 kB |
+```bash
+npm run verify
+npm run bench
+```
 
-Targets assume a commodity laptop and no network access. The current web build is about 55 kB gzip; the remaining numbers still need a harness.
+Published results are in `docs/PERFORMANCE.md`; raw measurements are in `docs/benchmark-results.json`. The latest run met the import, analysis, package export, memory, and web bundle targets. Cold start to `/api/health` did **not** meet the 500 ms target because the first TypeScript transform through `tsx` dominates startup; the miss is recorded rather than hidden.
+
+Targets assume a commodity laptop and no network access. Results are local measurements, not user-study evidence.
 
 ## Roadmap to v1.0.0
 
@@ -348,7 +346,7 @@ No release is tagged or published yet. The following remain in scope before a re
 - [x] Generated docs site from `docs/`
 - [x] Local MCP server exposing analysis and package tools
 - [x] Browser-based desktop shell around the local UI
-- [ ] Benchmark harness and published results against the targets above
+- [x] Benchmark harness and published results against the targets above
 - [ ] Real-user validation with consented traces and third-party ground truth
 - [ ] Final security review and explicit release approval
 
@@ -364,7 +362,7 @@ This runs the JavaScript syntax checks, TypeScript checks, tests, the web build,
 
 A browsable docs site is generated into `docs-site/` with `npm run build:docs`. Host that directory as static files or open `docs-site/index.html` locally.
 
-See `docs/PRODUCT_BRIEF.md`, `docs/ARCHITECTURE.md`, `docs/VALIDATION_PLAN.md`, `docs/USAGE_PRIVACY.md`, `docs/CASE_COMPARE.md`, `docs/MCP_CLAUDE_LOCAL.md`, and `docs/DESKTOP_SHELL.md` for scope, design, validation plans, and current contracts. Brand assets are documented in `docs/assets/README.md`.
+See `docs/PRODUCT_BRIEF.md`, `docs/ARCHITECTURE.md`, `docs/VALIDATION_PLAN.md`, `docs/USAGE_PRIVACY.md`, `docs/CASE_COMPARE.md`, `docs/MCP_CLAUDE_LOCAL.md`, `docs/DESKTOP_SHELL.md`, and `docs/PERFORMANCE.md` for scope, design, validation plans, and current contracts. Brand assets are documented in `docs/assets/README.md`.
 
 ## License
 

@@ -19,6 +19,7 @@ Keep one complete, local-only path from an imported failed trace to an evidence-
 | MCP server | `packages/mcp/src/` | stdio JSON-RPC tools over local store and analysis |
 | Claude local adapter | `packages/mcp/src/claudeLocal.ts` | Opt-in, allowlisted, count-only Claude Code transcript reader |
 | Desktop shell | `scripts/desktop.mjs`, `scripts/lib/localServer.mjs` | Loopback launcher, built UI server, and `/api` proxy |
+| Benchmark harness | `scripts/bench.ts` | Synthetic performance measurements and published results |
 
 ## Data flow
 

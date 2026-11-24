@@ -70,6 +70,7 @@
         <a href="CASE_COMPARE.html">Case comparison</a>
         <a href="MCP_CLAUDE_LOCAL.html">MCP and Claude local</a>
         <a href="DESKTOP_SHELL.html">Desktop shell</a>
+        <a href="PERFORMANCE.html">Performance results</a>
         <a href="AI_SOURCE_MATRIX.html">AI source matrix</a>
         <a href="VALIDATION_PLAN.html">Validation plan</a>
         <a href="OPS_BOTS.html">Ops bots</a>
@@ -88,8 +89,8 @@
 <li>Existing local commits from the earlier phase were diverged from <code>origin/main</code>. This branch includes <code>origin/main</code> via a normal merge commit, not a reset or force push.</li>
 </ul>
 <h2 id="current-stage">Current stage</h2>
-<p>Stage 6: browser-based local desktop shell.</p>
-<p>Stage 6 builds on the merged Stage 1 usage contracts, Stage 2 server/CLI/web integration, Stage 3 Case Packages, Stage 4 docs/assets, and Stage 5 MCP/adapter. It adds a dependency-free launcher that starts the API, serves the built UI from the same loopback origin, proxies <code>/api/*</code>, and opens the default browser. A web app manifest makes the windowed view installable where supported. No release action is performed in this stage.</p>
+<p>Stage 7: benchmark harness and published results.</p>
+<p>Stage 7 builds on the merged Stage 1 usage contracts, Stage 2 server/CLI/web integration, Stage 3 Case Packages, Stage 4 docs/assets, Stage 5 MCP/adapter, and Stage 6 desktop shell. It adds a dependency-free benchmark script, publishes synthetic 10,000-event results in <code>docs/PERFORMANCE.md</code>, and records the cold-start target miss honestly. No release action is performed in this stage.</p>
 <h2 id="shared-interfaces-frozen-by-the-coordinator">Shared interfaces frozen by the coordinator</h2>
 <p>These files are coordinator-owned. No parallel session may edit them without coordinator approval:</p>
 <ul>

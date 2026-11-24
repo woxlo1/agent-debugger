@@ -1,0 +1,44 @@
+{
+  "generatedAt": "2026-11-24T09:50:16.433Z",
+  "environment": {
+    "node": "v24.13.1",
+    "platform": "win32",
+    "arch": "x64",
+    "cpuModel": "12th Gen Intel(R) Core(TM) i7-12700K",
+    "logicalCpus": 20,
+    "totalMemoryGb": 31.8
+  },
+  "dataset": {
+    "kind": "synthetic",
+    "eventCount": 10000,
+    "description": "Deterministic generated agent trace with representative rule-engine work"
+  },
+  "targets": {
+    "coldStartMs": "< 500 ms",
+    "importMs": "< 2 s",
+    "analyzeMs": "< 500 ms",
+    "packageMs": "< 1 s",
+    "maxRssDeltaMb": "< 150 MB",
+    "webGzipKb": "< 60 kB"
+  },
+  "measurements": {
+    "coldStartMs": 683.01,
+    "importMs": 46.19,
+    "analyzeMs": 12.34,
+    "packageMs": 102.86,
+    "maxRssDeltaMb": 96.7,
+    "webGzipKb": 53.33
+  },
+  "pass": {
+    "coldStartMs": false,
+    "importMs": true,
+    "analyzeMs": true,
+    "packageMs": true,
+    "maxRssDeltaMb": true,
+    "webGzipKb": true
+  },
+  "notes": [
+    "No external service or real trace is used.",
+    "maxRssDeltaMb is a process-level proxy, not a per-function heap profile."
+  ]
+}

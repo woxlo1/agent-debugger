@@ -70,6 +70,7 @@
         <a href="CASE_COMPARE.html">Case comparison</a>
         <a href="MCP_CLAUDE_LOCAL.html">MCP and Claude local</a>
         <a href="DESKTOP_SHELL.html">Desktop shell</a>
+        <a href="PERFORMANCE.html">Performance results</a>
         <a href="AI_SOURCE_MATRIX.html">AI source matrix</a>
         <a href="VALIDATION_PLAN.html">Validation plan</a>
         <a href="OPS_BOTS.html">Ops bots</a>
@@ -116,8 +117,8 @@ estimates are excluded from billing totals unless you opt in.
 This is an alpha, not a finished observability platform. It does not do
 evals, live injection, or team trace storage. Cause candidates are
 hypotheses, not verified root causes. A generated docs site, local MCP server,
-and browser-based desktop shell are included; published benchmarks and
-real-user validation are still in the v1.0.0 scope.
+browser-based desktop shell, and published synthetic benchmarks are included.
+Real-user validation is still in the v1.0.0 scope.
 
 Feedback on the cause/hypothesis split, the privacy model, or the CLI
 workflow is especially welcome.
@@ -125,7 +126,7 @@ workflow is especially welcome.
 Repo: https://github.com/woxlo1/agent-debugger
 Demo GIF: https://github.com/woxlo1/agent-debugger/blob/main/docs/assets/demo.gif</code></pre>
 <h2 id="likely-questions-and-short-answers">Likely questions and short answers</h2>
-<table><thead><tr><th>Question</th><th>Answer</th></tr></thead><tbody><tr><td>Why not LangSmith / Langfuse / Phoenix?</td><td>Those are observability platforms. This is a local debugging step for one failed run, with no account or upload.</td></tr><tr><td>Does it call an LLM to explain failures?</td><td>No. Analysis is rule-based and deterministic. External AI adapters are not enabled.</td></tr><tr><td>How is privacy handled?</td><td>Redaction is applied on ingest, stream, export, and package export. Receipts store detector counts only. Claude sources require explicit consent before inclusion.</td></tr><tr><td>Why a SHA-256 fingerprint, not a signature?</td><td>It detects accidental edits to a bundle. It does not establish trust in the source file; that is stated in the docs.</td></tr><tr><td>Is it production ready?</td><td>No. It is alpha. Performance targets are documented but not yet benchmarked.</td></tr></tbody></table>
+<table><thead><tr><th>Question</th><th>Answer</th></tr></thead><tbody><tr><td>Why not LangSmith / Langfuse / Phoenix?</td><td>Those are observability platforms. This is a local debugging step for one failed run, with no account or upload.</td></tr><tr><td>Does it call an LLM to explain failures?</td><td>No. Analysis is rule-based and deterministic. External AI adapters are not enabled.</td></tr><tr><td>How is privacy handled?</td><td>Redaction is applied on ingest, stream, export, and package export. Receipts store detector counts only. Claude sources require explicit consent before inclusion.</td></tr><tr><td>Why a SHA-256 fingerprint, not a signature?</td><td>It detects accidental edits to a bundle. It does not establish trust in the source file; that is stated in the docs.</td></tr><tr><td>Is it production ready?</td><td>No. It is alpha. Synthetic benchmarks are published in <code>docs/PERFORMANCE.md</code>; cold start misses the 500 ms target and real-user validation has not run.</td></tr></tbody></table>
 <h2 id="preflight-checklist-all-must-be-true-before-posting">Preflight checklist (all must be true before posting)</h2>
 <ul>
 <li>[ ] All v1.0.0 scope items are complete and <code>npm run verify</code> passes.</li>
