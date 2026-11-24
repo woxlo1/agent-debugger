@@ -64,11 +64,28 @@ cat failed-run.jsonl | agent-debugger import
 
 # Print the Cause Package as JSON
 agent-debugger analyze <traceId>
+
+# Print the AI usage ledger and privacy audit
+agent-debugger usage <traceId>
+agent-debugger privacy <traceId>
 ```
 
 You can also paste NDJSON into the **Cause Package** view and click **Import & select**.
 
 Imported records are normalized into the v2 schema. Timestamps, status fields, error payloads, source locations, and token/cost fields are preserved when present. Secret-like keys, API-key patterns, bearer tokens, and email addresses are redacted on ingest and again on export.
+
+## AI usage and privacy audit
+
+AI usage is normalized from caller-supplied provider responses or explicit events. Values are labelled `reported`, `estimated`, or `unknown`; local estimates are excluded from billing totals unless you opt in with `--include-estimates` or the **Include estimates** checkbox.
+
+```bash
+# Normalize an OpenAI-style response already held by your agent
+curl -X POST http://127.0.0.1:4317/api/usage \
+  -H 'content-type: application/json' \
+  -d '{"source":"openai_api","traceId":"run-1","payload":{"id":"chatcmpl-1","model":"gpt-5.6","usage":{"prompt_tokens":100,"completion_tokens":20}}}'
+```
+
+Claude Code and claude.ai Web sources require explicit consent before their values are included in totals. Redaction receipts store detector counts only, never raw values. See `docs/AI_SOURCE_MATRIX.md` for the full source policy.
 
 ## Instrumenting your own agent
 
@@ -167,6 +184,9 @@ type AgentEvent = {
 | GET | `/api/traces` | List trace summaries |
 | GET | `/api/events?traceId=...` | List events |
 | GET | `/api/traces/:traceId/analysis` | Build the rule-based Cause Package |
+| POST | `/api/usage` | Normalize and store AI usage entries |
+| GET | `/api/traces/:traceId/usage` | Build the consent-aware usage ledger |
+| GET | `/api/traces/:traceId/privacy` | Aggregate redaction receipts and consent states |
 | GET | `/api/traces/:traceId/export` | Download redacted NDJSON |
 | POST | `/api/reset` | Clear the local store |
 | GET | `/api/stream` | SSE stream of new events |
