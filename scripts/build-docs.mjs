@@ -13,6 +13,7 @@ const nav = [
   { file: "USAGE_PRIVACY.md", title: "Usage and privacy" },
   { file: "CASE_COMPARE.md", title: "Case comparison" },
   { file: "MCP_CLAUDE_LOCAL.md", title: "MCP and Claude local" },
+  { file: "DESKTOP_SHELL.md", title: "Desktop shell" },
   { file: "AI_SOURCE_MATRIX.md", title: "AI source matrix" },
   { file: "VALIDATION_PLAN.md", title: "Validation plan" },
   { file: "OPS_BOTS.md", title: "Ops bots" },
