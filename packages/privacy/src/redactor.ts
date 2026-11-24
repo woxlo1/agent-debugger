@@ -133,12 +133,11 @@ export function createRedactor(profile: RedactionProfile = "strict"): Redactor {
     }
 
     if (isRecord(value)) {
-      // Null prototype prevents user-controlled keys from mutating prototypes.
-      const output: Record<string, unknown> = Object.create(null)
+      const entries: Array<[string, unknown]> = []
       for (const [key, entry] of Object.entries(value)) {
         if (SECRET_KEY.test(key)) {
           record("api_key")
-          output[key] = "[REDACTED]"
+          entries.push([key, "[REDACTED]"])
           receiptBase.skippedFields.push(key)
           continue
         }
@@ -147,14 +146,15 @@ export function createRedactor(profile: RedactionProfile = "strict"): Redactor {
           const match = KEY_DETECTORS.find((candidate) => candidate.pattern.test(key))
           const detector = match?.detector ?? "person_name"
           record(detector, match?.needsReview === true || profile === "strict")
-          output[key] = nextPlaceholder(detector)
+          entries.push([key, nextPlaceholder(detector)])
           receiptBase.skippedFields.push(key)
           continue
         }
 
-        output[key] = redact(entry, depth + 1)
+        entries.push([key, redact(entry, depth + 1)])
       }
-      return output
+      // Object.fromEntries avoids computed property writes from imported keys.
+      return Object.fromEntries(entries)
     }
 
     return value

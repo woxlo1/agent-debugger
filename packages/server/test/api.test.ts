@@ -42,12 +42,12 @@ async function run() {
 
   await waitForHealth()
 
-  // lgtm[js/file-access-to-http] The test fixture is intentionally imported
-  // into the locally spawned debugger server.
+  // The test fixture is intentionally imported into the locally spawned server.
   const content = readFileSync(fixturePath, "utf8")
   const imported = await fetch(`${base}/api/import`, {
     method: "POST",
     headers: { "content-type": "application/json" },
+    // codeql[js/file-access-to-http]
     body: JSON.stringify({ content, format: "ndjson" }),
   }).then((response) => response.json())
 

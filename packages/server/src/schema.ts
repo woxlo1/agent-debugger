@@ -67,13 +67,14 @@ export function redact(value: unknown, depth = 0): unknown {
   }
 
   if (isRecord(value)) {
-    // Null prototype prevents user-controlled keys such as `__proto__` from
-    // mutating Object.prototype while redacting imported event payloads.
-    const result: Record<string, unknown> = Object.create(null)
-    for (const [key, entry] of Object.entries(value)) {
-      result[key] = SECRET_KEY.test(key) ? "[REDACTED]" : redact(entry, depth + 1)
-    }
-    return result
+    // Build the output without computed property writes so imported keys such
+    // as `__proto__` cannot mutate a prototype.
+    return Object.fromEntries(
+      Object.entries(value).map(([key, entry]) => [
+        key,
+        SECRET_KEY.test(key) ? "[REDACTED]" : redact(entry, depth + 1),
+      ]),
+    )
   }
 
   return value

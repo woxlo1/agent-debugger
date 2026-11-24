@@ -123,11 +123,12 @@ export async function runImport(filePath) {
   const headers = { "Content-Type": "application/json" }
   if (TOKEN) headers["x-agent-debugger-token"] = TOKEN
 
-  // lgtm[js/file-access-to-http] The file is intentionally imported to the
-  // local debugger server. SERVER_URL defaults to http://127.0.0.1:4317.
+  // The file is intentionally imported to the local debugger server.
+  // SERVER_URL defaults to http://127.0.0.1:4317.
   const res = await fetch(`${SERVER_URL}/api/import`, {
     method: "POST",
     headers,
+    // codeql[js/file-access-to-http]
     body: JSON.stringify({ content, format: "ndjson" }),
   })
 

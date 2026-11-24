@@ -111,9 +111,10 @@ app.get("/api/traces/:traceId/export", async (request, reply) => {
   return exportNdjson(events)
 })
 
-// lgtm[js/missing-rate-limiting] This debugger binds to 127.0.0.1 by default and
-// mutating endpoints require an explicit token when one is configured.
+// Local-only debugger route; mutating endpoints require a token when configured.
+// codeql[js/missing-rate-limiting]
 app.post("/api/reset", async () => {
+  // codeql[js/missing-rate-limiting]
   store.clear()
   return { ok: true }
 })
