@@ -9,9 +9,9 @@
 
 ## Current stage
 
-Stage 1: AI source contracts and privacy-first usage ledger.
+Stage 3: case comparison and portable Cause Packages.
 
-Stage 1 does not call any external AI service. It only normalizes provider-reported usage values that the caller already has, plus explicitly labelled estimates.
+Stage 3 builds on the merged Stage 1 usage contracts and Stage 2 server/CLI/web integration. It exports a redacted bundle with a fingerprint and diffs two local traces without calling any external AI service.
 
 ## Shared interfaces frozen by the coordinator
 

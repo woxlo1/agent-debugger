@@ -4,6 +4,7 @@ import type { AiUsage, ConsentState, CostSource } from "../../shared/src/index.j
 import { buildUsageLedger } from "../../usage/src/index.js"
 import { store, STORE_PATH, USAGE_STORE_PATH } from "./store.js"
 import { analyzeTrace } from "./analyzer.js"
+import { compareCaseTraces, findCasePackage } from "./caseService.js"
 import { exportNdjson, importTrace, type ImportFormat } from "./importer.js"
 import { normalizeEvent, redact, SCHEMA_VERSION } from "./schema.js"
 import {
@@ -65,6 +66,10 @@ function createRateLimiter(max: number, windowMs: number, label: string) {
 
 const limitReset = createRateLimiter(5, 60_000, "reset")
 const limitUsageIngest = createRateLimiter(30, 60_000, "usage ingest")
+
+function wantsEstimates(query: unknown): boolean {
+  return (query as { includeEstimates?: string } | undefined)?.includeEstimates === "true"
+}
 
 app.get("/api/health", async () => ({
   ok: true,
@@ -188,6 +193,33 @@ app.get("/api/traces/:traceId/analysis", async (request, reply) => {
     return { error: `Unknown traceId: ${traceId}` }
   }
   return analyzeTrace(traceId, events)
+})
+
+app.get("/api/traces/:traceId/package", async (request, reply) => {
+  const { traceId } = request.params as { traceId: string }
+  const packageValue = findCasePackage(traceId, wantsEstimates(request.query))
+  if (!packageValue) {
+    reply.code(404)
+    return { error: `Unknown traceId: ${traceId}` }
+  }
+  return packageValue
+})
+
+app.get("/api/cases/compare", async (request, reply) => {
+  const { a, b } = request.query as { a?: string; b?: string }
+  if (!a || !b) {
+    reply.code(400)
+    return { error: "Both a and b traceId query parameters are required" }
+  }
+  const result = compareCaseTraces(a, b, wantsEstimates(request.query))
+  if (!result.ok) {
+    reply.code(404)
+    return {
+      error: `Unknown traceId(s): ${result.missing.join(", ")}`,
+      missing: result.missing,
+    }
+  }
+  return result.comparison
 })
 
 app.get("/api/traces/:traceId/export", async (request, reply) => {

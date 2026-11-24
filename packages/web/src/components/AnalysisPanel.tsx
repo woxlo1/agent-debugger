@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import type { ReactNode } from "react"
 import type { Analysis } from "../types"
-import { exportUrl, fetchAnalysis, importTrace } from "../api"
+import { exportUrl, fetchAnalysis, importTrace, packageUrl } from "../api"
 
 type Props = {
   traceId: string | null
@@ -49,12 +49,20 @@ export default function AnalysisPanel({ traceId, onImported }: Props) {
           </p>
         </div>
         {traceId && (
-          <a
-            href={exportUrl(traceId)}
-            className="text-xs px-3 py-1.5 rounded border border-zinc-700 hover:bg-zinc-800"
-          >
-            Export NDJSON
-          </a>
+          <div className="flex gap-2">
+            <a
+              href={packageUrl(traceId)}
+              className="text-xs px-3 py-1.5 rounded border border-emerald-800 text-emerald-300 hover:bg-emerald-950"
+            >
+              Export package
+            </a>
+            <a
+              href={exportUrl(traceId)}
+              className="text-xs px-3 py-1.5 rounded border border-zinc-700 hover:bg-zinc-800"
+            >
+              Export NDJSON
+            </a>
+          </div>
         )}
       </div>
 
