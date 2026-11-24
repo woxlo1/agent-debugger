@@ -10,6 +10,7 @@ paths = [
   '''docs/.*\.md''',
   '''packages/privacy/test/.*''',
   '''packages/server/test/.*''',
+  '''packages/mcp/test/.*''',
   '''packages/test-fixtures/.*''',
   '''packages/usage/test/.*''',
 ]
