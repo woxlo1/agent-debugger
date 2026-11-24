@@ -12,8 +12,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const command = process.argv[2] ?? "start"
 
 if (command === "pipe") {
-  await runPipe(process.argv[3])
-  process.exit(0)
+  const failed = await runPipe(process.argv[3])
+  process.exit(failed > 0 ? 1 : 0)
 }
 
 if (command === "import") {
@@ -140,12 +140,19 @@ if (command !== "start") {
   process.exit(1)
 }
 
-const serverEntry = path.join(__dirname, "..", "src", "index.ts")
-
-const child = spawn(
-  process.execPath,
-  [path.join(__dirname, "..", "node_modules", ".bin", "tsx"), serverEntry],
-  { stdio: "inherit", env: process.env }
+const serverEntry = path.join(
+  __dirname,
+  "..",
+  "dist",
+  "packages",
+  "server",
+  "src",
+  "index.js",
 )
+
+const child = spawn(process.execPath, [serverEntry], {
+  stdio: "inherit",
+  env: process.env,
+})
 
 child.on("exit", (code) => process.exit(code ?? 0))
