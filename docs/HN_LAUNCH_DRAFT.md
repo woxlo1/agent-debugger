@@ -26,7 +26,7 @@ Do not substitute a pre-release branch, a fork, or a short link.
 Hi HN,
 
 I built Agent Debugger because debugging a failed agent run usually means
-scroll-searcheting a long trace and guessing which tool call mattered.
+scroll-searching a long trace and guessing which tool call mattered.
 
 Agent Debugger is local-first and MIT licensed. You import an NDJSON trace
 (or pipe events from any language), and it builds a "Cause Package":
@@ -37,8 +37,9 @@ Agent Debugger is local-first and MIT licensed. You import an NDJSON trace
 - a handoff suggestion pointing at your existing debugger
 
 It also has a Compare view for diffing a failing run against a passing one,
-a consent-aware AI usage ledger, and portable redacted bundles with a
-SHA-256 fingerprint.
+a consent-aware AI usage ledger, portable redacted bundles with a
+SHA-256 fingerprint, a local MCP server, and a one-command browser-based
+desktop shell.
 
 Everything runs on localhost. There is no account, no cloud, and no external
 AI service call. Redaction runs on ingest, stream, export, and bundle
@@ -47,9 +48,9 @@ estimates are excluded from billing totals unless you opt in.
 
 This is an alpha, not a finished observability platform. It does not do
 evals, live injection, or team trace storage. Cause candidates are
-hypotheses, not verified root causes. A generated docs site and a local MCP
-server are included; a desktop shell, published benchmarks, and real-user
-validation are still in the v1.0.0 scope.
+hypotheses, not verified root causes. A generated docs site, local MCP server,
+and browser-based desktop shell are included; published benchmarks and
+real-user validation are still in the v1.0.0 scope.
 
 Feedback on the cause/hypothesis split, the privacy model, or the CLI
 workflow is especially welcome.

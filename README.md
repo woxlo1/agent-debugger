@@ -35,6 +35,7 @@ Everything runs on your machine. No account, no cloud, no external AI service.
 | Deterministic, rule-only Cause Package | External AI explanations |
 | Portable redacted Cause Package bundles | Custom DAP/debugger implementation |
 | Case comparison across two local traces | Cloud case storage |
+| Browser-based local desktop shell | Native Electron/Tauri binary |
 
 Cause candidates are **hypotheses derived from rules**, not verified root causes. The UI keeps observed facts, rule flags, hypotheses, reproduction steps, and handoff suggestions in separate sections.
 
@@ -65,6 +66,14 @@ This starts:
 - the Web UI on `http://localhost:5173`
 
 Open `http://localhost:5173`. The **Cause Package** view is selected by default.
+
+For a one-command app-style launch, use the browser-based desktop shell instead:
+
+```bash
+npm run desktop
+```
+
+It starts the local API and serves the built UI from one loopback origin, then opens your default browser. See `docs/DESKTOP_SHELL.md`.
 
 ### Try the demo
 
@@ -288,6 +297,8 @@ packages/artifact      portable redacted bundle + fingerprint
 packages/cases         deterministic case comparison
 packages/mcp           stdio JSON-RPC tools + Claude local adapter
    ▼
+scripts/desktop.mjs    loopback shell + /api proxy
+   ▼
 agent-debugger web
    ├─ Cause Package view
    ├─ Compare view
@@ -310,6 +321,9 @@ packages/
   sdk/             TypeScript event client
   web/             React + Vite + Tailwind UI
   example-agent/   Demo trace emitter
+scripts/
+  desktop.mjs      Browser-based local desktop launcher
+  build-docs.mjs   Static docs site generator
 ```
 
 ## Performance targets
@@ -333,7 +347,7 @@ No release is tagged or published yet. The following remain in scope before a re
 
 - [x] Generated docs site from `docs/`
 - [x] Local MCP server exposing analysis and package tools
-- [ ] Desktop shell around the local UI
+- [x] Browser-based desktop shell around the local UI
 - [ ] Benchmark harness and published results against the targets above
 - [ ] Real-user validation with consented traces and third-party ground truth
 - [ ] Final security review and explicit release approval
@@ -350,7 +364,7 @@ This runs the JavaScript syntax checks, TypeScript checks, tests, the web build,
 
 A browsable docs site is generated into `docs-site/` with `npm run build:docs`. Host that directory as static files or open `docs-site/index.html` locally.
 
-See `docs/PRODUCT_BRIEF.md`, `docs/ARCHITECTURE.md`, `docs/VALIDATION_PLAN.md`, `docs/USAGE_PRIVACY.md`, `docs/CASE_COMPARE.md`, and `docs/MCP_CLAUDE_LOCAL.md` for scope, design, validation plans, and current contracts. Brand assets are documented in `docs/assets/README.md`.
+See `docs/PRODUCT_BRIEF.md`, `docs/ARCHITECTURE.md`, `docs/VALIDATION_PLAN.md`, `docs/USAGE_PRIVACY.md`, `docs/CASE_COMPARE.md`, `docs/MCP_CLAUDE_LOCAL.md`, and `docs/DESKTOP_SHELL.md` for scope, design, validation plans, and current contracts. Brand assets are documented in `docs/assets/README.md`.
 
 ## License
 

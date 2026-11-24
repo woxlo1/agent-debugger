@@ -18,6 +18,7 @@ Keep one complete, local-only path from an imported failed trace to an evidence-
 | Web UI | `packages/web/src/` | Cause Package view and replay view |
 | MCP server | `packages/mcp/src/` | stdio JSON-RPC tools over local store and analysis |
 | Claude local adapter | `packages/mcp/src/claudeLocal.ts` | Opt-in, allowlisted, count-only Claude Code transcript reader |
+| Desktop shell | `scripts/desktop.mjs`, `scripts/lib/localServer.mjs` | Loopback launcher, built UI server, and `/api` proxy |
 
 ## Data flow
 
@@ -36,6 +37,11 @@ MCP client (stdio JSON-RPC)
   -> packages/mcp/src/index.ts
   -> tools.ts -> local store / analyzer / artifact / cases / usage
   -> redacted JSON tool results
+
+Desktop shell (npm run desktop)
+  -> scripts/desktop.mjs -> local API + built web UI
+  -> scripts/lib/localServer.mjs -> static files + /api proxy
+  -> default browser on 127.0.0.1 only
 ```
 
 No component calls an external service. The web UI talks only to the local API through the Vite proxy.

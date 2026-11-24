@@ -48,6 +48,8 @@ Included:
 - Reproduction steps and debugger handoff text
 - Redacted NDJSON export
 - CLI and local web UI for the same workflow
+- Local MCP server for the same read-only analysis tools
+- Browser-based desktop shell with a loopback-only `/api` proxy
 
 Explicitly deferred:
 
