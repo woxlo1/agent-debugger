@@ -9,9 +9,9 @@
 
 ## Current stage
 
-Stage 8: final security review and validation-status documentation.
+Stage 9: final project structure and validation kit.
 
-Stage 8 builds on the merged Stage 1 usage contracts, Stage 2 server/CLI/web integration, Stage 3 Case Packages, Stage 4 docs/assets, Stage 5 MCP/adapter, Stage 6 desktop shell, and Stage 7 benchmarks. It adds `docs/SECURITY_REVIEW.md`, marks real-user validation as not executed in `docs/VALIDATION_PLAN.md`, and hardens the Claude adapter's path allowlist with realpath containment. No release action is performed in this stage.
+Stage 9 builds on all merged implementation and review stages. It declares the current `packages/`, `scripts/`, `docs/`, and `docs-site/` layout final for the 1.0.0 line, adds `docs/PROJECT_STRUCTURE.md`, and adds ready-to-use validation materials in `docs/VALIDATION_KIT.md` and `docs/validation/`. The study itself remains unexecuted. No release action is performed in this stage.
 
 ## Shared interfaces frozen by the coordinator
 
@@ -25,18 +25,22 @@ These files are coordinator-owned. No parallel session may edit them without coo
 - `docs/COORDINATOR_PLAN.md`
 - root `README.md`
 
-## Ownership map
+## Final ownership map
 
-| Session | Branch | Owned files | Forbidden files |
+| Area | Files | Owner | Change rule |
 |---|---|---|---|
-| S0 coordinator | current stage branch | shared types, protocol, config, root manifests, integration docs | other sessions' owned source files |
-| S1 privacy | `feat/stage-1-privacy` | `packages/privacy/**`, `packages/privacy/test/**` | shared types, server, web |
-| S2 usage | `feat/stage-1-usage` | `packages/usage/**`, `packages/ingest/src/adapters/**`, usage tests | shared types, privacy internals |
-| S3 server CLI | `feat/stage-2-server-cli` | `packages/server/**`, `apps/cli/**` | shared types without coordinator change |
-| S4 web | `feat/stage-2-web` | `apps/web/**` | shared types, server internals |
-| S5 cases artifact | `feat/stage-3-cases` | `packages/cases/**`, `packages/artifact/**`, `packages/query/**` | shared types, web |
-| S6 docs assets | `feat/stage-4-docs-assets` | `docs/**`, `assets/**`, `apps/docs-site/**` | root README final merge |
-| S7 ops bots | `feat/stage-4-ops` | `.github/**`, `scripts/**`, `benchmark-results/**` | package manifests |
+| Shared contracts | `packages/shared/src/types/**` | Coordinator | Explicit contract change required |
+| Privacy and usage | `packages/privacy/**`, `packages/usage/**`, `packages/ingest/**` | Privacy/usage owner | Add tests with every behavior change |
+| Runtime core | `packages/server/**`, `packages/cases/**`, `packages/artifact/**` | Server owner | API changes require integration tests |
+| Local interfaces | `packages/mcp/**`, `packages/sdk/**` | Interface owner | Preserve local-only and consent contracts |
+| Web UI | `packages/web/**` | Web owner | No direct API token handling |
+| Tooling | `scripts/**` | Tooling owner | Add script tests under `scripts/test/` |
+| Documentation | `docs/**` | Docs owner | Regenerate `docs-site/` in the same PR |
+| Generated site | `docs-site/**` | Generated | Never edit HTML by hand |
+| Automation | `.github/**`, `renovate.json` | Ops owner | Least-privilege permissions and PR review |
+| Root manifests | `package.json`, `package-lock.json`, `README.md` | Coordinator | Version bumps require release approval |
+
+The final layout is documented in `docs/PROJECT_STRUCTURE.md`. No `apps/` migration is planned for 1.0.0.
 
 ## Integration order
 
@@ -48,7 +52,8 @@ These files are coordinator-owned. No parallel session may edit them without coo
 6. Add docs, icons, demo GIF, docs site, and HN draft.
 7. Add benchmark harness and ops bots.
 8. Document final security review and unexecuted validation status.
-9. Final `npm run verify`, then pull request to `main`.
+9. Freeze final project structure and prepare validation materials.
+10. Final `npm run verify`, then pull request to `main`.
 
 ## Verification for every stage
 
