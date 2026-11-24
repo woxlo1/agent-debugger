@@ -65,3 +65,56 @@ export type Analysis = {
     errorEvents: number
   }
 }
+
+export type UsageConfidence = "reported" | "estimated" | "unknown"
+export type ConsentState = "not-required" | "required" | "granted" | "denied"
+
+export type UsageBuckets = {
+  inputTokens?: number
+  outputTokens?: number
+  cacheReadTokens?: number
+  cacheWriteTokens?: number
+  reasoningTokens?: number
+  audioTokens?: number
+  totalTokens?: number
+}
+
+export type AiUsage = UsageBuckets & {
+  id: string
+  traceId?: string
+  eventId?: string
+  source: string
+  sourceLabel: string
+  confidence: UsageConfidence
+  provider?: string
+  model?: string
+  responseModel?: string
+  requestId?: string
+  observedAt?: number
+  durationMs?: number
+  cost?: number
+  currency: "USD"
+  costSource: "reported" | "user-rate" | "none"
+  consent: ConsentState
+  warnings: string[]
+}
+
+export type UsageLedger = {
+  traceId: string
+  entries: AiUsage[]
+  totals: UsageBuckets & { cost?: number; entries: number }
+  confidence: UsageConfidence
+  warnings: string[]
+  estimatedExcludedFromCost: boolean
+}
+
+export type PrivacyAudit = {
+  entries: number
+  rawValuesStored: false
+  consent: Record<ConsentState, number>
+  confidence: Record<"reported" | "estimated" | "unknown", number>
+  redactionReceipts: number
+  findings: Array<{ detector: string; count: number; needsReview: boolean }>
+  skippedFields: number
+  warnings: string[]
+}

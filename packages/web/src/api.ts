@@ -1,4 +1,10 @@
-import type { AgentEvent, Analysis, TraceSummary } from "./types"
+import type {
+  AgentEvent,
+  Analysis,
+  PrivacyAudit,
+  TraceSummary,
+  UsageLedger,
+} from "./types"
 
 // All requests go through the Vite dev proxy (/api -> http://localhost:4317)
 export async function fetchTraces(): Promise<TraceSummary[]> {
@@ -18,6 +24,26 @@ export async function fetchAnalysis(traceId: string): Promise<Analysis> {
     `/api/traces/${encodeURIComponent(traceId)}/analysis`,
   )
   if (!res.ok) throw new Error(`Failed to load analysis: HTTP ${res.status}`)
+  return res.json()
+}
+
+export async function fetchUsage(
+  traceId: string,
+  includeEstimates = false,
+): Promise<UsageLedger> {
+  const query = includeEstimates ? "?includeEstimates=true" : ""
+  const res = await fetch(
+    `/api/traces/${encodeURIComponent(traceId)}/usage${query}`,
+  )
+  if (!res.ok) throw new Error(`Failed to load usage: HTTP ${res.status}`)
+  return res.json()
+}
+
+export async function fetchPrivacy(traceId: string): Promise<PrivacyAudit> {
+  const res = await fetch(
+    `/api/traces/${encodeURIComponent(traceId)}/privacy`,
+  )
+  if (!res.ok) throw new Error(`Failed to load privacy audit: HTTP ${res.status}`)
   return res.json()
 }
 
