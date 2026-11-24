@@ -317,7 +317,7 @@ Targets assume a commodity laptop and no network access. The current web build i
 
 No release is tagged or published yet. The following remain in scope before a release request is made:
 
-- [ ] Generated docs site from `docs/`
+- [x] Generated docs site from `docs/`
 - [ ] Local MCP server exposing analysis and package tools
 - [ ] Desktop shell around the local UI
 - [ ] Benchmark harness and published results against the targets above
@@ -332,7 +332,9 @@ A version bump, tag, GitHub Release, npm publish, and Hacker News posting all re
 npm run verify
 ```
 
-This runs the JavaScript syntax checks, TypeScript checks, tests, and the web build. No dependency install is performed by this repository's scripts.
+This runs the JavaScript syntax checks, TypeScript checks, tests, the web build, and the static docs site build. No dependency install is performed by this repository's scripts.
+
+A browsable docs site is generated into `docs-site/` with `npm run build:docs`. Host that directory as static files or open `docs-site/index.html` locally.
 
 See `docs/PRODUCT_BRIEF.md`, `docs/ARCHITECTURE.md`, `docs/VALIDATION_PLAN.md`, `docs/USAGE_PRIVACY.md`, and `docs/CASE_COMPARE.md` for scope, design, validation plans, and current contracts. Brand assets are documented in `docs/assets/README.md`.
 

@@ -9,9 +9,9 @@
 
 ## Current stage
 
-Stage 4: docs, brand assets, and launch readiness.
+Stage 4: docs, brand assets, docs site, and launch readiness.
 
-Stage 4 builds on the merged Stage 1 usage contracts, Stage 2 server/CLI/web integration, and Stage 3 Case Packages. It adds versionable SVG branding, embeds the existing synthetic demo GIF in the README, sharpens the product narrative, records performance targets, and prepares an approval-gated Hacker News draft. No release action is performed in this stage.
+Stage 4 builds on the merged Stage 1 usage contracts, Stage 2 server/CLI/web integration, and Stage 3 Case Packages. It adds versionable SVG branding, embeds the existing synthetic demo GIF in the README, sharpens the product narrative, records performance targets, generates a dependency-free static docs site, and prepares an approval-gated Hacker News draft. No release action is performed in this stage.
 
 ## Shared interfaces frozen by the coordinator
 
