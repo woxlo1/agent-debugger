@@ -1,14 +1,12 @@
 # Hacker News launch draft
 
-> **Status: APPROVED FOR POSTING.** The repository owner approved the final text and the act of posting on 2026-11-24, approved the `v1.0.2` URL/text update on 2026-11-25, and approved the 19:00 JST posting with the repository URL and revised title on 2026-11-25. Post manually from an authenticated browser at the approved time. No external AI service call, credential creation, or secret logging is involved.
+> **Status: APPROVED FOR POSTING.** The repository owner approved the final text and the act of posting on 2026-11-24, approved the `v1.0.2` URL/text update on 2026-11-25, approved the 19:00 JST posting with the repository URL and revised title on 2026-11-25, and approved the 68-character alternative title on 2026-11-25 because the original title exceeded the Hacker News 80-character limit. Post manually from an authenticated browser at the approved time. No external AI service call, credential creation, or secret logging is involved.
 
 ## Suggested title
 
-Show HN: Agent Debugger – replay failed agent traces into evidence and a debugger handoff
-
-Alternative title:
-
 Show HN: Agent Debugger – local-first failure debugger for AI agents
+
+The earlier title `Show HN: Agent Debugger – replay failed agent traces into evidence and a debugger handoff` is 89 characters and exceeds the Hacker News 80-character limit. Do not use it.
 
 ## Target URL
 
@@ -83,7 +81,7 @@ Demo GIF: https://github.com/woxlo1/agent-debugger/blob/main/docs/assets/demo.gi
 ## Preflight checklist
 
 - [x] All v1.0.2 scope items are complete and `npm run verify` passes.
-- [x] The owner approved the version bump, tag, GitHub Release, demo GIF refresh, final text, and posting on 2026-11-24, the `v1.0.2` text/URL update on 2026-11-25, and the 19:00 JST post with the repository URL and revised title.
+- [x] The owner approved the version bump, tag, GitHub Release, demo GIF refresh, final text, and posting on 2026-11-24, the `v1.0.2` text/URL update on 2026-11-25, the 19:00 JST post with the repository URL and revised title, and the 68-character replacement title after confirming the Hacker News 80-character limit.
 - [x] Both the repository URL and the `v1.0.2` release URL resolve.
 - [x] The demo GIF contains only synthetic data from `docs/examples/failed-trace.ndjson`.
 - [x] No secrets, customer data, or internal hostnames appear in the repository or in the comment.
