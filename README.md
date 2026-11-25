@@ -355,7 +355,7 @@ Targets assume a commodity laptop and no network access. Results are local measu
 - [x] Publish-ready package build verified with `npm pack` and a clean-directory smoke test
 - [ ] Real-user validation with consented traces and third-party ground truth (materials ready in `docs/VALIDATION_KIT.md`; study not executed)
 
-The `v1.0.2` tag and GitHub Release are published. `agent-debugger-server@1.0.2` is published on npm; `agent-debugger-sdk@1.0.2` still requires an authenticated owner publish with a real 2FA OTP. CI never performs a version bump, tag, release, publish, or Hacker News post. The final Hacker News text is in `docs/HN_LAUNCH_DRAFT.md` and now references `v1.0.2`. Posting requires an authenticated HN session.
+The `v1.0.2` tag and GitHub Release are published. Both `agent-debugger-server@1.0.2` and `agent-debugger-sdk@1.0.2` are published on npm (`latest = 1.0.2`); the SDK went live after the owner approved npm staged publishing with 2FA. CI never performs a version bump, tag, release, publish, or Hacker News post. The final Hacker News text is in `docs/HN_LAUNCH_DRAFT.md` and now references `v1.0.2`. Posting requires an authenticated HN session.
 
 ## Verification
 
