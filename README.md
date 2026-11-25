@@ -9,6 +9,8 @@
 </p>
 
 <p align="center">
+  <a href="https://www.npmjs.com/package/agent-debugger-server"><img src="https://img.shields.io/npm/v/agent-debugger-server.svg" alt="npm: agent-debugger-server" /></a>
+  <a href="https://www.npmjs.com/package/agent-debugger-sdk"><img src="https://img.shields.io/npm/v/agent-debugger-sdk.svg" alt="npm: agent-debugger-sdk" /></a>
   <img src="https://img.shields.io/badge/status-v1.0.2-brightgreen" alt="status: v1.0.2" />
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="license: MIT" />
   <img src="https://img.shields.io/badge/runtime-local%20only-emerald" alt="runtime: local only" />
