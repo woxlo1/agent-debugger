@@ -156,10 +156,10 @@ Claude Code local transcript reading is **off by default**. It requires the proc
 
 ## Instrumenting your own agent
 
-The SDK is not published to npm yet. Use it from the workspace or send JSON Lines with the `pipe` command.
+The SDK is published on npm as `agent-debugger-sdk`. Install it with `npm install agent-debugger-sdk`, or use the workspace source while developing this repository. You can also send JSON Lines from any language with the `pipe` command.
 
 ```ts
-import { setTraceId, trace } from "./packages/sdk/src/index.ts"
+import { setTraceId, trace } from "agent-debugger-sdk"
 
 setTraceId("checkout-agent-run-42")
 
@@ -176,7 +176,7 @@ await trace({
 `trace()` never throws; it returns `{ ok, event, error }`. Use `traceOrThrow()` when delivery failure must stop the run.
 
 ```ts
-import { traceOrThrow } from "./packages/sdk/src/index.ts"
+import { traceOrThrow } from "agent-debugger-sdk"
 
 await traceOrThrow({ type: "agent", name: "final_answer", output: "..." })
 ```
