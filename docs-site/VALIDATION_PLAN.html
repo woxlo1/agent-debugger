@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Validation Plan · Agent Debugger Docs</title>
+  <meta name="description" content="Local-first failure debugging for AI agents." />
+  <link rel="icon" href="assets/favicon.svg" />
+  <meta property="og:title" content="Agent Debugger" />
+  <meta property="og:description" content="Local-first failure debugging for AI agents." />
+  <meta property="og:image" content="assets/social-card.svg" />
+  <style>
+    :root { color-scheme: dark; --bg:#080f1c; --panel:#0d1729; --line:#1e293b; --text:#e2e8f0; --muted:#94a3b8; --accent:#34d399; --accent2:#22d3ee; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:15px/1.65 Inter,"Segoe UI",Arial,sans-serif; }
+    a { color:var(--accent2); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .layout { display:grid; grid-template-columns:250px minmax(0,1fr) 220px; min-height:100vh; }
+    .sidebar { border-right:1px solid var(--line); padding:28px 20px; background:var(--panel); position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .brand { display:flex; align-items:center; gap:10px; color:var(--text); font-weight:700; font-size:17px; margin-bottom:28px; }
+    .brand:hover { text-decoration:none; }
+    .brand img { width:34px; height:34px; }
+    nav.side-links { display:flex; flex-direction:column; gap:4px; }
+    nav.side-links a { padding:8px 10px; border-radius:8px; color:var(--muted); font-size:14px; }
+    nav.side-links a:hover, nav.side-links a.active { background:#13233c; color:var(--text); text-decoration:none; }
+    .side-footer { margin-top:32px; font-size:12px; color:#64748b; }
+    main { padding:48px 56px 96px; max-width:960px; }
+    article h1 { font-size:36px; line-height:1.2; margin:0 0 24px; }
+    article h2 { font-size:24px; margin:40px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--line); }
+    article h3 { font-size:19px; margin:28px 0 8px; }
+    article p, article li { color:#cbd5e1; }
+    article ul, article ol { padding-left:22px; }
+    article li { margin:6px 0; }
+    article pre { background:#050b16; border:1px solid var(--line); border-radius:10px; padding:16px; overflow-x:auto; }
+    article code { font-family:"SFMono-Regular",Consolas,monospace; font-size:0.9em; }
+    article :not(pre) > code { background:#13233c; color:#a7f3d0; padding:2px 5px; border-radius:4px; }
+    article table { width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+    article th, article td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+    article th { background:#111d33; color:#e2e8f0; }
+    article blockquote { margin:18px 0; padding:12px 16px; border-left:3px solid var(--accent); background:#0f1d2e; color:var(--muted); }
+    article blockquote p { margin:0; }
+    article hr { border:0; border-top:1px solid var(--line); margin:32px 0; }
+    .toc { border-left:1px solid var(--line); padding:48px 20px; font-size:13px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .toc strong { display:block; color:#64748b; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; margin-bottom:12px; }
+    .toc a { display:block; color:var(--muted); padding:4px 0; }
+    .toc .toc-3 { padding-left:14px; color:#64748b; }
+    .hero { display:flex; align-items:center; gap:22px; margin-bottom:32px; }
+    .hero img { width:88px; height:88px; }
+    .hero h1 { margin:0 0 6px; }
+    .hero p { margin:0; color:var(--muted); }
+    .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; margin:32px 0; }
+    .card { display:block; padding:18px; border:1px solid var(--line); border-radius:12px; background:var(--panel); color:var(--text); }
+    .card:hover { border-color:var(--accent); text-decoration:none; }
+    .card strong { display:block; margin-bottom:6px; }
+    .card span { color:var(--muted); font-size:13px; }
+    .demo { width:100%; max-width:900px; border:1px solid var(--line); border-radius:12px; display:block; margin:24px 0; }
+    .generated { color:#475569; font-size:12px; margin-top:56px; }
+    @media (max-width:1100px) { .layout { grid-template-columns:220px minmax(0,1fr); } .toc { display:none; } main { padding:36px 32px 72px; } }
+    @media (max-width:720px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:0; border-bottom:1px solid var(--line); } main { padding:28px 20px 56px; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><img src="assets/icon.svg" alt="" /> Agent Debugger</a>
+      <nav class="side-links">
+        <a href="index.html">Product brief</a>
+        <a href="ARCHITECTURE.html">Architecture</a>
+        <a href="PROJECT_STRUCTURE.html">Project structure</a>
+        <a href="USAGE_PRIVACY.html">Usage and privacy</a>
+        <a href="CASE_COMPARE.html">Case comparison</a>
+        <a href="MCP_CLAUDE_LOCAL.html">MCP and Claude local</a>
+        <a href="DESKTOP_SHELL.html">Desktop shell</a>
+        <a href="PERFORMANCE.html">Performance results</a>
+        <a href="AI_SOURCE_MATRIX.html">AI source matrix</a>
+        <a href="VALIDATION_PLAN.html" class="active">Validation plan</a>
+        <a href="VALIDATION_KIT.html">Validation kit</a>
+        <a href="SECURITY_REVIEW.html">Security review</a>
+        <a href="OPS_BOTS.html">Ops bots</a>
+        <a href="COORDINATOR_PLAN.html">Coordinator plan</a>
+        <a href="HN_LAUNCH_DRAFT.html">HN launch draft</a>
+      </nav>
+      <p class="side-footer">Local-first · MIT licensed<br />Generated docs, edit Markdown in <code>docs/</code>.</p>
+    </aside>
+    <main>
+      <article><h1 id="validation-plan">Validation Plan</h1>
+<h2 id="status">Status</h2>
+<p><strong>Not executed. No user results, effect estimates, or validation claims are made.</strong></p>
+<p>Current state as of 2026-11-24:</p>
+<table><thead><tr><th>Item</th><th>Required</th><th>Current</th><th>Status</th></tr></thead><tbody><tr><td>Target-user participants</td><td>6–8</td><td>0 recruited</td><td>Blocked</td></tr><tr><td>Consented, pre-redacted real failed traces</td><td>At least 6</td><td>0 available</td><td>Blocked</td></tr><tr><td>Third-party ground-truth owner</td><td>1</td><td>Not assigned</td><td>Blocked</td></tr><tr><td>Manual Cause Package authors</td><td>1 or more</td><td>Not assigned</td><td>Blocked</td></tr><tr><td>Procedure rehearsal</td><td>1 recorded run</td><td>Not performed as a recorded study procedure</td><td>Not executed</td></tr><tr><td>H1 hypothesis</td><td>Tested</td><td>Untested</td><td>No decision</td></tr></tbody></table>
+<p>Automated fixture tests exercise import, analysis, and bundle shape. They are <strong>not</strong> a user study and do not count as evidence for H1. Synthetic traces may be used only for procedure rehearsal, and any rehearsal result must be labelled <code>not evaluable</code>.</p>
+<p>Ready-to-use materials are in <code>docs/VALIDATION_KIT.md</code>: consent template, session script, and anonymous results sheet. They do not change the status above.</p>
+<p>Executing the study requires all blocking conditions below to be satisfied first.</p>
+<h2 id="hypothesis-under-test">Hypothesis under test</h2>
+<p>H1 (product hypothesis, not a confirmed decision):</p>
+<blockquote><p>A rule-based Cause Package generated from a failed agent trace helps the target developer reach a plausible cause and a concrete next debugging action faster than reading the raw trace alone.</p></blockquote>
+<h2 id="design">Design</h2>
+<ul>
+<li>Comparison: manual Cause Package view versus raw trace viewing.</li>
+<li>Order is counterbalanced across participants.</li>
+<li>The same trace repeated by the same participant is not counted as an independent observation.</li>
+<li>Ground truth is fixed in advance by a third party who does not author the Cause Packages.</li>
+<li>Timing is reported descriptively at participant level; no population claim is made.</li>
+<li>Qualitative comments inform iteration but are never the sole condition for withdrawing an option.</li>
+</ul>
+<h2 id="roles-required">Roles required</h2>
+<ul>
+<li>6–8 target-user participants.</li>
+<li>At least 6 consented, pre-redacted real failed traces.</li>
+<li>One third-party ground-truth owner.</li>
+<li>One or more authors for manual Cause Packages.</li>
+</ul>
+<h2 id="consent-and-data-handling">Consent and data handling</h2>
+<ul>
+<li>Real traces require explicit consent from the trace owner.</li>
+<li>Redaction must be applied before a trace enters the study workspace.</li>
+<li>Synthetic traces may be used only for procedure rehearsal.</li>
+<li>A rehearsal result must be labelled <code>not evaluable</code>; it does not count toward H1.</li>
+<li>No trace, prompt, or runtime state is sent to an external service as part of this plan.</li>
+</ul>
+<h2 id="measures">Measures</h2>
+<ul>
+<li>Time from opening the trace to naming a plausible cause.</li>
+<li>Agreement with third-party ground truth.</li>
+<li>Whether the proposed reproduction step can be followed.</li>
+<li>Whether the handoff identifies a concrete file, tool, or breakpoint target.</li>
+<li>Confidence calibration against correctness.</li>
+</ul>
+<h2 id="decision-labels-directional-only">Decision labels (directional only)</h2>
+<ul>
+<li><strong>Advance</strong>: faster cause identification and at least comparable correctness, with usable handoff.</li>
+<li><strong>Hold</strong>: mixed results; refine the rule set or the user flow before deciding.</li>
+<li><strong>Withdraw</strong>: the Cause Package does not improve investigation or misleads participants.</li>
+</ul>
+<p>These labels guide iteration. They are not proof of product-market fit.</p>
+<h2 id="procedure-rehearsal-checklist-synthetic-only">Procedure rehearsal checklist (synthetic only)</h2>
+<ol>
+<li>Start the local server.</li>
+<li>Import <code>docs/examples/failed-trace.ndjson</code>.</li>
+<li>Confirm observed evidence, candidates, reproduction, and handoff render.</li>
+<li>Export NDJSON and confirm values remain redacted.</li>
+<li>Record the result as <code>procedure ok / not evaluable</code>.</li>
+</ol>
+<h2 id="blocking-conditions">Blocking conditions</h2>
+<p>Do not execute the user study until consent, redaction, participants, and ground truth are in place. Do not use the rehearsal result as evidence for H1.</p></article>
+      <p class="generated">Generated by <code>scripts/build-docs.mjs</code>. Do not edit this HTML directly.</p>
+    </main>
+    <aside class="toc">
+      <strong>On this page</strong>
+      <a class="toc-2" href="#status">Status</a>
+        <a class="toc-2" href="#hypothesis-under-test">Hypothesis under test</a>
+        <a class="toc-2" href="#design">Design</a>
+        <a class="toc-2" href="#roles-required">Roles required</a>
+        <a class="toc-2" href="#consent-and-data-handling">Consent and data handling</a>
+        <a class="toc-2" href="#measures">Measures</a>
+        <a class="toc-2" href="#decision-labels-directional-only">Decision labels (directional only)</a>
+        <a class="toc-2" href="#procedure-rehearsal-checklist-synthetic-only">Procedure rehearsal checklist (synthetic only)</a>
+        <a class="toc-2" href="#blocking-conditions">Blocking conditions</a>
+    </aside>
+  </div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Agent Debugger icon</title>
+  <desc id="desc">A magnifying glass over a broken agent trace with one error node.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1220"/>
+      <stop offset="1" stop-color="#14213b"/>
+    </linearGradient>
+    <linearGradient id="lens" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#34d399"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#38bdf8" stroke-opacity="0.12" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#bg)"/>
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#grid)"/>
+  <rect x="17.5" y="17.5" width="477" height="477" rx="110.5" fill="none" stroke="#334155" stroke-opacity="0.8" stroke-width="3"/>
+
+  <path d="M84 330H164L204 278H276L316 222H416" fill="none" stroke="#475569" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="84" cy="330" r="14" fill="#64748b"/>
+  <circle cx="164" cy="330" r="14" fill="#64748b"/>
+  <circle cx="204" cy="278" r="14" fill="#64748b"/>
+  <circle cx="276" cy="278" r="14" fill="#64748b"/>
+  <circle cx="416" cy="222" r="18" fill="#f87171" filter="url(#glow)"/>
+  <path d="M408 214l16 16m0-16l-16 16" stroke="#450a0a" stroke-width="5" stroke-linecap="round"/>
+
+  <circle cx="238" cy="238" r="104" fill="#0b1220" fill-opacity="0.82" stroke="url(#lens)" stroke-width="26" filter="url(#glow)"/>
+  <path d="M186 258h30l18-34h28l18-30h26" fill="none" stroke="#34d399" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="186" cy="258" r="9" fill="#34d399"/>
+  <circle cx="234" cy="224" r="9" fill="#22d3ee"/>
+  <circle cx="306" cy="194" r="11" fill="#f87171"/>
+
+  <path d="M315 315l92 92" stroke="url(#lens)" stroke-width="34" stroke-linecap="round" filter="url(#glow)"/>
+  <path d="M315 315l92 92" stroke="#0b1220" stroke-opacity="0.25" stroke-width="10" stroke-linecap="round"/>
+</svg>

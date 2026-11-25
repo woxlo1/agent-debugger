@@ -84,6 +84,7 @@ export function importTrace(input: {
       skipped++
       continue
     }
+    if (input.traceId) event.traceId = traceId
     events.push(event)
   }
 

@@ -1,6 +1,6 @@
 // Demo agent that emits a failed checkout trace using the local SDK source.
 // Run with: npm run demo  (from the repo root, with the local server running)
-import { setTraceId, traceOrThrow } from "../../sdk/src/index.ts"
+import { setTraceId, traceOrThrow } from "../sdk/src/index.ts"
 
 const traceId = `demo-failed-checkout-${Date.now()}`
 setTraceId(traceId)

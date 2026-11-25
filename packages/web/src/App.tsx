@@ -1,12 +1,33 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import type { AgentEvent, TraceSummary } from "./types"
 import { fetchEvents, fetchTraces, subscribeToStream } from "./api"
 import TraceList from "./components/TraceList"
 import ReplayTimeline from "./components/ReplayTimeline"
 import DetailPanel from "./components/DetailPanel"
 import AnalysisPanel from "./components/AnalysisPanel"
+import UsagePanel from "./components/UsagePanel"
+import PrivacyPanel from "./components/PrivacyPanel"
+import ComparePanel from "./components/ComparePanel"
 
-type View = "replay" | "analysis"
+type View = "replay" | "analysis" | "usage" | "privacy" | "compare"
+
+type EventLoad = {
+  generation: number
+  loaded: boolean
+  buffered: AgentEvent[]
+}
+
+function mergeEvents(base: AgentEvent[], incoming: AgentEvent[]): AgentEvent[] {
+  if (incoming.length === 0) return base
+  const seen = new Set(base.map((event) => event.id))
+  const merged = [...base]
+  for (const event of incoming) {
+    if (seen.has(event.id)) continue
+    seen.add(event.id)
+    merged.push(event)
+  }
+  return merged
+}
 
 export default function App() {
   const [traces, setTraces] = useState<TraceSummary[]>([])
@@ -14,6 +35,7 @@ export default function App() {
   const [events, setEvents] = useState<AgentEvent[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [view, setView] = useState<View>("analysis")
+  const eventLoad = useRef<EventLoad>({ generation: 0, loaded: false, buffered: [] })
 
   const loadTraces = () => {
     fetchTraces()
@@ -34,18 +56,30 @@ export default function App() {
   }, [traces, selectedTraceId])
 
   useEffect(() => {
+    const load = eventLoad.current
+    const generation = ++load.generation
+    load.loaded = false
+    load.buffered = []
     if (!selectedTraceId) return
     fetchEvents(selectedTraceId).then((evts) => {
-      setEvents(evts)
-      setCurrentIndex(evts.length > 0 ? evts.length - 1 : 0)
+      if (generation !== eventLoad.current.generation) return
+      const buffered = eventLoad.current.buffered
+      eventLoad.current.loaded = true
+      const merged = mergeEvents(evts, buffered)
+      setEvents(merged)
+      setCurrentIndex(merged.length > 0 ? merged.length - 1 : 0)
     })
   }, [selectedTraceId])
 
   useEffect(() => {
     const unsubscribe = subscribeToStream((event) => {
-      if (event.traceId === selectedTraceId) {
-        setEvents((prev) => [...prev, event])
+      if (event.traceId !== selectedTraceId) return
+      const load = eventLoad.current
+      if (!load.loaded) {
+        load.buffered.push(event)
+        return
       }
+      setEvents((prev) => mergeEvents(prev, [event]))
     })
     return unsubscribe
   }, [selectedTraceId])
@@ -65,7 +99,7 @@ export default function App() {
           Failed trace → evidence → debugger handoff
         </span>
         <div className="ml-auto flex gap-1">
-          {(["analysis", "replay"] as View[]).map((item) => (
+          {(["analysis", "compare", "replay", "usage", "privacy"] as View[]).map((item) => (
             <button
               key={item}
               onClick={() => setView(item)}
@@ -75,7 +109,15 @@ export default function App() {
                   : "text-zinc-400 hover:bg-zinc-900"
               }`}
             >
-              {item === "analysis" ? "Cause Package" : "Replay"}
+              {item === "analysis"
+                ? "Cause Package"
+                : item === "compare"
+                  ? "Compare"
+                  : item === "replay"
+                    ? "Replay"
+                    : item === "usage"
+                      ? "Usage"
+                      : "Privacy"}
             </button>
           ))}
         </div>
@@ -90,6 +132,12 @@ export default function App() {
 
         {view === "analysis" ? (
           <AnalysisPanel traceId={selectedTraceId} onImported={handleImported} />
+        ) : view === "compare" ? (
+          <ComparePanel traces={traces} selectedTraceId={selectedTraceId} />
+        ) : view === "usage" ? (
+          <UsagePanel traceId={selectedTraceId} />
+        ) : view === "privacy" ? (
+          <PrivacyPanel traceId={selectedTraceId} />
         ) : (
           <>
             <div className="w-[420px] border-r border-zinc-800">

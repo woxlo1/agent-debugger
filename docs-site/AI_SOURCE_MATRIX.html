@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Source Matrix · Agent Debugger Docs</title>
+  <meta name="description" content="Local-first failure debugging for AI agents." />
+  <link rel="icon" href="assets/favicon.svg" />
+  <meta property="og:title" content="Agent Debugger" />
+  <meta property="og:description" content="Local-first failure debugging for AI agents." />
+  <meta property="og:image" content="assets/social-card.svg" />
+  <style>
+    :root { color-scheme: dark; --bg:#080f1c; --panel:#0d1729; --line:#1e293b; --text:#e2e8f0; --muted:#94a3b8; --accent:#34d399; --accent2:#22d3ee; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:15px/1.65 Inter,"Segoe UI",Arial,sans-serif; }
+    a { color:var(--accent2); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .layout { display:grid; grid-template-columns:250px minmax(0,1fr) 220px; min-height:100vh; }
+    .sidebar { border-right:1px solid var(--line); padding:28px 20px; background:var(--panel); position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .brand { display:flex; align-items:center; gap:10px; color:var(--text); font-weight:700; font-size:17px; margin-bottom:28px; }
+    .brand:hover { text-decoration:none; }
+    .brand img { width:34px; height:34px; }
+    nav.side-links { display:flex; flex-direction:column; gap:4px; }
+    nav.side-links a { padding:8px 10px; border-radius:8px; color:var(--muted); font-size:14px; }
+    nav.side-links a:hover, nav.side-links a.active { background:#13233c; color:var(--text); text-decoration:none; }
+    .side-footer { margin-top:32px; font-size:12px; color:#64748b; }
+    main { padding:48px 56px 96px; max-width:960px; }
+    article h1 { font-size:36px; line-height:1.2; margin:0 0 24px; }
+    article h2 { font-size:24px; margin:40px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--line); }
+    article h3 { font-size:19px; margin:28px 0 8px; }
+    article p, article li { color:#cbd5e1; }
+    article ul, article ol { padding-left:22px; }
+    article li { margin:6px 0; }
+    article pre { background:#050b16; border:1px solid var(--line); border-radius:10px; padding:16px; overflow-x:auto; }
+    article code { font-family:"SFMono-Regular",Consolas,monospace; font-size:0.9em; }
+    article :not(pre) > code { background:#13233c; color:#a7f3d0; padding:2px 5px; border-radius:4px; }
+    article table { width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+    article th, article td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+    article th { background:#111d33; color:#e2e8f0; }
+    article blockquote { margin:18px 0; padding:12px 16px; border-left:3px solid var(--accent); background:#0f1d2e; color:var(--muted); }
+    article blockquote p { margin:0; }
+    article hr { border:0; border-top:1px solid var(--line); margin:32px 0; }
+    .toc { border-left:1px solid var(--line); padding:48px 20px; font-size:13px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .toc strong { display:block; color:#64748b; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; margin-bottom:12px; }
+    .toc a { display:block; color:var(--muted); padding:4px 0; }
+    .toc .toc-3 { padding-left:14px; color:#64748b; }
+    .hero { display:flex; align-items:center; gap:22px; margin-bottom:32px; }
+    .hero img { width:88px; height:88px; }
+    .hero h1 { margin:0 0 6px; }
+    .hero p { margin:0; color:var(--muted); }
+    .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; margin:32px 0; }
+    .card { display:block; padding:18px; border:1px solid var(--line); border-radius:12px; background:var(--panel); color:var(--text); }
+    .card:hover { border-color:var(--accent); text-decoration:none; }
+    .card strong { display:block; margin-bottom:6px; }
+    .card span { color:var(--muted); font-size:13px; }
+    .demo { width:100%; max-width:900px; border:1px solid var(--line); border-radius:12px; display:block; margin:24px 0; }
+    .generated { color:#475569; font-size:12px; margin-top:56px; }
+    @media (max-width:1100px) { .layout { grid-template-columns:220px minmax(0,1fr); } .toc { display:none; } main { padding:36px 32px 72px; } }
+    @media (max-width:720px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:0; border-bottom:1px solid var(--line); } main { padding:28px 20px 56px; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><img src="assets/icon.svg" alt="" /> Agent Debugger</a>
+      <nav class="side-links">
+        <a href="index.html">Product brief</a>
+        <a href="ARCHITECTURE.html">Architecture</a>
+        <a href="PROJECT_STRUCTURE.html">Project structure</a>
+        <a href="USAGE_PRIVACY.html">Usage and privacy</a>
+        <a href="CASE_COMPARE.html">Case comparison</a>
+        <a href="MCP_CLAUDE_LOCAL.html">MCP and Claude local</a>
+        <a href="DESKTOP_SHELL.html">Desktop shell</a>
+        <a href="PERFORMANCE.html">Performance results</a>
+        <a href="AI_SOURCE_MATRIX.html" class="active">AI source matrix</a>
+        <a href="VALIDATION_PLAN.html">Validation plan</a>
+        <a href="VALIDATION_KIT.html">Validation kit</a>
+        <a href="SECURITY_REVIEW.html">Security review</a>
+        <a href="OPS_BOTS.html">Ops bots</a>
+        <a href="COORDINATOR_PLAN.html">Coordinator plan</a>
+        <a href="HN_LAUNCH_DRAFT.html">HN launch draft</a>
+      </nav>
+      <p class="side-footer">Local-first · MIT licensed<br />Generated docs, edit Markdown in <code>docs/</code>.</p>
+    </aside>
+    <main>
+      <article><h1 id="ai-source-matrix">AI Source Matrix</h1>
+<h2 id="purpose">Purpose</h2>
+<p>Define how every supported AI-related information source is represented. The goal is honest visibility, not guessed precision.</p>
+<h2 id="confidence-labels">Confidence labels</h2>
+<table><thead><tr><th>Label</th><th>Meaning</th></tr></thead><tbody><tr><td><code>reported</code></td><td>The provider or SDK explicitly returned the value.</td></tr><tr><td><code>estimated</code></td><td>The value was derived by a local heuristic. It is never presented as provider billing truth.</td></tr><tr><td><code>unknown</code></td><td>No trustworthy value is available. The UI must show this explicitly.</td></tr></tbody></table>
+<h2 id="source-matrix">Source matrix</h2>
+<table><thead><tr><th>Source</th><th>Access mode</th><th>Default</th><th>Confidence</th><th>Notes</th></tr></thead><tbody><tr><td>Anthropic API response</td><td>Caller supplies response object</td><td>On when used</td><td><code>reported</code></td><td>Reads <code>usage.input_tokens</code>, <code>usage.output_tokens</code>, <code>usage.cache_read_input_tokens</code>, and cache creation fields. No API call by this project.</td></tr><tr><td>OpenAI API response</td><td>Caller supplies response object</td><td>On when used</td><td><code>reported</code></td><td>Reads <code>usage.prompt_tokens</code>, <code>usage.completion_tokens</code>, <code>total_tokens</code>, and detail buckets. Cached tokens are separated from input.</td></tr><tr><td>OpenTelemetry GenAI</td><td>Attributes in imported spans</td><td>On when imported</td><td><code>reported</code></td><td>Reads <code>gen_ai.usage.*</code>, <code>gen_ai.provider.name</code>, and request/response model attributes.</td></tr><tr><td>OpenInference</td><td>Attributes in imported spans</td><td>On when imported</td><td><code>reported</code></td><td>Reads <code>llm.token_count.*</code> and <code>llm.model_name</code>.</td></tr><tr><td>LangChain callback</td><td>Caller supplies callback metadata</td><td>On when used</td><td><code>reported</code></td><td>Reads provider usage when the callback contains it.</td></tr><tr><td>Explicit SDK event</td><td><code>trace()</code> / <code>trackUsage()</code></td><td>On when used</td><td><code>reported</code></td><td>Caller states the source and values.</td></tr><tr><td>Manual import</td><td>JSON/NDJSON supplied by user</td><td>On when supplied</td><td><code>reported</code></td><td>The value is trusted as user-entered, not vendor-verified.</td></tr><tr><td>Claude Code local transcript</td><td>Local file reader</td><td><strong>Off</strong></td><td><code>reported</code></td><td>Implemented in <code>packages/mcp/src/claudeLocal.ts</code>. Requires process opt-in, explicit request consent, strict redaction, and source path allowlist. Never enabled by default.</td></tr><tr><td>claude.ai Web</td><td>Manual export or pasted data</td><td><strong>Off</strong></td><td><code>reported</code> / <code>unknown</code></td><td>No credentials, scraping, or browser automation. If no export is supplied, show <code>unknown</code>.</td></tr><tr><td>Local heuristic estimate</td><td>Text/message length</td><td><strong>Off</strong></td><td><code>estimated</code></td><td>Available for investigation only. Must be labelled and excluded from billing totals by default.</td></tr><tr><td>External AI explanation</td><td>Optional adapter</td><td><strong>Off</strong></td><td>n/a</td><td>Requires explicit consent and a caller-supplied transport. This project makes no external AI call by default.</td></tr></tbody></table>
+<h2 id="privacy-rules-for-all-sources">Privacy rules for all sources</h2>
+<ul>
+<li>No raw prompt, tool argument, transcript line, file path, token, or API key is stored by the usage ledger.</li>
+<li>Provider/model names are kept because they are needed for cost interpretation.</li>
+<li>Redaction counters are stored as counts only, never values.</li>
+<li>Claude Code and claude.ai sources require a consent record before ingestion.</li>
+<li>Any source outside the matrix is normalized as <code>unknown</code>, not guessed.</li>
+</ul>
+<h2 id="local-claude-adapter">Local Claude adapter</h2>
+<p><code>docs/MCP_CLAUDE_LOCAL.md</code> defines the opt-in reader for Claude Code JSONL transcripts. It is disabled unless <code>AGENT_DEBUGGER_CLAUDE_LOCAL=enabled</code> is set for the local process, and each request must also supply explicit consent and an absolute path allowlist. Redaction runs before normalization, and the result contains counts and allowlisted usage fields only. No raw transcript text or source path is returned or persisted.</p>
+<h2 id="relationship-to-existing-branches">Relationship to existing branches</h2>
+<p><code>origin/feat/instrument-token-usage</code> contains an earlier word-count based token logger. It was reviewed but is not merged as-is because:</p>
+<ol>
+<li>It labels estimated values as token counts without a <code>reported</code>/<code>estimated</code>/<code>unknown</code> distinction.</li>
+<li>It writes a raw JSONL file under <code>logs/</code>.</li>
+<li>It has no redaction or consent policy.</li>
+</ol>
+<p>Its intent is preserved here through the explicit <code>estimated</code> path.</p></article>
+      <p class="generated">Generated by <code>scripts/build-docs.mjs</code>. Do not edit this HTML directly.</p>
+    </main>
+    <aside class="toc">
+      <strong>On this page</strong>
+      <a class="toc-2" href="#purpose">Purpose</a>
+        <a class="toc-2" href="#confidence-labels">Confidence labels</a>
+        <a class="toc-2" href="#source-matrix">Source matrix</a>
+        <a class="toc-2" href="#privacy-rules-for-all-sources">Privacy rules for all sources</a>
+        <a class="toc-2" href="#local-claude-adapter">Local Claude adapter</a>
+        <a class="toc-2" href="#relationship-to-existing-branches">Relationship to existing branches</a>
+    </aside>
+  </div>
+</body>
+</html>

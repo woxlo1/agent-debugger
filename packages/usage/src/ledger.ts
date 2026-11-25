@@ -16,37 +16,44 @@ const BUCKET_KEYS: Array<keyof UsageBuckets> = [
   "totalTokens",
 ]
 
-function addDefined(target: UsageBuckets, entry: AiUsage): void {
-  const bucketValues = BUCKET_KEYS.filter((key) => key !== "totalTokens").map(
-    (key) => entry[key],
-  )
-  const hasBuckets = bucketValues.some((value) => value !== undefined)
-  const total = hasBuckets
-    ? bucketValues.reduce<number>((sum, value) => sum + (value ?? 0), 0)
-    : entry.totalTokens
+type TotalParts = {
+  explicit: number | undefined
+  fromBuckets: number
+}
 
-  if (hasBuckets) {
-    for (const key of BUCKET_KEYS) {
-      if (key === "totalTokens") continue
-      const value = entry[key]
-      if (value !== undefined) {
-        target[key] = (target[key] ?? 0) + value
-      }
+function addDefined(target: UsageBuckets, entry: AiUsage, totals: TotalParts): void {
+  const bucketKeys = BUCKET_KEYS.filter((key) => key !== "totalTokens")
+  const bucketValues = bucketKeys.map((key) => entry[key])
+  const hasBuckets = bucketValues.some((value) => value !== undefined)
+
+  for (const key of bucketKeys) {
+    const value = entry[key]
+    if (value !== undefined) {
+      target[key] = (target[key] ?? 0) + value
     }
-  } else if (total !== undefined) {
-    target.totalTokens = (target.totalTokens ?? 0) + total
+  }
+
+  if (entry.totalTokens !== undefined) {
+    totals.explicit = (totals.explicit ?? 0) + entry.totalTokens
+  } else if (hasBuckets) {
+    totals.fromBuckets += bucketValues.reduce<number>(
+      (sum, value) => sum + (value ?? 0),
+      0,
+    )
   }
 }
 
-function finalizeTotal(buckets: UsageBuckets): void {
-  const bucketTotal = BUCKET_KEYS.filter((key) => key !== "totalTokens").reduce<number>(
-    (sum, key) => sum + (buckets[key] ?? 0),
-    0,
-  )
-  const hasBuckets = BUCKET_KEYS.filter((key) => key !== "totalTokens").some(
-    (key) => buckets[key] !== undefined,
-  )
-  if (hasBuckets) buckets.totalTokens = bucketTotal
+function finalizeTotal(buckets: UsageBuckets, totals: TotalParts): void {
+  const bucketKeys = BUCKET_KEYS.filter((key) => key !== "totalTokens")
+  const hasBuckets = bucketKeys.some((key) => buckets[key] !== undefined)
+  if (totals.explicit !== undefined) {
+    buckets.totalTokens = totals.explicit + totals.fromBuckets
+  } else if (hasBuckets) {
+    buckets.totalTokens = bucketKeys.reduce<number>(
+      (sum, key) => sum + (buckets[key] ?? 0),
+      0,
+    )
+  }
 }
 
 function aggregateConfidence(entries: AiUsage[]): UsageConfidence {
@@ -85,13 +92,14 @@ export function buildUsageLedger(
   }
 
   const buckets: UsageBuckets = {}
+  const totalParts: TotalParts = { explicit: undefined, fromBuckets: 0 }
   let cost: number | undefined
   for (const entry of included) {
-    addDefined(buckets, entry)
+    addDefined(buckets, entry, totalParts)
     if (entry.cost !== undefined) cost = (cost ?? 0) + entry.cost
   }
 
-  finalizeTotal(buckets)
+  finalizeTotal(buckets, totalParts)
   const totals: UsageTotals = { ...buckets, entries: included.length }
   if (cost !== undefined) totals.cost = cost
 

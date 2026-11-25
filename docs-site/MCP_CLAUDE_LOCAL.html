@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MCP Server and Claude Local Adapter · Agent Debugger Docs</title>
+  <meta name="description" content="Local-first failure debugging for AI agents." />
+  <link rel="icon" href="assets/favicon.svg" />
+  <meta property="og:title" content="Agent Debugger" />
+  <meta property="og:description" content="Local-first failure debugging for AI agents." />
+  <meta property="og:image" content="assets/social-card.svg" />
+  <style>
+    :root { color-scheme: dark; --bg:#080f1c; --panel:#0d1729; --line:#1e293b; --text:#e2e8f0; --muted:#94a3b8; --accent:#34d399; --accent2:#22d3ee; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:15px/1.65 Inter,"Segoe UI",Arial,sans-serif; }
+    a { color:var(--accent2); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .layout { display:grid; grid-template-columns:250px minmax(0,1fr) 220px; min-height:100vh; }
+    .sidebar { border-right:1px solid var(--line); padding:28px 20px; background:var(--panel); position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .brand { display:flex; align-items:center; gap:10px; color:var(--text); font-weight:700; font-size:17px; margin-bottom:28px; }
+    .brand:hover { text-decoration:none; }
+    .brand img { width:34px; height:34px; }
+    nav.side-links { display:flex; flex-direction:column; gap:4px; }
+    nav.side-links a { padding:8px 10px; border-radius:8px; color:var(--muted); font-size:14px; }
+    nav.side-links a:hover, nav.side-links a.active { background:#13233c; color:var(--text); text-decoration:none; }
+    .side-footer { margin-top:32px; font-size:12px; color:#64748b; }
+    main { padding:48px 56px 96px; max-width:960px; }
+    article h1 { font-size:36px; line-height:1.2; margin:0 0 24px; }
+    article h2 { font-size:24px; margin:40px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--line); }
+    article h3 { font-size:19px; margin:28px 0 8px; }
+    article p, article li { color:#cbd5e1; }
+    article ul, article ol { padding-left:22px; }
+    article li { margin:6px 0; }
+    article pre { background:#050b16; border:1px solid var(--line); border-radius:10px; padding:16px; overflow-x:auto; }
+    article code { font-family:"SFMono-Regular",Consolas,monospace; font-size:0.9em; }
+    article :not(pre) > code { background:#13233c; color:#a7f3d0; padding:2px 5px; border-radius:4px; }
+    article table { width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+    article th, article td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+    article th { background:#111d33; color:#e2e8f0; }
+    article blockquote { margin:18px 0; padding:12px 16px; border-left:3px solid var(--accent); background:#0f1d2e; color:var(--muted); }
+    article blockquote p { margin:0; }
+    article hr { border:0; border-top:1px solid var(--line); margin:32px 0; }
+    .toc { border-left:1px solid var(--line); padding:48px 20px; font-size:13px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .toc strong { display:block; color:#64748b; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; margin-bottom:12px; }
+    .toc a { display:block; color:var(--muted); padding:4px 0; }
+    .toc .toc-3 { padding-left:14px; color:#64748b; }
+    .hero { display:flex; align-items:center; gap:22px; margin-bottom:32px; }
+    .hero img { width:88px; height:88px; }
+    .hero h1 { margin:0 0 6px; }
+    .hero p { margin:0; color:var(--muted); }
+    .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; margin:32px 0; }
+    .card { display:block; padding:18px; border:1px solid var(--line); border-radius:12px; background:var(--panel); color:var(--text); }
+    .card:hover { border-color:var(--accent); text-decoration:none; }
+    .card strong { display:block; margin-bottom:6px; }
+    .card span { color:var(--muted); font-size:13px; }
+    .demo { width:100%; max-width:900px; border:1px solid var(--line); border-radius:12px; display:block; margin:24px 0; }
+    .generated { color:#475569; font-size:12px; margin-top:56px; }
+    @media (max-width:1100px) { .layout { grid-template-columns:220px minmax(0,1fr); } .toc { display:none; } main { padding:36px 32px 72px; } }
+    @media (max-width:720px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:0; border-bottom:1px solid var(--line); } main { padding:28px 20px 56px; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><img src="assets/icon.svg" alt="" /> Agent Debugger</a>
+      <nav class="side-links">
+        <a href="index.html">Product brief</a>
+        <a href="ARCHITECTURE.html">Architecture</a>
+        <a href="PROJECT_STRUCTURE.html">Project structure</a>
+        <a href="USAGE_PRIVACY.html">Usage and privacy</a>
+        <a href="CASE_COMPARE.html">Case comparison</a>
+        <a href="MCP_CLAUDE_LOCAL.html" class="active">MCP and Claude local</a>
+        <a href="DESKTOP_SHELL.html">Desktop shell</a>
+        <a href="PERFORMANCE.html">Performance results</a>
+        <a href="AI_SOURCE_MATRIX.html">AI source matrix</a>
+        <a href="VALIDATION_PLAN.html">Validation plan</a>
+        <a href="VALIDATION_KIT.html">Validation kit</a>
+        <a href="SECURITY_REVIEW.html">Security review</a>
+        <a href="OPS_BOTS.html">Ops bots</a>
+        <a href="COORDINATOR_PLAN.html">Coordinator plan</a>
+        <a href="HN_LAUNCH_DRAFT.html">HN launch draft</a>
+      </nav>
+      <p class="side-footer">Local-first · MIT licensed<br />Generated docs, edit Markdown in <code>docs/</code>.</p>
+    </aside>
+    <main>
+      <article><h1 id="mcp-server-and-claude-local-adapter">MCP Server and Claude Local Adapter</h1>
+<h2 id="local-mcp-server">Local MCP server</h2>
+<p>Stage 5 exposes the existing local debugger as a Model Context Protocol (MCP) server over stdio. It uses JSON-RPC 2.0 and Node built-ins only; no MCP SDK, credential, network listener, or external AI service is added.</p>
+<pre><code class="language-bash">npm run mcp</code></pre>
+<p>The process reads one JSON-RPC request per line from stdin and writes one response per line to stdout. It supports <code>initialize</code>, <code>ping</code>, <code>tools/list</code>, and <code>tools/call</code>. Notifications are acknowledged implicitly and produce no response.</p>
+<h3 id="example-client-configuration">Example client configuration</h3>
+<p>For a local MCP client that supports command-based servers:</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;agent-debugger&quot;: {
+      &quot;command&quot;: &quot;node&quot;,
+      &quot;args&quot;: [&quot;--import&quot;, &quot;tsx&quot;, &quot;packages/mcp/src/index.ts&quot;],
+      &quot;cwd&quot;: &quot;/absolute/path/to/agent-debugger&quot;,
+      &quot;env&quot;: {
+        &quot;AGENT_DEBUGGER_STORE&quot;: &quot;/absolute/path/to/agent-debugger/.agent-debugger/events.ndjson&quot;
+      }
+    }
+  }
+}</code></pre>
+<p><code>cwd</code> and the store path should be absolute. The server binds to no port and uses the same local NDJSON store as the API and CLI.</p>
+<h3 id="tools">Tools</h3>
+<table><thead><tr><th>Tool</th><th>Purpose</th></tr></thead><tbody><tr><td><code>list_traces</code></td><td>List locally stored traces</td></tr><tr><td><code>analyze_trace</code></td><td>Build the deterministic Cause Package for one trace</td></tr><tr><td><code>get_cause_package</code></td><td>Export a redacted portable bundle with fingerprint</td></tr><tr><td><code>compare_traces</code></td><td>Diff two local traces</td></tr><tr><td><code>get_usage</code></td><td>Read the consent-aware usage ledger</td></tr><tr><td><code>get_privacy_audit</code></td><td>Read count-only redaction and consent counters</td></tr><tr><td><code>import_trace</code></td><td>Import NDJSON/JSON into the local store (redacted on ingest)</td></tr><tr><td><code>record_usage</code></td><td>Normalize and store a caller-supplied provider usage payload</td></tr><tr><td><code>read_claude_local_usage</code></td><td>Opt-in, path-allowlisted Claude Code local transcript reader</td></tr></tbody></table>
+<p><code>record_usage</code> intentionally rejects <code>claude_code_local</code> and <code>claude_web_export</code>. Those sources must go through the consent-aware path below.</p>
+<h2 id="claude-local-adapter">Claude local adapter</h2>
+<p>Claude Code local transcript reading is <strong>off by default</strong>. Even calling the MCP tool is not enough: the process must also be started with:</p>
+<pre><code class="language-bash">AGENT_DEBUGGER_CLAUDE_LOCAL=enabled npm run mcp</code></pre>
+<p>That flag is a local switch, not a credential. No token, account, or secret is introduced.</p>
+<h3 id="required-tool-arguments">Required tool arguments</h3>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;read_claude_local_usage&quot;,
+  &quot;arguments&quot;: {
+    &quot;path&quot;: &quot;/absolute/path/to/claude-transcript.jsonl&quot;,
+    &quot;allowedRoots&quot;: [&quot;/absolute/path/to/allowed-directory&quot;],
+    &quot;consentGranted&quot;: true,
+    &quot;acknowledgedScope&quot;: true,
+    &quot;traceId&quot;: &quot;optional-local-trace-id&quot;,
+    &quot;maxRecords&quot;: 500
+  }
+}</code></pre>
+<p>All of the following are enforced:</p>
+<ul>
+<li><code>AGENT_DEBUGGER_CLAUDE_LOCAL=enabled</code> for the process</li>
+<li><code>consentGranted: true</code> and <code>acknowledgedScope: true</code> in the request</li>
+<li>At least one absolute <code>allowedRoots</code> entry pointing to an existing directory</li>
+<li>The target must be an absolute <code>.jsonl</code> path inside an allowed root</li>
+<li>Both the supplied path and its <code>realpath</code> must be inside an allowed root, so a symlink cannot escape the allowlist</li>
+<li>File size is capped at 10 MB and records at 5,000 (default 500)</li>
+<li>Strict redaction runs before any usage normalization</li>
+</ul>
+<h3 id="what-the-adapter-returns">What the adapter returns</h3>
+<p>The adapter returns only:</p>
+<ul>
+<li>allowlisted usage fields: token buckets, provider, model, request id, trace id, confidence, consent</li>
+<li>one strict redaction receipt with detector counts and skipped-field counts</li>
+<li>record counters and warnings</li>
+</ul>
+<p>It never returns transcript text, the source path, raw JSON lines, prompts, tool arguments, or redacted values. Entries are labelled <code>reported</code> and <code>consent: &quot;granted&quot;</code> only because the caller explicitly opted in. They are not inferred from browser state. claude.ai Web remains manual-export only; no scraping, automation, or credential use is implemented.</p>
+<h2 id="trust-model">Trust model</h2>
+<ul>
+<li>MCP calls operate on the local store only.</li>
+<li><code>import_trace</code> and <code>record_usage</code> are explicitly mutating tools; they do not call out to any service.</li>
+<li>Tool errors are returned as MCP tool results with <code>isError: true</code>; protocol errors use JSON-RPC error codes.</li>
+<li>The server logs neither request bodies nor transcript content.</li>
+<li>The fingerprint on a Cause Package detects accidental edits; it is not a signature.</li>
+</ul>
+<h2 id="verification">Verification</h2>
+<pre><code class="language-bash">npm run verify</code></pre>
+<p>The MCP tests cover initialization, tool discovery, analysis, comparison, package export, error responses, redaction of a synthetic secret, consent enforcement, path allowlisting, symlink containment, relative and nonexistent root rejection, and the process-level opt-in switch. Symlink creation tests are skipped only on platforms where the local process is not permitted to create symlinks. See <code>docs/SECURITY_REVIEW.md</code> for the security disposition.</p></article>
+      <p class="generated">Generated by <code>scripts/build-docs.mjs</code>. Do not edit this HTML directly.</p>
+    </main>
+    <aside class="toc">
+      <strong>On this page</strong>
+      <a class="toc-2" href="#local-mcp-server">Local MCP server</a>
+        <a class="toc-3" href="#example-client-configuration">Example client configuration</a>
+        <a class="toc-3" href="#tools">Tools</a>
+        <a class="toc-2" href="#claude-local-adapter">Claude local adapter</a>
+        <a class="toc-3" href="#required-tool-arguments">Required tool arguments</a>
+        <a class="toc-3" href="#what-the-adapter-returns">What the adapter returns</a>
+        <a class="toc-2" href="#trust-model">Trust model</a>
+        <a class="toc-2" href="#verification">Verification</a>
+    </aside>
+  </div>
+</body>
+</html>

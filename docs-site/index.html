@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Product Brief · Agent Debugger Docs</title>
+  <meta name="description" content="Local-first failure debugging for AI agents." />
+  <link rel="icon" href="assets/favicon.svg" />
+  <meta property="og:title" content="Agent Debugger" />
+  <meta property="og:description" content="Local-first failure debugging for AI agents." />
+  <meta property="og:image" content="assets/social-card.svg" />
+  <style>
+    :root { color-scheme: dark; --bg:#080f1c; --panel:#0d1729; --line:#1e293b; --text:#e2e8f0; --muted:#94a3b8; --accent:#34d399; --accent2:#22d3ee; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:15px/1.65 Inter,"Segoe UI",Arial,sans-serif; }
+    a { color:var(--accent2); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .layout { display:grid; grid-template-columns:250px minmax(0,1fr) 220px; min-height:100vh; }
+    .sidebar { border-right:1px solid var(--line); padding:28px 20px; background:var(--panel); position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .brand { display:flex; align-items:center; gap:10px; color:var(--text); font-weight:700; font-size:17px; margin-bottom:28px; }
+    .brand:hover { text-decoration:none; }
+    .brand img { width:34px; height:34px; }
+    nav.side-links { display:flex; flex-direction:column; gap:4px; }
+    nav.side-links a { padding:8px 10px; border-radius:8px; color:var(--muted); font-size:14px; }
+    nav.side-links a:hover, nav.side-links a.active { background:#13233c; color:var(--text); text-decoration:none; }
+    .side-footer { margin-top:32px; font-size:12px; color:#64748b; }
+    main { padding:48px 56px 96px; max-width:960px; }
+    article h1 { font-size:36px; line-height:1.2; margin:0 0 24px; }
+    article h2 { font-size:24px; margin:40px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--line); }
+    article h3 { font-size:19px; margin:28px 0 8px; }
+    article p, article li { color:#cbd5e1; }
+    article ul, article ol { padding-left:22px; }
+    article li { margin:6px 0; }
+    article pre { background:#050b16; border:1px solid var(--line); border-radius:10px; padding:16px; overflow-x:auto; }
+    article code { font-family:"SFMono-Regular",Consolas,monospace; font-size:0.9em; }
+    article :not(pre) > code { background:#13233c; color:#a7f3d0; padding:2px 5px; border-radius:4px; }
+    article table { width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+    article th, article td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+    article th { background:#111d33; color:#e2e8f0; }
+    article blockquote { margin:18px 0; padding:12px 16px; border-left:3px solid var(--accent); background:#0f1d2e; color:var(--muted); }
+    article blockquote p { margin:0; }
+    article hr { border:0; border-top:1px solid var(--line); margin:32px 0; }
+    .toc { border-left:1px solid var(--line); padding:48px 20px; font-size:13px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .toc strong { display:block; color:#64748b; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; margin-bottom:12px; }
+    .toc a { display:block; color:var(--muted); padding:4px 0; }
+    .toc .toc-3 { padding-left:14px; color:#64748b; }
+    .hero { display:flex; align-items:center; gap:22px; margin-bottom:32px; }
+    .hero img { width:88px; height:88px; }
+    .hero h1 { margin:0 0 6px; }
+    .hero p { margin:0; color:var(--muted); }
+    .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; margin:32px 0; }
+    .card { display:block; padding:18px; border:1px solid var(--line); border-radius:12px; background:var(--panel); color:var(--text); }
+    .card:hover { border-color:var(--accent); text-decoration:none; }
+    .card strong { display:block; margin-bottom:6px; }
+    .card span { color:var(--muted); font-size:13px; }
+    .demo { width:100%; max-width:900px; border:1px solid var(--line); border-radius:12px; display:block; margin:24px 0; }
+    .generated { color:#475569; font-size:12px; margin-top:56px; }
+    @media (max-width:1100px) { .layout { grid-template-columns:220px minmax(0,1fr); } .toc { display:none; } main { padding:36px 32px 72px; } }
+    @media (max-width:720px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:0; border-bottom:1px solid var(--line); } main { padding:28px 20px 56px; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><img src="assets/icon.svg" alt="" /> Agent Debugger</a>
+      <nav class="side-links">
+        <a href="index.html" class="active">Product brief</a>
+        <a href="ARCHITECTURE.html">Architecture</a>
+        <a href="PROJECT_STRUCTURE.html">Project structure</a>
+        <a href="USAGE_PRIVACY.html">Usage and privacy</a>
+        <a href="CASE_COMPARE.html">Case comparison</a>
+        <a href="MCP_CLAUDE_LOCAL.html">MCP and Claude local</a>
+        <a href="DESKTOP_SHELL.html">Desktop shell</a>
+        <a href="PERFORMANCE.html">Performance results</a>
+        <a href="AI_SOURCE_MATRIX.html">AI source matrix</a>
+        <a href="VALIDATION_PLAN.html">Validation plan</a>
+        <a href="VALIDATION_KIT.html">Validation kit</a>
+        <a href="SECURITY_REVIEW.html">Security review</a>
+        <a href="OPS_BOTS.html">Ops bots</a>
+        <a href="COORDINATOR_PLAN.html">Coordinator plan</a>
+        <a href="HN_LAUNCH_DRAFT.html">HN launch draft</a>
+      </nav>
+      <p class="side-footer">Local-first · MIT licensed<br />Generated docs, edit Markdown in <code>docs/</code>.</p>
+    </aside>
+    <main>
+      <article><h1 id="product-brief">Product Brief</h1>
+<h2 id="product-promise">Product promise</h2>
+<p>Agent Debugger turns a failed agent trace into a local, evidence-linked Cause Package with reproduction steps and a concrete handoff to the debugger a developer already uses.</p>
+<h2 id="primary-job-to-be-done">Primary job to be done</h2>
+<p>When an agent run fails, inspect the captured events, separate observed facts from hypotheses, and decide where to set the next breakpoint or what to replay — without uploading the trace to another service.</p>
+<h2 id="first-user">First user</h2>
+<p>Developers who build or maintain in-house agents and already have access to trace exports (NDJSON/JSON) but lack a repeatable path from a failed step to runtime evidence. This user is assumed to be comfortable with a CLI and a local web UI.</p>
+<p>This is a target-user hypothesis from Phase 0, not a validated segment.</p>
+<h2 id="moment-of-use">Moment of use</h2>
+<p>After a failed run, when the developer opens the trace, sees an error or a repeated tool call, and asks: &quot;What do I inspect next, and in which file?&quot;</p>
+<h2 id="why-this-is-meaningfully-different">Why this is meaningfully different</h2>
+<p>Phase 0 checked official documentation and repositories for Langfuse, LangSmith, LangGraph Studio, Arize Phoenix, Braintrust, Laminar, GraphMind, JoaquinCampo/agent-debugger, DebugMCP, Microsoft DebugMCP, JetBrains CLion, and OpenTelemetry GenAI semantic conventions (checked 2026-11-24).</p>
+<p>Verified facts from that research:</p>
+<ul>
+<li>Observability and evaluation products such as Langfuse, LangSmith, Phoenix, Braintrust, and Laminar emphasize trace capture, replay, prompt management, and evaluation workflows.</li>
+<li>Runtime debugger projects and IDEs emphasize breakpoints, stepping, and process attachment.</li>
+<li>A verified direct, primary-source link from an arbitrary agent trace event to runtime stack or variable state was not found during that research.</li>
+</ul>
+<p>Inference from those facts:</p>
+<ul>
+<li>A focused tool that converts trace evidence into reproduction steps and an explicit debugger handoff occupies a narrow, testable gap. It does not replace observability, evaluation, or debugger control planes.</li>
+</ul>
+<p>Product hypothesis (not validated):</p>
+<ul>
+<li><code>A local, rule-based Cause Package helps the target developer reach a plausible cause and a concrete next debugging action faster than reading the raw trace alone.</code></li>
+</ul>
+<h2 id="scope-of-the-first-complete-path">Scope of the first complete path</h2>
+<p>Included:</p>
+<ul>
+<li>Versioned event schema (<code>schemaVersion: 2</code>)</li>
+<li>NDJSON/JSON import and redaction</li>
+<li>Local file-backed event store</li>
+<li>Deterministic, rule-based evidence extraction</li>
+<li>Cause candidates with falsifiers</li>
+<li>Reproduction steps and debugger handoff text</li>
+<li>Redacted NDJSON export</li>
+<li>CLI and local web UI for the same workflow</li>
+<li>Local MCP server for the same read-only analysis tools</li>
+<li>Browser-based desktop shell with a loopback-only <code>/api</code> proxy</li>
+</ul>
+<p>Explicitly deferred:</p>
+<ul>
+<li>Live pause/inject, execution modification, and expression evaluation</li>
+<li>A custom Debug Adapter Protocol implementation</li>
+<li>Evaluation, datasets, and scoring</li>
+<li>Cloud sync, accounts, and hosted service</li>
+<li>External AI explanations (possible only as a separate, explicit-consent feature)</li>
+<li>Repository or npm package renaming</li>
+</ul>
+<h2 id="labels-used-in-this-repository">Labels used in this repository</h2>
+<ul>
+<li><strong>Verified fact</strong>: supported by an inspected source or by code that exists in this repository.</li>
+<li><strong>Inference</strong>: an interpretation of verified facts.</li>
+<li><strong>Hypothesis</strong>: a testable claim that has not been validated with users.</li>
+<li><strong>Open question</strong>: requires evidence before a decision.</li>
+</ul>
+<h2 id="adoption-measures-proposed-not-achieved">Adoption measures (proposed, not achieved)</h2>
+<ul>
+<li>Time from clone to a successful <code>npm run demo</code> and first Cause Package.</li>
+<li>Whether a new user can identify the seeded failure without assistance.</li>
+<li>Whether a target user can import one of their own redacted traces.</li>
+<li>Completion rate of import → evidence → handoff.</li>
+<li>Qualitative reports of which tool the user would otherwise have used.</li>
+</ul>
+<p>These are proposed measurements. No user results are claimed.</p></article>
+      <p class="generated">Generated by <code>scripts/build-docs.mjs</code>. Do not edit this HTML directly.</p>
+    </main>
+    <aside class="toc">
+      <strong>On this page</strong>
+      <a class="toc-2" href="#product-promise">Product promise</a>
+        <a class="toc-2" href="#primary-job-to-be-done">Primary job to be done</a>
+        <a class="toc-2" href="#first-user">First user</a>
+        <a class="toc-2" href="#moment-of-use">Moment of use</a>
+        <a class="toc-2" href="#why-this-is-meaningfully-different">Why this is meaningfully different</a>
+        <a class="toc-2" href="#scope-of-the-first-complete-path">Scope of the first complete path</a>
+        <a class="toc-2" href="#labels-used-in-this-repository">Labels used in this repository</a>
+        <a class="toc-2" href="#adoption-measures-proposed-not-achieved">Adoption measures (proposed, not achieved)</a>
+    </aside>
+  </div>
+</body>
+</html>

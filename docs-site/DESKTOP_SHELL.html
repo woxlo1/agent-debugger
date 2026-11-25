@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Desktop Shell · Agent Debugger Docs</title>
+  <meta name="description" content="Local-first failure debugging for AI agents." />
+  <link rel="icon" href="assets/favicon.svg" />
+  <meta property="og:title" content="Agent Debugger" />
+  <meta property="og:description" content="Local-first failure debugging for AI agents." />
+  <meta property="og:image" content="assets/social-card.svg" />
+  <style>
+    :root { color-scheme: dark; --bg:#080f1c; --panel:#0d1729; --line:#1e293b; --text:#e2e8f0; --muted:#94a3b8; --accent:#34d399; --accent2:#22d3ee; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:15px/1.65 Inter,"Segoe UI",Arial,sans-serif; }
+    a { color:var(--accent2); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .layout { display:grid; grid-template-columns:250px minmax(0,1fr) 220px; min-height:100vh; }
+    .sidebar { border-right:1px solid var(--line); padding:28px 20px; background:var(--panel); position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .brand { display:flex; align-items:center; gap:10px; color:var(--text); font-weight:700; font-size:17px; margin-bottom:28px; }
+    .brand:hover { text-decoration:none; }
+    .brand img { width:34px; height:34px; }
+    nav.side-links { display:flex; flex-direction:column; gap:4px; }
+    nav.side-links a { padding:8px 10px; border-radius:8px; color:var(--muted); font-size:14px; }
+    nav.side-links a:hover, nav.side-links a.active { background:#13233c; color:var(--text); text-decoration:none; }
+    .side-footer { margin-top:32px; font-size:12px; color:#64748b; }
+    main { padding:48px 56px 96px; max-width:960px; }
+    article h1 { font-size:36px; line-height:1.2; margin:0 0 24px; }
+    article h2 { font-size:24px; margin:40px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--line); }
+    article h3 { font-size:19px; margin:28px 0 8px; }
+    article p, article li { color:#cbd5e1; }
+    article ul, article ol { padding-left:22px; }
+    article li { margin:6px 0; }
+    article pre { background:#050b16; border:1px solid var(--line); border-radius:10px; padding:16px; overflow-x:auto; }
+    article code { font-family:"SFMono-Regular",Consolas,monospace; font-size:0.9em; }
+    article :not(pre) > code { background:#13233c; color:#a7f3d0; padding:2px 5px; border-radius:4px; }
+    article table { width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+    article th, article td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+    article th { background:#111d33; color:#e2e8f0; }
+    article blockquote { margin:18px 0; padding:12px 16px; border-left:3px solid var(--accent); background:#0f1d2e; color:var(--muted); }
+    article blockquote p { margin:0; }
+    article hr { border:0; border-top:1px solid var(--line); margin:32px 0; }
+    .toc { border-left:1px solid var(--line); padding:48px 20px; font-size:13px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .toc strong { display:block; color:#64748b; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; margin-bottom:12px; }
+    .toc a { display:block; color:var(--muted); padding:4px 0; }
+    .toc .toc-3 { padding-left:14px; color:#64748b; }
+    .hero { display:flex; align-items:center; gap:22px; margin-bottom:32px; }
+    .hero img { width:88px; height:88px; }
+    .hero h1 { margin:0 0 6px; }
+    .hero p { margin:0; color:var(--muted); }
+    .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; margin:32px 0; }
+    .card { display:block; padding:18px; border:1px solid var(--line); border-radius:12px; background:var(--panel); color:var(--text); }
+    .card:hover { border-color:var(--accent); text-decoration:none; }
+    .card strong { display:block; margin-bottom:6px; }
+    .card span { color:var(--muted); font-size:13px; }
+    .demo { width:100%; max-width:900px; border:1px solid var(--line); border-radius:12px; display:block; margin:24px 0; }
+    .generated { color:#475569; font-size:12px; margin-top:56px; }
+    @media (max-width:1100px) { .layout { grid-template-columns:220px minmax(0,1fr); } .toc { display:none; } main { padding:36px 32px 72px; } }
+    @media (max-width:720px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:0; border-bottom:1px solid var(--line); } main { padding:28px 20px 56px; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><img src="assets/icon.svg" alt="" /> Agent Debugger</a>
+      <nav class="side-links">
+        <a href="index.html">Product brief</a>
+        <a href="ARCHITECTURE.html">Architecture</a>
+        <a href="PROJECT_STRUCTURE.html">Project structure</a>
+        <a href="USAGE_PRIVACY.html">Usage and privacy</a>
+        <a href="CASE_COMPARE.html">Case comparison</a>
+        <a href="MCP_CLAUDE_LOCAL.html">MCP and Claude local</a>
+        <a href="DESKTOP_SHELL.html" class="active">Desktop shell</a>
+        <a href="PERFORMANCE.html">Performance results</a>
+        <a href="AI_SOURCE_MATRIX.html">AI source matrix</a>
+        <a href="VALIDATION_PLAN.html">Validation plan</a>
+        <a href="VALIDATION_KIT.html">Validation kit</a>
+        <a href="SECURITY_REVIEW.html">Security review</a>
+        <a href="OPS_BOTS.html">Ops bots</a>
+        <a href="COORDINATOR_PLAN.html">Coordinator plan</a>
+        <a href="HN_LAUNCH_DRAFT.html">HN launch draft</a>
+      </nav>
+      <p class="side-footer">Local-first · MIT licensed<br />Generated docs, edit Markdown in <code>docs/</code>.</p>
+    </aside>
+    <main>
+      <article><h1 id="desktop-shell">Desktop Shell</h1>
+<h2 id="what-it-is">What it is</h2>
+<p>The desktop shell is a dependency-free launcher that starts the local API, serves the built web UI from the same loopback origin, and opens it in the default browser:</p>
+<pre><code class="language-bash">npm run desktop</code></pre>
+<p>It is a <strong>browser-based desktop shell</strong>, not an Electron or Tauri application. It adds no package dependency and no native binary. The web UI also includes a web app manifest so a browser can install the windowed view where supported.</p>
+<h2 id="startup-sequence">Startup sequence</h2>
+<ol>
+<li>Build <code>packages/web/dist</code> once if it is missing.</li>
+<li>Ask the OS for two free loopback ports.</li>
+<li>Start <code>packages/server/src/index.ts</code> with <code>AGENT_DEBUGGER_HOST=127.0.0.1</code>.</li>
+<li>Wait for <code>/api/health</code>.</li>
+<li>Serve <code>packages/web/dist</code> from the second loopback port.</li>
+<li>Proxy <code>/api/*</code> requests from the UI to the API port.</li>
+<li>Open the UI URL in the local default browser.</li>
+<li>Stop both processes on Ctrl+C or when the API exits.</li>
+</ol>
+<p>The two-process split keeps the existing API unchanged. The UI continues to call relative <code>/api/*</code> URLs, so no build-time environment variable is needed.</p>
+<h2 id="security-properties">Security properties</h2>
+<ul>
+<li>Both the API and the shell bind to <code>127.0.0.1</code> only.</li>
+<li>Static paths are validated against the <code>dist</code> directory; encoded traversal attempts fall back to <code>index.html</code>.</li>
+<li>Static responses use <code>Cache-Control: no-store</code>.</li>
+<li>Proxy hop-by-hop headers are not forwarded.</li>
+<li>No external network request, account, credential, or upload is introduced.</li>
+<li>The launcher does not set <code>AGENT_DEBUGGER_TOKEN</code>. If you set one in your environment, note that the current web UI does not send that header, so mutating UI actions will be rejected by design.</li>
+</ul>
+<h2 id="files">Files</h2>
+<table><thead><tr><th>File</th><th>Purpose</th></tr></thead><tbody><tr><td><code>scripts/desktop.mjs</code></td><td>Launcher, browser open, lifecycle, and cleanup</td></tr><tr><td><code>scripts/lib/localServer.mjs</code></td><td>Loopback static server and <code>/api</code> proxy</td></tr><tr><td><code>packages/web/public/manifest.webmanifest</code></td><td>Installable web app metadata</td></tr><tr><td><code>packages/web/public/icon.svg</code></td><td>Installable app icon</td></tr></tbody></table>
+<h2 id="limitations">Limitations</h2>
+<ul>
+<li>The shell depends on a locally installed browser.</li>
+<li><code>xdg-open</code> is required on Linux; if unavailable, the URL is printed to the terminal.</li>
+<li>It does not implement native window menus, system tray integration, auto-update, or OS keychain storage.</li>
+<li>It does not attach to, pause, inspect, or modify a running agent. The debugger handoff remains a suggestion for your existing debugger.</li>
+</ul>
+<h2 id="verification">Verification</h2>
+<p><code>node scripts/test/desktop.test.mjs</code> checks static serving, SPA fallback, <code>/api</code> proxying for GET and POST, and traversal containment. It is included in <code>npm run verify</code>.</p></article>
+      <p class="generated">Generated by <code>scripts/build-docs.mjs</code>. Do not edit this HTML directly.</p>
+    </main>
+    <aside class="toc">
+      <strong>On this page</strong>
+      <a class="toc-2" href="#what-it-is">What it is</a>
+        <a class="toc-2" href="#startup-sequence">Startup sequence</a>
+        <a class="toc-2" href="#security-properties">Security properties</a>
+        <a class="toc-2" href="#files">Files</a>
+        <a class="toc-2" href="#limitations">Limitations</a>
+        <a class="toc-2" href="#verification">Verification</a>
+    </aside>
+  </div>
+</body>
+</html>

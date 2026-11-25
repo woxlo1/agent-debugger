@@ -31,15 +31,25 @@ export function normalizeOtelGenAiUsage(
     return null
   }
 
+  const warnings: string[] = []
+  const cacheTokens = (cacheReadTokens ?? 0) + (cacheWriteTokens ?? 0)
+  if (inputTokens !== undefined && cacheTokens > inputTokens) {
+    warnings.push("cache token attributes exceed input tokens; input bucket clamped to zero")
+  }
+  const exclusiveInputTokens =
+    inputTokens === undefined ? undefined : Math.max(0, inputTokens - cacheTokens)
+  const reportedTotal =
+    readNumber(attrs["gen_ai.usage.total_tokens"]) ?? readNumber(attrs["gen_ai.response.usage.total_tokens"])
   const totalTokens =
-    [inputTokens, outputTokens, cacheReadTokens, cacheWriteTokens].some(
+    reportedTotal ??
+    ([exclusiveInputTokens, outputTokens, cacheReadTokens, cacheWriteTokens].some(
       (value) => value !== undefined,
     )
-      ? [inputTokens, outputTokens, cacheReadTokens, cacheWriteTokens].reduce<number>(
+      ? [exclusiveInputTokens, outputTokens, cacheReadTokens, cacheWriteTokens].reduce<number>(
           (sum, value) => sum + (value ?? 0),
           0,
         )
-      : undefined
+      : undefined)
 
   const provider = readString(attrs["gen_ai.provider.name"])
   const model = readString(attrs["gen_ai.request.model"])
@@ -55,6 +65,13 @@ export function normalizeOtelGenAiUsage(
     model,
     responseModel,
     requestId,
-    buckets: { inputTokens, outputTokens, cacheReadTokens, cacheWriteTokens, totalTokens },
+    buckets: {
+      inputTokens: exclusiveInputTokens,
+      outputTokens,
+      cacheReadTokens,
+      cacheWriteTokens,
+      totalTokens,
+    },
+    warnings,
   })
 }

@@ -23,7 +23,7 @@ Define how every supported AI-related information source is represented. The goa
 | LangChain callback | Caller supplies callback metadata | On when used | `reported` | Reads provider usage when the callback contains it. |
 | Explicit SDK event | `trace()` / `trackUsage()` | On when used | `reported` | Caller states the source and values. |
 | Manual import | JSON/NDJSON supplied by user | On when supplied | `reported` | The value is trusted as user-entered, not vendor-verified. |
-| Claude Code local transcript | Local file reader | **Off** | `reported` | Requires explicit opt-in, consent record, strict redaction, and source path allowlist. Never enabled by default. |
+| Claude Code local transcript | Local file reader | **Off** | `reported` | Implemented in `packages/mcp/src/claudeLocal.ts`. Requires process opt-in, explicit request consent, strict redaction, and source path allowlist. Never enabled by default. |
 | claude.ai Web | Manual export or pasted data | **Off** | `reported` / `unknown` | No credentials, scraping, or browser automation. If no export is supplied, show `unknown`. |
 | Local heuristic estimate | Text/message length | **Off** | `estimated` | Available for investigation only. Must be labelled and excluded from billing totals by default. |
 | External AI explanation | Optional adapter | **Off** | n/a | Requires explicit consent and a caller-supplied transport. This project makes no external AI call by default. |
@@ -35,6 +35,10 @@ Define how every supported AI-related information source is represented. The goa
 - Redaction counters are stored as counts only, never values.
 - Claude Code and claude.ai sources require a consent record before ingestion.
 - Any source outside the matrix is normalized as `unknown`, not guessed.
+
+## Local Claude adapter
+
+`docs/MCP_CLAUDE_LOCAL.md` defines the opt-in reader for Claude Code JSONL transcripts. It is disabled unless `AGENT_DEBUGGER_CLAUDE_LOCAL=enabled` is set for the local process, and each request must also supply explicit consent and an absolute path allowlist. Redaction runs before normalization, and the result contains counts and allowlisted usage fields only. No raw transcript text or source path is returned or persisted.
 
 ## Relationship to existing branches
 

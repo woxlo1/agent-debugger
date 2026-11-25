@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Architecture · Agent Debugger Docs</title>
+  <meta name="description" content="Local-first failure debugging for AI agents." />
+  <link rel="icon" href="assets/favicon.svg" />
+  <meta property="og:title" content="Agent Debugger" />
+  <meta property="og:description" content="Local-first failure debugging for AI agents." />
+  <meta property="og:image" content="assets/social-card.svg" />
+  <style>
+    :root { color-scheme: dark; --bg:#080f1c; --panel:#0d1729; --line:#1e293b; --text:#e2e8f0; --muted:#94a3b8; --accent:#34d399; --accent2:#22d3ee; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:15px/1.65 Inter,"Segoe UI",Arial,sans-serif; }
+    a { color:var(--accent2); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .layout { display:grid; grid-template-columns:250px minmax(0,1fr) 220px; min-height:100vh; }
+    .sidebar { border-right:1px solid var(--line); padding:28px 20px; background:var(--panel); position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .brand { display:flex; align-items:center; gap:10px; color:var(--text); font-weight:700; font-size:17px; margin-bottom:28px; }
+    .brand:hover { text-decoration:none; }
+    .brand img { width:34px; height:34px; }
+    nav.side-links { display:flex; flex-direction:column; gap:4px; }
+    nav.side-links a { padding:8px 10px; border-radius:8px; color:var(--muted); font-size:14px; }
+    nav.side-links a:hover, nav.side-links a.active { background:#13233c; color:var(--text); text-decoration:none; }
+    .side-footer { margin-top:32px; font-size:12px; color:#64748b; }
+    main { padding:48px 56px 96px; max-width:960px; }
+    article h1 { font-size:36px; line-height:1.2; margin:0 0 24px; }
+    article h2 { font-size:24px; margin:40px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--line); }
+    article h3 { font-size:19px; margin:28px 0 8px; }
+    article p, article li { color:#cbd5e1; }
+    article ul, article ol { padding-left:22px; }
+    article li { margin:6px 0; }
+    article pre { background:#050b16; border:1px solid var(--line); border-radius:10px; padding:16px; overflow-x:auto; }
+    article code { font-family:"SFMono-Regular",Consolas,monospace; font-size:0.9em; }
+    article :not(pre) > code { background:#13233c; color:#a7f3d0; padding:2px 5px; border-radius:4px; }
+    article table { width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+    article th, article td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+    article th { background:#111d33; color:#e2e8f0; }
+    article blockquote { margin:18px 0; padding:12px 16px; border-left:3px solid var(--accent); background:#0f1d2e; color:var(--muted); }
+    article blockquote p { margin:0; }
+    article hr { border:0; border-top:1px solid var(--line); margin:32px 0; }
+    .toc { border-left:1px solid var(--line); padding:48px 20px; font-size:13px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .toc strong { display:block; color:#64748b; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; margin-bottom:12px; }
+    .toc a { display:block; color:var(--muted); padding:4px 0; }
+    .toc .toc-3 { padding-left:14px; color:#64748b; }
+    .hero { display:flex; align-items:center; gap:22px; margin-bottom:32px; }
+    .hero img { width:88px; height:88px; }
+    .hero h1 { margin:0 0 6px; }
+    .hero p { margin:0; color:var(--muted); }
+    .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; margin:32px 0; }
+    .card { display:block; padding:18px; border:1px solid var(--line); border-radius:12px; background:var(--panel); color:var(--text); }
+    .card:hover { border-color:var(--accent); text-decoration:none; }
+    .card strong { display:block; margin-bottom:6px; }
+    .card span { color:var(--muted); font-size:13px; }
+    .demo { width:100%; max-width:900px; border:1px solid var(--line); border-radius:12px; display:block; margin:24px 0; }
+    .generated { color:#475569; font-size:12px; margin-top:56px; }
+    @media (max-width:1100px) { .layout { grid-template-columns:220px minmax(0,1fr); } .toc { display:none; } main { padding:36px 32px 72px; } }
+    @media (max-width:720px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:0; border-bottom:1px solid var(--line); } main { padding:28px 20px 56px; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><img src="assets/icon.svg" alt="" /> Agent Debugger</a>
+      <nav class="side-links">
+        <a href="index.html">Product brief</a>
+        <a href="ARCHITECTURE.html" class="active">Architecture</a>
+        <a href="PROJECT_STRUCTURE.html">Project structure</a>
+        <a href="USAGE_PRIVACY.html">Usage and privacy</a>
+        <a href="CASE_COMPARE.html">Case comparison</a>
+        <a href="MCP_CLAUDE_LOCAL.html">MCP and Claude local</a>
+        <a href="DESKTOP_SHELL.html">Desktop shell</a>
+        <a href="PERFORMANCE.html">Performance results</a>
+        <a href="AI_SOURCE_MATRIX.html">AI source matrix</a>
+        <a href="VALIDATION_PLAN.html">Validation plan</a>
+        <a href="VALIDATION_KIT.html">Validation kit</a>
+        <a href="SECURITY_REVIEW.html">Security review</a>
+        <a href="OPS_BOTS.html">Ops bots</a>
+        <a href="COORDINATOR_PLAN.html">Coordinator plan</a>
+        <a href="HN_LAUNCH_DRAFT.html">HN launch draft</a>
+      </nav>
+      <p class="side-footer">Local-first · MIT licensed<br />Generated docs, edit Markdown in <code>docs/</code>.</p>
+    </aside>
+    <main>
+      <article><h1 id="architecture">Architecture</h1>
+<h2 id="goal">Goal</h2>
+<p>Keep one complete, local-only path from an imported failed trace to an evidence-linked Cause Package. Avoid abstractions that serve only hypothetical future features.</p>
+<h2 id="components">Components</h2>
+<table><thead><tr><th>Component</th><th>File</th><th>Responsibility</th></tr></thead><tbody><tr><td>Event schema</td><td><code>packages/server/src/schema.ts</code></td><td>v2 event type, normalization helpers, redaction</td></tr><tr><td>Importer</td><td><code>packages/server/src/importer.ts</code></td><td>NDJSON/JSON parsing, normalization, redacted export</td></tr><tr><td>Analyzer</td><td><code>packages/server/src/analyzer.ts</code></td><td>Deterministic rules producing a Cause Package</td></tr><tr><td>Store</td><td><code>packages/server/src/store.ts</code></td><td>Local NDJSON persistence and event subscription</td></tr><tr><td>API server</td><td><code>packages/server/src/index.ts</code></td><td>Fastify routes, local binding, CORS, optional token</td></tr><tr><td>CLI</td><td><code>packages/server/bin/cli.js</code>, <code>pipe.js</code></td><td><code>start</code>, <code>pipe</code>, <code>import</code>, <code>analyze</code></td></tr><tr><td>SDK</td><td><code>packages/sdk/src/index.ts</code></td><td>Explicit event submission with redaction</td></tr><tr><td>Web UI</td><td><code>packages/web/src/</code></td><td>Cause Package view and replay view</td></tr><tr><td>MCP server</td><td><code>packages/mcp/src/</code></td><td>stdio JSON-RPC tools over local store and analysis</td></tr><tr><td>Claude local adapter</td><td><code>packages/mcp/src/claudeLocal.ts</code></td><td>Opt-in, allowlisted, count-only Claude Code transcript reader</td></tr><tr><td>Desktop shell</td><td><code>scripts/desktop.mjs</code>, <code>scripts/lib/localServer.mjs</code></td><td>Loopback launcher, built UI server, and <code>/api</code> proxy</td></tr><tr><td>Benchmark harness</td><td><code>scripts/bench.ts</code></td><td>Synthetic performance measurements and published results</td></tr><tr><td>Security review</td><td><code>docs/SECURITY_REVIEW.md</code></td><td>Threat model, findings, residual risks, and CI evidence</td></tr></tbody></table>
+<h2 id="data-flow">Data flow</h2>
+<pre><code class="language-text">Agent or export file
+  -&gt; SDK trace() / JSON Lines pipe / web paste
+  -&gt; POST /api/events or /api/import
+  -&gt; normalizeEvent() + redact()
+  -&gt; local NDJSON store (.agent-debugger/events.ndjson)
+  -&gt; analyzeTrace(traceId, events)
+  -&gt; GET /api/traces/:traceId/analysis
+  -&gt; Cause Package UI (evidence, candidates, reproduction, handoff)
+  -&gt; GET /api/traces/:traceId/export (redacted NDJSON)
+
+MCP client (stdio JSON-RPC)
+  -&gt; packages/mcp/src/index.ts
+  -&gt; tools.ts -&gt; local store / analyzer / artifact / cases / usage
+  -&gt; redacted JSON tool results
+
+Desktop shell (npm run desktop)
+  -&gt; scripts/desktop.mjs -&gt; local API + built web UI
+  -&gt; scripts/lib/localServer.mjs -&gt; static files + /api proxy
+  -&gt; default browser on 127.0.0.1 only</code></pre>
+<p>No component calls an external service. The web UI talks only to the local API through the Vite proxy.</p>
+<h2 id="event-contract-v2">Event contract (v2)</h2>
+<pre><code class="language-ts">type AgentEvent = {
+  schemaVersion: number
+  id: string
+  traceId: string
+  parentId?: string
+  type: &quot;user&quot; | &quot;agent&quot; | &quot;tool&quot; | &quot;reasoning&quot; | &quot;system&quot;
+  name: string
+  status?: &quot;ok&quot; | &quot;error&quot; | &quot;unknown&quot;
+  error?: { kind?: string; message?: string }
+  input?: unknown
+  output?: unknown
+  timestamp: number
+  durationMs?: number
+  tokens?: number
+  cost?: number
+  source?: { path?: string; line?: number; symbol?: string }
+  attributes?: Record&lt;string, unknown&gt;
+}</code></pre>
+<p>The importer also recognizes common OpenTelemetry and OpenInference attribute names for status, source location, and duration. Unknown shapes are mapped conservatively; they are never guessed as verified runtime facts.</p>
+<h2 id="analysis-contract">Analysis contract</h2>
+<p>The analyzer returns <code>observed</code>, <code>candidates</code>, <code>reproduction</code>, <code>handoff</code>, <code>unknowns</code>, and <code>metrics</code>. Each candidate carries <code>evidenceIds</code> and a <code>falsifier</code>. Confidence is derived from the number of supporting signals and is a rule output, not a probability or a model score.</p>
+<h2 id="redaction-and-trust">Redaction and trust</h2>
+<ul>
+<li>Redaction runs on ingest, on SSE broadcast, and on NDJSON export.</li>
+<li>Secret-like keys, API-key patterns, bearer tokens, and email addresses are replaced.</li>
+<li>Invalid JSON Lines are reported by line number only; raw content is not logged.</li>
+<li>The server binds to <code>127.0.0.1</code> by default; CORS allows only local Vite origins.</li>
+<li><code>AGENT_DEBUGGER_TOKEN</code> requires <code>x-agent-debugger-token</code> on mutating routes.</li>
+<li>Stored traces are treated as sensitive local data; <code>.agent-debugger/</code> is gitignored.</li>
+</ul>
+<h2 id="scale-assumptions">Scale assumptions</h2>
+<p>Verified: none measured.</p>
+<p>Design assumptions for the current code:</p>
+<ul>
+<li>Single developer, one local process, traces in the low thousands of events.</li>
+<li>The full trace for one <code>traceId</code> is loaded into memory for analysis.</li>
+<li>Writes rewrite the local NDJSON file; this is acceptable at the assumed scale and should be revisited before claiming support for long-running or high-volume sessions.</li>
+</ul>
+<h2 id="extension-points">Extension points</h2>
+<ul>
+<li>Additional source formats should enter through <code>importer.ts</code> and produce the same v2 event type.</li>
+<li>Additional rules should live in <code>analyzer.ts</code> and produce the same analysis shape.</li>
+<li>The MCP integration consumes <code>source</code> and <code>handoff</code> output as read-only tool results. A future DAP integration must require explicit user control before attaching, evaluating, or modifying execution.</li>
+</ul>
+<h2 id="non-goals">Non-goals</h2>
+<ul>
+<li>Live pause/inject or execution control</li>
+<li>Custom DAP server</li>
+<li>Cloud storage, accounts, or telemetry upload</li>
+<li>Eval and regression scoring</li>
+<li>External AI explanation by default</li>
+</ul></article>
+      <p class="generated">Generated by <code>scripts/build-docs.mjs</code>. Do not edit this HTML directly.</p>
+    </main>
+    <aside class="toc">
+      <strong>On this page</strong>
+      <a class="toc-2" href="#goal">Goal</a>
+        <a class="toc-2" href="#components">Components</a>
+        <a class="toc-2" href="#data-flow">Data flow</a>
+        <a class="toc-2" href="#event-contract-v2">Event contract (v2)</a>
+        <a class="toc-2" href="#analysis-contract">Analysis contract</a>
+        <a class="toc-2" href="#redaction-and-trust">Redaction and trust</a>
+        <a class="toc-2" href="#scale-assumptions">Scale assumptions</a>
+        <a class="toc-2" href="#extension-points">Extension points</a>
+        <a class="toc-2" href="#non-goals">Non-goals</a>
+    </aside>
+  </div>
+</body>
+</html>

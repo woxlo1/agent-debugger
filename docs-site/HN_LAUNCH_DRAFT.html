@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hacker News launch draft · Agent Debugger Docs</title>
+  <meta name="description" content="Local-first failure debugging for AI agents." />
+  <link rel="icon" href="assets/favicon.svg" />
+  <meta property="og:title" content="Agent Debugger" />
+  <meta property="og:description" content="Local-first failure debugging for AI agents." />
+  <meta property="og:image" content="assets/social-card.svg" />
+  <style>
+    :root { color-scheme: dark; --bg:#080f1c; --panel:#0d1729; --line:#1e293b; --text:#e2e8f0; --muted:#94a3b8; --accent:#34d399; --accent2:#22d3ee; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:15px/1.65 Inter,"Segoe UI",Arial,sans-serif; }
+    a { color:var(--accent2); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .layout { display:grid; grid-template-columns:250px minmax(0,1fr) 220px; min-height:100vh; }
+    .sidebar { border-right:1px solid var(--line); padding:28px 20px; background:var(--panel); position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .brand { display:flex; align-items:center; gap:10px; color:var(--text); font-weight:700; font-size:17px; margin-bottom:28px; }
+    .brand:hover { text-decoration:none; }
+    .brand img { width:34px; height:34px; }
+    nav.side-links { display:flex; flex-direction:column; gap:4px; }
+    nav.side-links a { padding:8px 10px; border-radius:8px; color:var(--muted); font-size:14px; }
+    nav.side-links a:hover, nav.side-links a.active { background:#13233c; color:var(--text); text-decoration:none; }
+    .side-footer { margin-top:32px; font-size:12px; color:#64748b; }
+    main { padding:48px 56px 96px; max-width:960px; }
+    article h1 { font-size:36px; line-height:1.2; margin:0 0 24px; }
+    article h2 { font-size:24px; margin:40px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--line); }
+    article h3 { font-size:19px; margin:28px 0 8px; }
+    article p, article li { color:#cbd5e1; }
+    article ul, article ol { padding-left:22px; }
+    article li { margin:6px 0; }
+    article pre { background:#050b16; border:1px solid var(--line); border-radius:10px; padding:16px; overflow-x:auto; }
+    article code { font-family:"SFMono-Regular",Consolas,monospace; font-size:0.9em; }
+    article :not(pre) > code { background:#13233c; color:#a7f3d0; padding:2px 5px; border-radius:4px; }
+    article table { width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+    article th, article td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+    article th { background:#111d33; color:#e2e8f0; }
+    article blockquote { margin:18px 0; padding:12px 16px; border-left:3px solid var(--accent); background:#0f1d2e; color:var(--muted); }
+    article blockquote p { margin:0; }
+    article hr { border:0; border-top:1px solid var(--line); margin:32px 0; }
+    .toc { border-left:1px solid var(--line); padding:48px 20px; font-size:13px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .toc strong { display:block; color:#64748b; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; margin-bottom:12px; }
+    .toc a { display:block; color:var(--muted); padding:4px 0; }
+    .toc .toc-3 { padding-left:14px; color:#64748b; }
+    .hero { display:flex; align-items:center; gap:22px; margin-bottom:32px; }
+    .hero img { width:88px; height:88px; }
+    .hero h1 { margin:0 0 6px; }
+    .hero p { margin:0; color:var(--muted); }
+    .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; margin:32px 0; }
+    .card { display:block; padding:18px; border:1px solid var(--line); border-radius:12px; background:var(--panel); color:var(--text); }
+    .card:hover { border-color:var(--accent); text-decoration:none; }
+    .card strong { display:block; margin-bottom:6px; }
+    .card span { color:var(--muted); font-size:13px; }
+    .demo { width:100%; max-width:900px; border:1px solid var(--line); border-radius:12px; display:block; margin:24px 0; }
+    .generated { color:#475569; font-size:12px; margin-top:56px; }
+    @media (max-width:1100px) { .layout { grid-template-columns:220px minmax(0,1fr); } .toc { display:none; } main { padding:36px 32px 72px; } }
+    @media (max-width:720px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:0; border-bottom:1px solid var(--line); } main { padding:28px 20px 56px; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><img src="assets/icon.svg" alt="" /> Agent Debugger</a>
+      <nav class="side-links">
+        <a href="index.html">Product brief</a>
+        <a href="ARCHITECTURE.html">Architecture</a>
+        <a href="PROJECT_STRUCTURE.html">Project structure</a>
+        <a href="USAGE_PRIVACY.html">Usage and privacy</a>
+        <a href="CASE_COMPARE.html">Case comparison</a>
+        <a href="MCP_CLAUDE_LOCAL.html">MCP and Claude local</a>
+        <a href="DESKTOP_SHELL.html">Desktop shell</a>
+        <a href="PERFORMANCE.html">Performance results</a>
+        <a href="AI_SOURCE_MATRIX.html">AI source matrix</a>
+        <a href="VALIDATION_PLAN.html">Validation plan</a>
+        <a href="VALIDATION_KIT.html">Validation kit</a>
+        <a href="SECURITY_REVIEW.html">Security review</a>
+        <a href="OPS_BOTS.html">Ops bots</a>
+        <a href="COORDINATOR_PLAN.html">Coordinator plan</a>
+        <a href="HN_LAUNCH_DRAFT.html" class="active">HN launch draft</a>
+      </nav>
+      <p class="side-footer">Local-first · MIT licensed<br />Generated docs, edit Markdown in <code>docs/</code>.</p>
+    </aside>
+    <main>
+      <article><h1 id="hacker-news-launch-draft">Hacker News launch draft</h1>
+<blockquote><p><strong>Status: APPROVED FOR POSTING.</strong> The repository owner approved the final text and the act of posting on 2026-11-24, approved the <code>v1.0.2</code> URL/text update on 2026-11-25, and approved the 19:00 JST posting with the repository URL and revised title on 2026-11-25. Post manually from an authenticated browser at the approved time. No external AI service call, credential creation, or secret logging is involved.</p></blockquote>
+<h2 id="suggested-title">Suggested title</h2>
+<p>Show HN: Agent Debugger – replay failed agent traces into evidence and a debugger handoff</p>
+<p>Alternative title:</p>
+<p>Show HN: Agent Debugger – local-first failure debugger for AI agents</p>
+<h2 id="target-url">Target URL</h2>
+<p>Use the approved repository URL for the 19:00 posting:</p>
+<pre><code class="language-text">https://github.com/woxlo1/agent-debugger</code></pre>
+<p>Keep the <code>v1.0.2</code> release URL in the comment below. Do not use a fork or a short link.</p>
+<h2 id="submission-comment-draft">Submission comment draft</h2>
+<p>Post this as the maker comment at 19:02, immediately after the 19:00 submission.</p>
+<pre><code class="language-text">Hi HN,
+
+I built Agent Debugger because debugging a failed agent run usually means
+scroll-searching a long trace and guessing which tool call mattered.
+
+Agent Debugger v1.0.2 is local-first and MIT licensed. You import an NDJSON
+trace (or pipe events from any language), and it builds a &quot;Cause Package&quot;:
+
+- observed evidence with event IDs
+- rule-based cause candidates, each with a falsifier
+- reproduction steps
+- a handoff suggestion pointing at your existing debugger
+
+It also has a Compare view for diffing a failing run against a passing one,
+a consent-aware AI usage ledger, portable redacted bundles with a SHA-256
+fingerprint, a local MCP server, and a one-command browser-based desktop shell.
+
+Quick start:
+  npx agent-debugger-server start
+
+That runs the local API and CLI. For the web UI, clone the repo and run:
+  npm run desktop
+
+Everything runs on localhost. There is no account, no cloud, and no external
+AI service call. Redaction runs on ingest, stream, export, and bundle
+creation. Usage values are labelled reported, estimated, or unknown, and
+estimates are excluded from billing totals unless you opt in.
+
+This is v1.0.2 of a local debugging tool, not a finished observability
+platform. It does not do evals, live injection, or team trace storage.
+Cause candidates are hypotheses, not verified root causes. The security
+review is in the repo, but it is a self-review, not an audit. Real-user
+validation has not been executed, so I am not claiming the cause packages
+are proven to save time. Cold start also misses the 500 ms target in the
+published benchmark.
+
+Feedback on the cause/hypothesis split, the privacy model, or the CLI
+workflow is especially welcome.
+
+Repo: https://github.com/woxlo1/agent-debugger
+Release: https://github.com/woxlo1/agent-debugger/releases/tag/v1.0.2
+Demo GIF: https://github.com/woxlo1/agent-debugger/blob/main/docs/assets/demo.gif</code></pre>
+<h2 id="likely-questions-and-short-answers">Likely questions and short answers</h2>
+<table><thead><tr><th>Question</th><th>Answer</th></tr></thead><tbody><tr><td>Why not LangSmith / Langfuse / Phoenix?</td><td>Those are observability platforms. This is a local debugging step for one failed run, with no account or upload.</td></tr><tr><td>Does it call an LLM to explain failures?</td><td>No. Analysis is rule-based and deterministic. External AI adapters are not enabled.</td></tr><tr><td>How is privacy handled?</td><td>Redaction is applied on ingest, stream, export, and package export. Receipts store detector counts only. Claude sources require explicit consent before inclusion.</td></tr><tr><td>Is this security-audited?</td><td>No. <code>docs/SECURITY_REVIEW.md</code> records the threat model, findings, fixes, and residual risks. It is a self-review, not an external audit.</td></tr><tr><td>Why a SHA-256 fingerprint, not a signature?</td><td>It detects accidental edits to a bundle. It does not establish trust in the source file; that is stated in the docs.</td></tr><tr><td>Is it production ready?</td><td>It is v1.0.2 for local debugging, not a hosted production service. Synthetic benchmarks are published in <code>docs/PERFORMANCE.md</code>; cold start misses the 500 ms target and real-user validation has not run.</td></tr></tbody></table>
+<h2 id="preflight-checklist">Preflight checklist</h2>
+<ul>
+<li>[x] All v1.0.2 scope items are complete and <code>npm run verify</code> passes.</li>
+<li>[x] The owner approved the version bump, tag, GitHub Release, demo GIF refresh, final text, and posting on 2026-11-24, the <code>v1.0.2</code> text/URL update on 2026-11-25, and the 19:00 JST post with the repository URL and revised title.</li>
+<li>[x] Both the repository URL and the <code>v1.0.2</code> release URL resolve.</li>
+<li>[x] The demo GIF contains only synthetic data from <code>docs/examples/failed-trace.ndjson</code>.</li>
+<li>[x] No secrets, customer data, or internal hostnames appear in the repository or in the comment.</li>
+<li>[x] <code>agent-debugger-server@1.0.2</code> is published on npm (<code>latest = 1.0.2</code>); the publish build and dry run were verified.</li>
+<li>[x] <code>agent-debugger-sdk@1.0.2</code> is published after the owner approved the staged release with 2FA; <code>latest = 1.0.2</code>. This does not change the release URL.</li>
+<li>[x] The owner approved posting at 19:00 JST on 2026-11-25, a maker comment at 19:02, and same-day question replies through the US morning.</li>
+<li>[ ] HN posting requires an authenticated session; post manually from a signed-in browser at the approved time using the final text above.</li>
+</ul></article>
+      <p class="generated">Generated by <code>scripts/build-docs.mjs</code>. Do not edit this HTML directly.</p>
+    </main>
+    <aside class="toc">
+      <strong>On this page</strong>
+      <a class="toc-2" href="#suggested-title">Suggested title</a>
+        <a class="toc-2" href="#target-url">Target URL</a>
+        <a class="toc-2" href="#submission-comment-draft">Submission comment draft</a>
+        <a class="toc-2" href="#likely-questions-and-short-answers">Likely questions and short answers</a>
+        <a class="toc-2" href="#preflight-checklist">Preflight checklist</a>
+    </aside>
+  </div>
+</body>
+</html>

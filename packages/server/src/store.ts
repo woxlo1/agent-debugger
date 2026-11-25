@@ -1,19 +1,26 @@
 import fs from "node:fs"
 import path from "node:path"
+import type { AiUsage } from "../../shared/src/index.js"
 import type { AgentEvent, TraceSummary } from "./schema.js"
+import { sanitizeUsageEntry } from "./usage.js"
 
 const STORE_PATH =
   process.env.AGENT_DEBUGGER_STORE ??
   path.join(process.cwd(), ".agent-debugger", "events.ndjson")
+const USAGE_STORE_PATH =
+  process.env.AGENT_DEBUGGER_USAGE_STORE ?? `${STORE_PATH}.usage.ndjson`
 
 /** Local, file-backed event store. No external service, no new dependency. */
 class EventStore {
   private events: AgentEvent[] = []
   private ids = new Set<string>()
   private listeners = new Set<(event: AgentEvent) => void>()
+  private usageEntries: AiUsage[] = []
+  private usageIds = new Set<string>()
 
   constructor() {
     this.load()
+    this.loadUsage()
   }
 
   private load() {
@@ -39,6 +46,29 @@ class EventStore {
     fs.writeFileSync(STORE_PATH, body ? `${body}\n` : "")
   }
 
+  private loadUsage() {
+    if (!fs.existsSync(USAGE_STORE_PATH)) return
+    const content = fs.readFileSync(USAGE_STORE_PATH, "utf8")
+    for (const line of content.split(/\r?\n/)) {
+      const trimmed = line.trim()
+      if (!trimmed) continue
+      try {
+        const entry = sanitizeUsageEntry(JSON.parse(trimmed))
+        if (!entry || this.usageIds.has(entry.id)) continue
+        this.usageEntries.push(entry)
+        this.usageIds.add(entry.id)
+      } catch {
+        // Skip corrupt persisted usage lines instead of failing startup.
+      }
+    }
+  }
+
+  private persistUsage() {
+    fs.mkdirSync(path.dirname(USAGE_STORE_PATH), { recursive: true })
+    const body = this.usageEntries.map((entry) => JSON.stringify(entry)).join("\n")
+    fs.writeFileSync(USAGE_STORE_PATH, body ? `${body}\n` : "")
+  }
+
   add(event: AgentEvent) {
     if (this.ids.has(event.id)) return
     this.ids.add(event.id)
@@ -48,19 +78,35 @@ class EventStore {
   }
 
   addMany(events: AgentEvent[]) {
-    const addedIds = new Set<string>()
+    const addedEvents: AgentEvent[] = []
     for (const event of events) {
       if (this.ids.has(event.id)) continue
       this.ids.add(event.id)
-      addedIds.add(event.id)
+      addedEvents.push(event)
       this.events.push(event)
     }
-    if (addedIds.size > 0) this.persist()
-    for (const event of events) {
-      if (!addedIds.has(event.id)) continue
+    if (addedEvents.length > 0) this.persist()
+    for (const event of addedEvents) {
       for (const listener of this.listeners) listener(event)
     }
-    return addedIds.size
+    return addedEvents.length
+  }
+
+  addUsage(entries: AiUsage[]): number {
+    let added = 0
+    for (const entry of entries) {
+      if (this.usageIds.has(entry.id)) continue
+      this.usageIds.add(entry.id)
+      this.usageEntries.push(entry)
+      added += 1
+    }
+    if (added > 0) this.persistUsage()
+    return added
+  }
+
+  usages(traceId?: string): AiUsage[] {
+    const copy = [...this.usageEntries]
+    return traceId ? copy.filter((entry) => entry.traceId === traceId) : copy
   }
 
   list(traceId?: string): AgentEvent[] {
@@ -96,9 +142,12 @@ class EventStore {
   clear() {
     this.events = []
     this.ids.clear()
+    this.usageEntries = []
+    this.usageIds.clear()
     this.persist()
+    this.persistUsage()
   }
 }
 
 export const store = new EventStore()
-export { STORE_PATH }
+export { STORE_PATH, USAGE_STORE_PATH }

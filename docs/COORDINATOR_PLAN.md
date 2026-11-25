@@ -9,9 +9,9 @@
 
 ## Current stage
 
-Stage 1: AI source contracts and privacy-first usage ledger.
+Stage 11: v1.0.0 release preparation.
 
-Stage 1 does not call any external AI service. It only normalizes provider-reported usage values that the caller already has, plus explicitly labelled estimates.
+Stage 11 builds on all merged implementation, review, structure, and ops stages. It bumps every workspace manifest and runtime version constant to `1.0.0`, publishes release notes in `CHANGELOG.md`, reconciles the README / security / HN documents with the approved release, refreshes the synthetic demo GIF, and prepares the tag, GitHub Release, and final Hacker News text. Real-user validation remains unexecuted, and npm publishing requires registry credentials that are not stored in this repository.
 
 ## Shared interfaces frozen by the coordinator
 
@@ -25,18 +25,22 @@ These files are coordinator-owned. No parallel session may edit them without coo
 - `docs/COORDINATOR_PLAN.md`
 - root `README.md`
 
-## Ownership map
+## Final ownership map
 
-| Session | Branch | Owned files | Forbidden files |
+| Area | Files | Owner | Change rule |
 |---|---|---|---|
-| S0 coordinator | current stage branch | shared types, protocol, config, root manifests, integration docs | other sessions' owned source files |
-| S1 privacy | `feat/stage-1-privacy` | `packages/privacy/**`, `packages/privacy/test/**` | shared types, server, web |
-| S2 usage | `feat/stage-1-usage` | `packages/usage/**`, `packages/ingest/src/adapters/**`, usage tests | shared types, privacy internals |
-| S3 server CLI | `feat/stage-2-server-cli` | `packages/server/**`, `apps/cli/**` | shared types without coordinator change |
-| S4 web | `feat/stage-2-web` | `apps/web/**` | shared types, server internals |
-| S5 cases artifact | `feat/stage-3-cases` | `packages/cases/**`, `packages/artifact/**`, `packages/query/**` | shared types, web |
-| S6 docs assets | `feat/stage-4-docs-assets` | `docs/**`, `assets/**`, `apps/docs-site/**` | root README final merge |
-| S7 ops bots | `feat/stage-4-ops` | `.github/**`, `scripts/**`, `benchmark-results/**` | package manifests |
+| Shared contracts | `packages/shared/src/types/**` | Coordinator | Explicit contract change required |
+| Privacy and usage | `packages/privacy/**`, `packages/usage/**`, `packages/ingest/**` | Privacy/usage owner | Add tests with every behavior change |
+| Runtime core | `packages/server/**`, `packages/cases/**`, `packages/artifact/**` | Server owner | API changes require integration tests |
+| Local interfaces | `packages/mcp/**`, `packages/sdk/**` | Interface owner | Preserve local-only and consent contracts |
+| Web UI | `packages/web/**` | Web owner | No direct API token handling |
+| Tooling | `scripts/**` | Tooling owner | Add script tests under `scripts/test/` |
+| Documentation | `docs/**` | Docs owner | Regenerate `docs-site/` in the same PR |
+| Generated site | `docs-site/**` | Generated | Never edit HTML by hand |
+| Automation | `.github/**`, `renovate.json` | Ops owner | Least-privilege permissions and PR review |
+| Root manifests | `package.json`, `package-lock.json`, `README.md` | Coordinator | Version bumps require release approval |
+
+The final layout is documented in `docs/PROJECT_STRUCTURE.md`. No `apps/` migration is planned for 1.0.0.
 
 ## Integration order
 
@@ -47,7 +51,10 @@ These files are coordinator-owned. No parallel session may edit them without coo
 5. Add case comparison and portable bundles.
 6. Add docs, icons, demo GIF, docs site, and HN draft.
 7. Add benchmark harness and ops bots.
-8. Final `npm run verify`, then pull request to `main`.
+8. Document final security review and unexecuted validation status.
+9. Freeze final project structure and prepare validation materials.
+10. Restore the gated Dependency Review workflow and document UI-only activations.
+11. Bump to v1.0.0, refresh the synthetic demo GIF, verify, open a release PR, then tag and release after merge.
 
 ## Verification for every stage
 
@@ -61,4 +68,4 @@ No stage is complete until all three pass locally and in GitHub Actions.
 
 ## Release policy
 
-Version bump, tag, GitHub Release, npm publish, and Hacker News posting require explicit final approval. This plan does not authorize them.
+The repository owner granted explicit approval for the v1.0.0 version bump, tag, GitHub Release, demo GIF refresh, and Hacker News posting on 2026-11-24. CI never performs these actions. npm publish and Hacker News posting additionally require registry / HN credentials that are not stored in this repository; when unavailable, the approved text and dry-run evidence are recorded for the owner.

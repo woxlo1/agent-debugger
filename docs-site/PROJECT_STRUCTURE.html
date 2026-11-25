@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project Structure · Agent Debugger Docs</title>
+  <meta name="description" content="Local-first failure debugging for AI agents." />
+  <link rel="icon" href="assets/favicon.svg" />
+  <meta property="og:title" content="Agent Debugger" />
+  <meta property="og:description" content="Local-first failure debugging for AI agents." />
+  <meta property="og:image" content="assets/social-card.svg" />
+  <style>
+    :root { color-scheme: dark; --bg:#080f1c; --panel:#0d1729; --line:#1e293b; --text:#e2e8f0; --muted:#94a3b8; --accent:#34d399; --accent2:#22d3ee; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:15px/1.65 Inter,"Segoe UI",Arial,sans-serif; }
+    a { color:var(--accent2); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .layout { display:grid; grid-template-columns:250px minmax(0,1fr) 220px; min-height:100vh; }
+    .sidebar { border-right:1px solid var(--line); padding:28px 20px; background:var(--panel); position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .brand { display:flex; align-items:center; gap:10px; color:var(--text); font-weight:700; font-size:17px; margin-bottom:28px; }
+    .brand:hover { text-decoration:none; }
+    .brand img { width:34px; height:34px; }
+    nav.side-links { display:flex; flex-direction:column; gap:4px; }
+    nav.side-links a { padding:8px 10px; border-radius:8px; color:var(--muted); font-size:14px; }
+    nav.side-links a:hover, nav.side-links a.active { background:#13233c; color:var(--text); text-decoration:none; }
+    .side-footer { margin-top:32px; font-size:12px; color:#64748b; }
+    main { padding:48px 56px 96px; max-width:960px; }
+    article h1 { font-size:36px; line-height:1.2; margin:0 0 24px; }
+    article h2 { font-size:24px; margin:40px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--line); }
+    article h3 { font-size:19px; margin:28px 0 8px; }
+    article p, article li { color:#cbd5e1; }
+    article ul, article ol { padding-left:22px; }
+    article li { margin:6px 0; }
+    article pre { background:#050b16; border:1px solid var(--line); border-radius:10px; padding:16px; overflow-x:auto; }
+    article code { font-family:"SFMono-Regular",Consolas,monospace; font-size:0.9em; }
+    article :not(pre) > code { background:#13233c; color:#a7f3d0; padding:2px 5px; border-radius:4px; }
+    article table { width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+    article th, article td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+    article th { background:#111d33; color:#e2e8f0; }
+    article blockquote { margin:18px 0; padding:12px 16px; border-left:3px solid var(--accent); background:#0f1d2e; color:var(--muted); }
+    article blockquote p { margin:0; }
+    article hr { border:0; border-top:1px solid var(--line); margin:32px 0; }
+    .toc { border-left:1px solid var(--line); padding:48px 20px; font-size:13px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .toc strong { display:block; color:#64748b; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; margin-bottom:12px; }
+    .toc a { display:block; color:var(--muted); padding:4px 0; }
+    .toc .toc-3 { padding-left:14px; color:#64748b; }
+    .hero { display:flex; align-items:center; gap:22px; margin-bottom:32px; }
+    .hero img { width:88px; height:88px; }
+    .hero h1 { margin:0 0 6px; }
+    .hero p { margin:0; color:var(--muted); }
+    .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; margin:32px 0; }
+    .card { display:block; padding:18px; border:1px solid var(--line); border-radius:12px; background:var(--panel); color:var(--text); }
+    .card:hover { border-color:var(--accent); text-decoration:none; }
+    .card strong { display:block; margin-bottom:6px; }
+    .card span { color:var(--muted); font-size:13px; }
+    .demo { width:100%; max-width:900px; border:1px solid var(--line); border-radius:12px; display:block; margin:24px 0; }
+    .generated { color:#475569; font-size:12px; margin-top:56px; }
+    @media (max-width:1100px) { .layout { grid-template-columns:220px minmax(0,1fr); } .toc { display:none; } main { padding:36px 32px 72px; } }
+    @media (max-width:720px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:0; border-bottom:1px solid var(--line); } main { padding:28px 20px 56px; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><img src="assets/icon.svg" alt="" /> Agent Debugger</a>
+      <nav class="side-links">
+        <a href="index.html">Product brief</a>
+        <a href="ARCHITECTURE.html">Architecture</a>
+        <a href="PROJECT_STRUCTURE.html" class="active">Project structure</a>
+        <a href="USAGE_PRIVACY.html">Usage and privacy</a>
+        <a href="CASE_COMPARE.html">Case comparison</a>
+        <a href="MCP_CLAUDE_LOCAL.html">MCP and Claude local</a>
+        <a href="DESKTOP_SHELL.html">Desktop shell</a>
+        <a href="PERFORMANCE.html">Performance results</a>
+        <a href="AI_SOURCE_MATRIX.html">AI source matrix</a>
+        <a href="VALIDATION_PLAN.html">Validation plan</a>
+        <a href="VALIDATION_KIT.html">Validation kit</a>
+        <a href="SECURITY_REVIEW.html">Security review</a>
+        <a href="OPS_BOTS.html">Ops bots</a>
+        <a href="COORDINATOR_PLAN.html">Coordinator plan</a>
+        <a href="HN_LAUNCH_DRAFT.html">HN launch draft</a>
+      </nav>
+      <p class="side-footer">Local-first · MIT licensed<br />Generated docs, edit Markdown in <code>docs/</code>.</p>
+    </aside>
+    <main>
+      <article><h1 id="project-structure">Project Structure</h1>
+<h2 id="status">Status</h2>
+<p>This is the final repository structure for the 1.0.x line, including the 1.0.1 patch. No <code>apps/</code> layer is introduced. The current <code>packages/</code>, <code>scripts/</code>, <code>docs/</code>, and <code>docs-site/</code> split is kept because it matches the actual build, test, and release boundaries and avoids a destructive migration of user work.</p>
+<h2 id="layout">Layout</h2>
+<pre><code class="language-text">agent-debugger/
+├── .github/
+│   ├── dependabot.yml          npm and GitHub Actions updates
+│   ├── renovate.json           Renovate policy (app activation is separate)
+│   └── workflows/              CI, CodeQL, Gitleaks, Scorecard, Dependency Review
+├── docs/
+│   ├── assets/                 Icon, favicon, social card, demo GIF
+│   ├── examples/               Synthetic NDJSON fixtures
+│   ├── validation/             Consent, session, and results templates
+│   ├── *.md                    Product, architecture, privacy, security, ops docs
+│   └── benchmark-results.json  Raw benchmark measurements
+├── docs-site/                  Generated static site; do not edit HTML by hand
+├── packages/
+│   ├── shared/                 Frozen usage, consent, and privacy contracts
+│   ├── privacy/                Count-only redaction engine
+│   ├── ingest/                 Provider and local transcript normalizers
+│   ├── usage/                  Consent-aware usage ledger
+│   ├── artifact/               Portable Cause Package builder and verifier
+│   ├── cases/                  Deterministic case comparison
+│   ├── mcp/                    stdio JSON-RPC server and Claude local adapter
+│   ├── server/                 Fastify API, importer, analyzer, store, CLI
+│   ├── sdk/                    TypeScript event client
+│   ├── web/                    React + Vite + Tailwind UI
+│   └── example-agent/          Synthetic demo trace emitter
+├── scripts/
+│   ├── desktop.mjs             Browser-based local desktop launcher
+│   ├── bench.ts                Synthetic benchmark harness
+│   ├── build-docs.mjs          Static docs site generator
+│   ├── lib/                    Shared local server helpers
+│   └── test/                   Script-level tests
+├── package.json                Private root manifest and scripts
+├── package-lock.json           Lockfile for workspaces and root dev tools
+└── README.md                   Project entry point</code></pre>
+<h2 id="why-this-structure-is-final">Why this structure is final</h2>
+<ul>
+<li><code>packages/</code> contains reusable or runtime code with its own <code>tsconfig.json</code> and tests where applicable.</li>
+<li><code>scripts/</code> contains local tooling that is not imported as a package.</li>
+<li><code>docs/</code> is the source of truth for documentation and assets; <code>docs-site/</code> is generated from it.</li>
+<li><code>.github/</code> contains automation only and never holds application logic.</li>
+<li>The root <code>package.json</code> is private. Publishing, if approved, happens per distributable package (<code>agent-debugger-sdk</code>, <code>agent-debugger-server</code>), not from the root.</li>
+<li>The desktop shell is browser-based and stays in <code>scripts/</code>; no native Electron/Tauri workspace is added for 1.0.x.</li>
+</ul>
+<h2 id="rules-for-changes">Rules for changes</h2>
+<table><thead><tr><th>Change</th><th>Add it to</th></tr></thead><tbody><tr><td>A new event source normalizer</td><td><code>packages/ingest/src/adapters/</code> with a test in <code>packages/ingest/test/</code></td></tr><tr><td>A new redaction detector</td><td><code>packages/privacy/</code> with a count-only receipt test</td></tr><tr><td>A new analyzer rule</td><td><code>packages/server/src/analyzer.ts</code> with a fixture assertion</td></tr><tr><td>A new API route</td><td><code>packages/server/src/index.ts</code> with an API test</td></tr><tr><td>A new MCP tool</td><td><code>packages/mcp/src/tools.ts</code> with a protocol test</td></tr><tr><td>A new local command</td><td><code>scripts/</code> with a test in <code>scripts/test/</code></td></tr><tr><td>A new user guide</td><td><code>docs/</code> then regenerate <code>docs-site/</code> with <code>npm run build:docs</code></td></tr><tr><td>A new CI check</td><td><code>.github/workflows/</code> with least-privilege permissions</td></tr></tbody></table>
+<p>Shared contracts under <code>packages/shared/src/types/</code> remain coordinator-owned. Do not edit them from a feature branch without an explicit contract change.</p>
+<h2 id="release-surfaces">Release surfaces</h2>
+<table><thead><tr><th>Surface</th><th>Location</th><th>Publishing rule</th></tr></thead><tbody><tr><td>CLI / server package</td><td><code>packages/server</code></td><td>Requires explicit release approval</td></tr><tr><td>SDK package</td><td><code>packages/sdk</code></td><td>Requires explicit release approval</td></tr><tr><td>Documentation site</td><td><code>docs-site/</code></td><td>Static files only; no hosting is configured by this repository</td></tr><tr><td>Desktop shell</td><td><code>scripts/desktop.mjs</code></td><td>Local launcher; no native binary is distributed</td></tr><tr><td>Container / cloud service</td><td>Not included</td><td>Out of scope</td></tr></tbody></table>
+<h2 id="non-goals">Non-goals</h2>
+<ul>
+<li>No <code>apps/</code> migration.</li>
+<li>No monorepo tool beyond npm workspaces.</li>
+<li>No package rename or repository rename.</li>
+<li>No generated-code directory other than <code>docs-site/</code>.</li>
+<li>No runtime dependency added solely to make the structure look conventional.</li>
+</ul></article>
+      <p class="generated">Generated by <code>scripts/build-docs.mjs</code>. Do not edit this HTML directly.</p>
+    </main>
+    <aside class="toc">
+      <strong>On this page</strong>
+      <a class="toc-2" href="#status">Status</a>
+        <a class="toc-2" href="#layout">Layout</a>
+        <a class="toc-2" href="#why-this-structure-is-final">Why this structure is final</a>
+        <a class="toc-2" href="#rules-for-changes">Rules for changes</a>
+        <a class="toc-2" href="#release-surfaces">Release surfaces</a>
+        <a class="toc-2" href="#non-goals">Non-goals</a>
+    </aside>
+  </div>
+</body>
+</html>

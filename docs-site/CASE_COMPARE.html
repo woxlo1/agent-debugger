@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Case Comparison and Portable Cause Packages · Agent Debugger Docs</title>
+  <meta name="description" content="Local-first failure debugging for AI agents." />
+  <link rel="icon" href="assets/favicon.svg" />
+  <meta property="og:title" content="Agent Debugger" />
+  <meta property="og:description" content="Local-first failure debugging for AI agents." />
+  <meta property="og:image" content="assets/social-card.svg" />
+  <style>
+    :root { color-scheme: dark; --bg:#080f1c; --panel:#0d1729; --line:#1e293b; --text:#e2e8f0; --muted:#94a3b8; --accent:#34d399; --accent2:#22d3ee; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:15px/1.65 Inter,"Segoe UI",Arial,sans-serif; }
+    a { color:var(--accent2); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .layout { display:grid; grid-template-columns:250px minmax(0,1fr) 220px; min-height:100vh; }
+    .sidebar { border-right:1px solid var(--line); padding:28px 20px; background:var(--panel); position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .brand { display:flex; align-items:center; gap:10px; color:var(--text); font-weight:700; font-size:17px; margin-bottom:28px; }
+    .brand:hover { text-decoration:none; }
+    .brand img { width:34px; height:34px; }
+    nav.side-links { display:flex; flex-direction:column; gap:4px; }
+    nav.side-links a { padding:8px 10px; border-radius:8px; color:var(--muted); font-size:14px; }
+    nav.side-links a:hover, nav.side-links a.active { background:#13233c; color:var(--text); text-decoration:none; }
+    .side-footer { margin-top:32px; font-size:12px; color:#64748b; }
+    main { padding:48px 56px 96px; max-width:960px; }
+    article h1 { font-size:36px; line-height:1.2; margin:0 0 24px; }
+    article h2 { font-size:24px; margin:40px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--line); }
+    article h3 { font-size:19px; margin:28px 0 8px; }
+    article p, article li { color:#cbd5e1; }
+    article ul, article ol { padding-left:22px; }
+    article li { margin:6px 0; }
+    article pre { background:#050b16; border:1px solid var(--line); border-radius:10px; padding:16px; overflow-x:auto; }
+    article code { font-family:"SFMono-Regular",Consolas,monospace; font-size:0.9em; }
+    article :not(pre) > code { background:#13233c; color:#a7f3d0; padding:2px 5px; border-radius:4px; }
+    article table { width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; }
+    article th, article td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+    article th { background:#111d33; color:#e2e8f0; }
+    article blockquote { margin:18px 0; padding:12px 16px; border-left:3px solid var(--accent); background:#0f1d2e; color:var(--muted); }
+    article blockquote p { margin:0; }
+    article hr { border:0; border-top:1px solid var(--line); margin:32px 0; }
+    .toc { border-left:1px solid var(--line); padding:48px 20px; font-size:13px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+    .toc strong { display:block; color:#64748b; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; margin-bottom:12px; }
+    .toc a { display:block; color:var(--muted); padding:4px 0; }
+    .toc .toc-3 { padding-left:14px; color:#64748b; }
+    .hero { display:flex; align-items:center; gap:22px; margin-bottom:32px; }
+    .hero img { width:88px; height:88px; }
+    .hero h1 { margin:0 0 6px; }
+    .hero p { margin:0; color:var(--muted); }
+    .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; margin:32px 0; }
+    .card { display:block; padding:18px; border:1px solid var(--line); border-radius:12px; background:var(--panel); color:var(--text); }
+    .card:hover { border-color:var(--accent); text-decoration:none; }
+    .card strong { display:block; margin-bottom:6px; }
+    .card span { color:var(--muted); font-size:13px; }
+    .demo { width:100%; max-width:900px; border:1px solid var(--line); border-radius:12px; display:block; margin:24px 0; }
+    .generated { color:#475569; font-size:12px; margin-top:56px; }
+    @media (max-width:1100px) { .layout { grid-template-columns:220px minmax(0,1fr); } .toc { display:none; } main { padding:36px 32px 72px; } }
+    @media (max-width:720px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:0; border-bottom:1px solid var(--line); } main { padding:28px 20px 56px; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><img src="assets/icon.svg" alt="" /> Agent Debugger</a>
+      <nav class="side-links">
+        <a href="index.html">Product brief</a>
+        <a href="ARCHITECTURE.html">Architecture</a>
+        <a href="PROJECT_STRUCTURE.html">Project structure</a>
+        <a href="USAGE_PRIVACY.html">Usage and privacy</a>
+        <a href="CASE_COMPARE.html" class="active">Case comparison</a>
+        <a href="MCP_CLAUDE_LOCAL.html">MCP and Claude local</a>
+        <a href="DESKTOP_SHELL.html">Desktop shell</a>
+        <a href="PERFORMANCE.html">Performance results</a>
+        <a href="AI_SOURCE_MATRIX.html">AI source matrix</a>
+        <a href="VALIDATION_PLAN.html">Validation plan</a>
+        <a href="VALIDATION_KIT.html">Validation kit</a>
+        <a href="SECURITY_REVIEW.html">Security review</a>
+        <a href="OPS_BOTS.html">Ops bots</a>
+        <a href="COORDINATOR_PLAN.html">Coordinator plan</a>
+        <a href="HN_LAUNCH_DRAFT.html">HN launch draft</a>
+      </nav>
+      <p class="side-footer">Local-first · MIT licensed<br />Generated docs, edit Markdown in <code>docs/</code>.</p>
+    </aside>
+    <main>
+      <article><h1 id="case-comparison-and-portable-cause-packages">Case Comparison and Portable Cause Packages</h1>
+<h2 id="purpose">Purpose</h2>
+<p>Stage 3 adds two local-only workflows:</p>
+<ol>
+<li><strong>Portable Cause Package</strong> — export one failed run as a single redacted JSON artifact.</li>
+<li><strong>Case comparison</strong> — diff two local traces to see what changed between a failing and a passing run.</li>
+</ol>
+<p>Neither workflow calls an AI service, uploads data, or requires an account.</p>
+<h2 id="portable-cause-package">Portable Cause Package</h2>
+<h3 id="export">Export</h3>
+<pre><code class="language-bash"># CLI: stdout
+agent-debugger package &lt;traceId&gt;
+
+# CLI: local file
+agent-debugger package &lt;traceId&gt; failed-run.cause.json
+
+# HTTP
+curl http://127.0.0.1:4317/api/traces/&lt;traceId&gt;/package &gt; failed-run.cause.json</code></pre>
+<p>Add <code>?includeEstimates=true</code> (CLI: <code>--include-estimates</code>) only when local estimates should be included in the usage ledger.</p>
+<h3 id="bundle-contract">Bundle contract</h3>
+<p><code>kind</code> is always <code>cause-package</code> and <code>schemaVersion</code> is currently <code>1</code>.</p>
+<table><thead><tr><th>Field</th><th>Contents</th></tr></thead><tbody><tr><td><code>packageId</code></td><td>Random UUID for this export</td></tr><tr><td><code>generatedAt</code></td><td>Export timestamp</td></tr><tr><td><code>traceId</code></td><td>Source trace identifier</td></tr><tr><td><code>provenance</code></td><td>Generator, generator version, store kind, event schema version, analysis engine</td></tr><tr><td><code>analysis</code></td><td>Rule-based evidence, candidates, reproduction steps, handoff steps, unknowns, metrics</td></tr><tr><td><code>usage</code></td><td>Consent-aware ledger with <code>reported</code> / <code>estimated</code> / <code>unknown</code> labels</td></tr><tr><td><code>privacy</code></td><td>Redaction receipt counts, consent counts, warnings; <code>rawValuesStored</code> is always <code>false</code></td></tr><tr><td><code>events</code></td><td>Redacted v2 events in timestamp order</td></tr><tr><td><code>integrity</code></td><td>Event count, redaction flag, raw-value flag, SHA-256 checksum</td></tr><tr><td><code>fingerprint</code></td><td>SHA-256 of the canonical bundle body</td></tr></tbody></table>
+<p>The fingerprint is computed from a stable, key-sorted JSON representation. It detects accidental edits to the body; it is not a signature and does not establish trust in the source file.</p>
+<h3 id="privacy-rules">Privacy rules</h3>
+<ul>
+<li>Events are passed through the same redactor used by event ingest, SSE output, and NDJSON export.</li>
+<li>Usage entries are already allowlist-sanitized before persistence, so prompts and API keys are not part of a bundle.</li>
+<li>Privacy data contains detector names and counts only.</li>
+<li>The bundle does not contain local filesystem paths or environment values.</li>
+<li><code>buildCausePackage()</code> rejects a privacy audit whose <code>rawValuesStored</code> is not <code>false</code>.</li>
+</ul>
+<h2 id="case-comparison">Case comparison</h2>
+<pre><code class="language-bash"># CLI
+agent-debugger compare &lt;traceIdA&gt; &lt;traceIdB&gt;
+
+# HTTP
+curl &#39;http://127.0.0.1:4317/api/cases/compare?a=&lt;traceIdA&gt;&amp;b=&lt;traceIdB&gt;&#39;</code></pre>
+<p>The web <strong>Compare</strong> tab exposes the same result and links to a package export for case A.</p>
+<h3 id="comparison-sections">Comparison sections</h3>
+<table><thead><tr><th>Section</th><th>What is diffed</th></tr></thead><tbody><tr><td><code>metrics</code></td><td>Event count, tool calls, error signals</td></tr><tr><td><code>evidence</code></td><td>Evidence IDs present only in A/B and shared evidence whose fields changed</td></tr><tr><td><code>candidates</code></td><td>Cause hypotheses unique to A/B and shared hypotheses with changed confidence or evidence</td></tr><tr><td><code>unknowns</code></td><td>Strings present only in A/B and shared unknowns</td></tr><tr><td><code>usage.totals</code></td><td>Included entries, token buckets, cost, and total tokens</td></tr><tr><td><code>usage.confidence</code></td><td><code>reported</code> / <code>estimated</code> / <code>unknown</code> label changes</td></tr><tr><td><code>privacy</code></td><td>Redaction receipts, consent states, confidence counts, detector findings, skipped fields</td></tr><tr><td><code>notes</code></td><td>Human-readable summary of material differences</td></tr></tbody></table>
+<p>A missing trace returns HTTP 404; a missing <code>a</code> or <code>b</code> query parameter returns HTTP 400.</p>
+<h2 id="verification">Verification</h2>
+<p>The Stage 3 tests cover:</p>
+<ul>
+<li>package construction, redaction, fingerprint validation, and tamper detection</li>
+<li>deterministic comparison of metrics, hypotheses, usage, and privacy findings</li>
+<li>package and compare HTTP routes, including redaction of a synthetic secret and error handling</li>
+</ul>
+<p>Run them with:</p>
+<pre><code class="language-bash">npm run verify</code></pre></article>
+      <p class="generated">Generated by <code>scripts/build-docs.mjs</code>. Do not edit this HTML directly.</p>
+    </main>
+    <aside class="toc">
+      <strong>On this page</strong>
+      <a class="toc-2" href="#purpose">Purpose</a>
+        <a class="toc-2" href="#portable-cause-package">Portable Cause Package</a>
+        <a class="toc-3" href="#export">Export</a>
+        <a class="toc-3" href="#bundle-contract">Bundle contract</a>
+        <a class="toc-3" href="#privacy-rules">Privacy rules</a>
+        <a class="toc-2" href="#case-comparison">Case comparison</a>
+        <a class="toc-3" href="#comparison-sections">Comparison sections</a>
+        <a class="toc-2" href="#verification">Verification</a>
+    </aside>
+  </div>
+</body>
+</html>
