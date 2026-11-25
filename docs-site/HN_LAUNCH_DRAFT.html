@@ -84,14 +84,14 @@
     </aside>
     <main>
       <article><h1 id="hacker-news-launch-draft">Hacker News launch draft</h1>
-<blockquote><p><strong>Status: APPROVED FOR POSTING.</strong> The repository owner approved the final text and the act of posting on 2026-11-24. Post only after the v1.0.0 release URL resolves and the refreshed synthetic demo GIF is committed to <code>main</code>. No external AI service call, credential creation, or secret logging is involved.</p></blockquote>
+<blockquote><p><strong>Status: APPROVED FOR POSTING.</strong> The repository owner approved the final text and the act of posting on 2026-11-24, and approved the <code>v1.0.2</code> URL/text update on 2026-11-25. Post only after the v1.0.2 release URL resolves and the refreshed synthetic demo GIF is committed to <code>main</code>. No external AI service call, credential creation, or secret logging is involved.</p></blockquote>
 <h2 id="suggested-title">Suggested title</h2>
 <p>Show HN: Agent Debugger – local-first failure debugger for AI agents</p>
 <p>Alternative title:</p>
 <p>Show HN: Turn a failed agent trace into evidence, hypotheses, and a debugger handoff</p>
 <h2 id="target-url">Target URL</h2>
 <p>Use the approved release URL:</p>
-<pre><code class="language-text">https://github.com/woxlo1/agent-debugger/releases/tag/v1.0.0</code></pre>
+<pre><code class="language-text">https://github.com/woxlo1/agent-debugger/releases/tag/v1.0.2</code></pre>
 <p>Do not substitute a pre-release branch, a fork, or a short link.</p>
 <h2 id="submission-comment-draft">Submission comment draft</h2>
 <pre><code class="language-text">Hi HN,
@@ -99,7 +99,7 @@
 I built Agent Debugger because debugging a failed agent run usually means
 scroll-searching a long trace and guessing which tool call mattered.
 
-Agent Debugger v1.0.0 is local-first and MIT licensed. You import an NDJSON
+Agent Debugger v1.0.2 is local-first and MIT licensed. You import an NDJSON
 trace (or pipe events from any language), and it builds a &quot;Cause Package&quot;:
 
 - observed evidence with event IDs
@@ -117,7 +117,7 @@ AI service call. Redaction runs on ingest, stream, export, and bundle
 creation. Usage values are labelled reported, estimated, or unknown, and
 estimates are excluded from billing totals unless you opt in.
 
-This is v1.0.0 of a local debugging tool, not a finished observability
+This is v1.0.2 of a local debugging tool, not a finished observability
 platform. It does not do evals, live injection, or team trace storage.
 Cause candidates are hypotheses, not verified root causes. A generated docs
 site, local MCP server, browser-based desktop shell, and published synthetic
@@ -129,19 +129,20 @@ misses the 500 ms target in the published benchmark.
 Feedback on the cause/hypothesis split, the privacy model, or the CLI
 workflow is especially welcome.
 
-Release: https://github.com/woxlo1/agent-debugger/releases/tag/v1.0.0
+Release: https://github.com/woxlo1/agent-debugger/releases/tag/v1.0.2
 Repo: https://github.com/woxlo1/agent-debugger
 Demo GIF: https://github.com/woxlo1/agent-debugger/blob/main/docs/assets/demo.gif</code></pre>
 <h2 id="likely-questions-and-short-answers">Likely questions and short answers</h2>
-<table><thead><tr><th>Question</th><th>Answer</th></tr></thead><tbody><tr><td>Why not LangSmith / Langfuse / Phoenix?</td><td>Those are observability platforms. This is a local debugging step for one failed run, with no account or upload.</td></tr><tr><td>Does it call an LLM to explain failures?</td><td>No. Analysis is rule-based and deterministic. External AI adapters are not enabled.</td></tr><tr><td>How is privacy handled?</td><td>Redaction is applied on ingest, stream, export, and package export. Receipts store detector counts only. Claude sources require explicit consent before inclusion.</td></tr><tr><td>Is this security-audited?</td><td>No. <code>docs/SECURITY_REVIEW.md</code> records the threat model, findings, fixes, and residual risks. It is a self-review, not an external audit.</td></tr><tr><td>Why a SHA-256 fingerprint, not a signature?</td><td>It detects accidental edits to a bundle. It does not establish trust in the source file; that is stated in the docs.</td></tr><tr><td>Is it production ready?</td><td>It is v1.0.0 for local debugging, not a hosted production service. Synthetic benchmarks are published in <code>docs/PERFORMANCE.md</code>; cold start misses the 500 ms target and real-user validation has not run.</td></tr></tbody></table>
+<table><thead><tr><th>Question</th><th>Answer</th></tr></thead><tbody><tr><td>Why not LangSmith / Langfuse / Phoenix?</td><td>Those are observability platforms. This is a local debugging step for one failed run, with no account or upload.</td></tr><tr><td>Does it call an LLM to explain failures?</td><td>No. Analysis is rule-based and deterministic. External AI adapters are not enabled.</td></tr><tr><td>How is privacy handled?</td><td>Redaction is applied on ingest, stream, export, and package export. Receipts store detector counts only. Claude sources require explicit consent before inclusion.</td></tr><tr><td>Is this security-audited?</td><td>No. <code>docs/SECURITY_REVIEW.md</code> records the threat model, findings, fixes, and residual risks. It is a self-review, not an external audit.</td></tr><tr><td>Why a SHA-256 fingerprint, not a signature?</td><td>It detects accidental edits to a bundle. It does not establish trust in the source file; that is stated in the docs.</td></tr><tr><td>Is it production ready?</td><td>It is v1.0.2 for local debugging, not a hosted production service. Synthetic benchmarks are published in <code>docs/PERFORMANCE.md</code>; cold start misses the 500 ms target and real-user validation has not run.</td></tr></tbody></table>
 <h2 id="preflight-checklist">Preflight checklist</h2>
 <ul>
-<li>[x] All v1.0.0 scope items are complete and <code>npm run verify</code> passes.</li>
-<li>[x] The owner approved the version bump, tag, GitHub Release, demo GIF refresh, final text, and posting on 2026-11-24.</li>
-<li>[x] The target URL resolves to the approved v1.0.0 release after the tag is pushed.</li>
+<li>[x] All v1.0.2 scope items are complete and <code>npm run verify</code> passes.</li>
+<li>[x] The owner approved the version bump, tag, GitHub Release, demo GIF refresh, final text, and posting on 2026-11-24, and the <code>v1.0.2</code> text/URL update on 2026-11-25.</li>
+<li>[x] The target URL resolves to the approved v1.0.2 release after the tag is pushed.</li>
 <li>[x] The demo GIF contains only synthetic data from <code>docs/examples/failed-trace.ndjson</code>.</li>
 <li>[x] No secrets, customer data, or internal hostnames appear in the repository or in the comment.</li>
-<li>[ ] npm publish is approved but requires registry authentication; <code>npm publish --dry-run</code> was verified. This does not change the release URL.</li>
+<li>[x] <code>agent-debugger-server@1.0.2</code> is published on npm (<code>latest = 1.0.2</code>); the publish build and dry run were verified.</li>
+<li>[ ] <code>agent-debugger-sdk@1.0.2</code> is published; the owner must run <code>npm publish -w packages/sdk --otp=&lt;real 6-digit code&gt;</code> from an authenticated local session. This does not change the release URL.</li>
 <li>[ ] HN posting requires an authenticated session. If no HN credential is available in this environment, use the final text above to post manually.</li>
 </ul></article>
       <p class="generated">Generated by <code>scripts/build-docs.mjs</code>. Do not edit this HTML directly.</p>

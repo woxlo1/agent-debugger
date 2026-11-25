@@ -6,7 +6,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
-No unreleased changes.
+### Changed
+
+- Updated the approved Hacker News draft, the generated docs page, and the README release-status note from `v1.0.0` to `v1.0.2`. The checklist now records that `agent-debugger-server@1.0.2` is published and that `agent-debugger-sdk@1.0.2` still requires an authenticated owner publish.
 
 ## [1.0.2] - 2026-11-24
 
