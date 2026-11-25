@@ -82,5 +82,5 @@ Demo GIF: https://github.com/woxlo1/agent-debugger/blob/main/docs/assets/demo.gi
 - [x] The demo GIF contains only synthetic data from `docs/examples/failed-trace.ndjson`.
 - [x] No secrets, customer data, or internal hostnames appear in the repository or in the comment.
 - [x] `agent-debugger-server@1.0.2` is published on npm (`latest = 1.0.2`); the publish build and dry run were verified.
-- [ ] `agent-debugger-sdk@1.0.2` is published; the owner must run `npm publish -w packages/sdk --otp=<real 6-digit code>` from an authenticated local session. This does not change the release URL.
+- [x] `agent-debugger-sdk@1.0.2` is published after the owner approved the staged release with 2FA; `latest = 1.0.2`. This does not change the release URL.
 - [ ] HN posting requires an authenticated session. If no HN credential is available in this environment, use the final text above to post manually.
