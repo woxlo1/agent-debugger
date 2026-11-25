@@ -359,6 +359,19 @@ Targets assume a commodity laptop and no network access. Results are local measu
 
 The `v1.0.2` tag and GitHub Release are published. Both `agent-debugger-server@1.0.2` and `agent-debugger-sdk@1.0.2` are published on npm (`latest = 1.0.2`); the SDK went live after the owner approved npm staged publishing with 2FA. CI never performs a version bump, tag, release, publish, or Hacker News post. The final Hacker News text is in `docs/HN_LAUNCH_DRAFT.md` and now references `v1.0.2`. Posting requires an authenticated HN session.
 
+## Visual assets
+
+The SVGs in `docs/assets/` are the source of truth for the brand marks. See `docs/assets/README.md` for their intended uses.
+
+<p align="center">
+  <img src="docs/assets/icon.svg" width="112" alt="Agent Debugger icon" />
+  <img src="docs/assets/favicon.svg" width="64" alt="Agent Debugger favicon" />
+</p>
+
+<p align="center">
+  <img src="docs/assets/social-card.svg" width="480" alt="Agent Debugger social preview card" />
+</p>
+
 ## Verification
 
 ```bash
