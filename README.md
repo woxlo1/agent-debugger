@@ -9,6 +9,8 @@
 </p>
 
 <p align="center">
+  <a href="https://www.npmjs.com/package/agent-debugger-server"><img src="https://img.shields.io/npm/v/agent-debugger-server.svg" alt="npm: agent-debugger-server" /></a>
+  <a href="https://www.npmjs.com/package/agent-debugger-sdk"><img src="https://img.shields.io/npm/v/agent-debugger-sdk.svg" alt="npm: agent-debugger-sdk" /></a>
   <img src="https://img.shields.io/badge/status-v1.0.2-brightgreen" alt="status: v1.0.2" />
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="license: MIT" />
   <img src="https://img.shields.io/badge/runtime-local%20only-emerald" alt="runtime: local only" />
@@ -154,10 +156,10 @@ Claude Code local transcript reading is **off by default**. It requires the proc
 
 ## Instrumenting your own agent
 
-The SDK is not published to npm yet. Use it from the workspace or send JSON Lines with the `pipe` command.
+The SDK is published on npm as `agent-debugger-sdk`. Install it with `npm install agent-debugger-sdk`, or use the workspace source while developing this repository. You can also send JSON Lines from any language with the `pipe` command.
 
 ```ts
-import { setTraceId, trace } from "./packages/sdk/src/index.ts"
+import { setTraceId, trace } from "agent-debugger-sdk"
 
 setTraceId("checkout-agent-run-42")
 
@@ -174,7 +176,7 @@ await trace({
 `trace()` never throws; it returns `{ ok, event, error }`. Use `traceOrThrow()` when delivery failure must stop the run.
 
 ```ts
-import { traceOrThrow } from "./packages/sdk/src/index.ts"
+import { traceOrThrow } from "agent-debugger-sdk"
 
 await traceOrThrow({ type: "agent", name: "final_answer", output: "..." })
 ```
