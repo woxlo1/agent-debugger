@@ -11,6 +11,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Updated the approved Hacker News draft, the generated docs page, and the README release-status note from `v1.0.0` to `v1.0.2`, and recorded that both npm packages are published at `1.0.2`. The SDK went live after the owner approved npm staged publishing with 2FA.
 - Recorded the owner-approved 19:00 JST Hacker News plan: repository URL, revised title, maker comment with the `npx` quick start, and same-day question replies.
 - Replaced the Hacker News title with the owner-approved 68-character alternative because the original 89-character title exceeded the Hacker News limit. The target URL and maker comment are unchanged.
+- Redesigned the README introduction: a centered demo GIF with a caption, a table of the problems Agent Debugger removes, a capability list, and an `npx`-first quick start. The developer workflow remains available in its own section.
 
 ## [1.0.2] - 2026-11-24
 

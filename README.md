@@ -16,16 +16,34 @@
   <img src="https://img.shields.io/badge/runtime-local%20only-emerald" alt="runtime: local only" />
 </p>
 
-![Agent Debugger replaying a synthetic failed checkout trace](docs/assets/demo.gif)
+<p align="center">
+  <img src="docs/assets/demo.gif" width="960" alt="Agent Debugger replaying a synthetic failed checkout trace" />
+</p>
 
-Agent Debugger is a local-first developer tool for investigating **failed** agent runs. It does not try to replace observability platforms such as Langfuse, Phoenix, or LangSmith. Instead, it takes a trace you already have and builds a **Cause Package**:
+<p align="center">
+  <sub>Demo: a synthetic failed checkout trace becomes a Cause Package with evidence, falsifiable hypotheses, reproduction steps, and a debugger handoff.</sub>
+</p>
 
-- **Observed evidence** — directly visible facts with event IDs
-- **Cause candidates** — rule-based hypotheses, each with a falsifier
-- **Reproduction steps** — what to replay and what to compare
-- **Next debugger action** — where to stop and what to inspect in your existing debugger
+## What problem does it solve?
 
-Everything runs on your machine. No account, no cloud, no external AI service.
+| Usual failure loop | With Agent Debugger |
+|---|---|
+| Scroll a long trace and guess which tool call mattered | Import NDJSON or pipe events; every fact carries an event ID |
+| Treat a rule flag as the root cause | Candidates stay hypotheses, each with a falsifier |
+| Hand off raw prompts and secrets to a teammate | Export a redacted bundle with a SHA-256 fingerprint |
+| Lose usage and consent context | Consent-aware ledger labels reported, estimated, or unknown |
+| Ask someone else to reproduce the run | Reproduction steps and a debugger handoff are generated locally |
+
+## What can it do?
+
+- Build a deterministic **Cause Package** for one failed run
+- Compare a failing trace against a passing one
+- Redact on ingest, stream, export, and bundle creation
+- Run a local MCP server with no port and no external AI call
+- Launch a browser-based desktop shell with one command
+- Instrument your own agent with the `agent-debugger-sdk` package
+
+Everything runs on localhost. No account, no cloud, no external AI service. Cause candidates are hypotheses derived from rules, not verified root causes.
 
 ## What this is / is not
 
@@ -39,21 +57,25 @@ Everything runs on your machine. No account, no cloud, no external AI service.
 | Case comparison across two local traces | Cloud case storage |
 | Browser-based local desktop shell | Native Electron/Tauri binary |
 
-Cause candidates are **hypotheses derived from rules**, not verified root causes. The UI keeps observed facts, rule flags, hypotheses, reproduction steps, and handoff suggestions in separate sections.
-
-## Why another debugger?
-
-Most agent observability tools answer *what happened*. Agent Debugger answers the narrower question a developer has when a run fails: **what should I inspect next, and how can I prove that hypothesis wrong?**
-
-- Evidence is separated from interpretation. A rule flag never becomes a root cause on its own.
-- Every cause candidate carries a falsifier, so a hypothesis can be challenged instead of trusted.
-- The handoff step points at your existing debugger and source location. This project does not invent another debug protocol.
-- Privacy is structural: redaction runs on ingest, stream, export, and bundle creation, and usage data is allowlist-sanitized before it reaches disk.
-- The scope is intentionally narrow: one failed run, compared against another when useful, then handed off.
-
-If you need dashboards, evaluation suites, or team-wide trace retention, use an observability platform. Agent Debugger is the local step you take before or after that platform.
+The UI keeps observed facts, rule flags, hypotheses, reproduction steps, and handoff suggestions in separate sections. If you need dashboards, evaluation suites, or team-wide trace retention, use an observability platform.
 
 ## Quick start
+
+Start the local API and CLI without cloning the repository:
+
+```bash
+npx agent-debugger-server start
+```
+
+This serves the local API at `http://127.0.0.1:4317`. To instrument your own agent, install the SDK separately:
+
+```bash
+npm install agent-debugger-sdk
+```
+
+### For the web UI and the full developer workflow
+
+Clone the repository and run the dev servers:
 
 ```bash
 git clone https://github.com/woxlo1/agent-debugger.git
